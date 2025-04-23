@@ -1,0 +1,34 @@
+# # ========== SÉCURITÉ DE BASE ==========
+
+# # Empêche l'affichage de l'arborescence des dossiers s'il n'y a pas de fichier index
+Options -Indexes
+
+# # Masque les informations sur le serveur Apache dans les pages d'erreur
+ ServerSignature Off
+
+# # ========== EN-TÊTES DE SÉCURITÉ HTTP ==========
+
+# # Interdit l'affichage du site dans une iframe (protection contre le clickjacking)
+ Header always set X-Frame-Options "SAMEORIGIN"
+
+# # Empêche le navigateur de deviner le type de contenu (protection contre certaines attaques)
+Header always set X-Content-Type-Options "nosniff"
+
+# # Active la protection contre les scripts XSS dans certains navigateurs
+Header always set X-XSS-Protection "1; mode=block"
+
+# # Ne transmet pas l'URL complète du site en tant que referer lors d'une navigation externe
+ Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# # Force l'utilisation du protocole HTTPS pour une durée d'un an, y compris les sous-domaines
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+RewriteEngine On
+
+# Si c'est un fichier ou un dossier existant → ne rien faire
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Sinon → rediriger vers index.php
+RewriteRule ^ index.php [QSA,L]

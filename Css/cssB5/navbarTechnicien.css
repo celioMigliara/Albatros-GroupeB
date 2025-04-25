@@ -1,0 +1,463 @@
+/* Logo dans le coin supérieur gauche */
+.logo-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 300;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 0 50% 0;
+    
+}
+
+.logo-container img {
+    height: auto; /* ajuste à ta convenance */
+    width: 150px;
+    padding: 0;
+}
+
+.site-logo {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cercles décoratifs (images SVG) */
+.decorative-circle {
+    position: fixed;
+    z-index: -1;
+}
+
+.yellow-circle {
+    width: 500px;
+    height: auto;
+    bottom: -150px;
+    left: -150px;
+}
+
+.green-circle {
+    width: 500px;
+    height: auto;
+    top: 25%;
+    right: -150px;
+}
+
+/* Wrapper pour la navbar qui s'étend sur toute la largeur */
+.navbar-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+}
+
+/* Navbar styles */
+nav {
+    display: flex;
+    background-color: #FFCC4D;
+    padding: 10px 20px;
+    border-radius: 0 0 20px 20px;
+    margin: 0 auto;
+    align-items: center;
+    position: relative;
+    max-width: 900px;
+    width: 80%;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+nav img.logo {
+    height: 40px;
+    width: auto;
+    margin-right: 20px;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    justify-content: space-around;
+}
+
+nav ul li {
+    display: inline-block;
+    position: relative;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 16px;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* Style pour les liens de menu déroulant */
+.dropdown-toggle {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Style pour les éléments dropdown pour faciliter l'accès */
+.dropdown {
+    position: relative;
+}
+
+/* Ajouter un style visuel lorsque le menu est survolé ou actif */
+.dropdown:hover .dropdown-toggle,
+.dropdown:focus-within .dropdown-toggle {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* Style pour les petites flèches dans le menu principal */
+.dropdown-toggle::after {
+    content: "↓";
+    font-size: 0.8em;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+/* Style des menus déroulants */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #A7BE7D;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 12px 0;
+    z-index: 1000;
+    top: 100%;
+    left: 0;
+    transform: none;
+    margin-top: 10px;
+    animation: fadeIn 0.2s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    transition-delay: 0s;
+}
+
+/* Créer une zone tampon pour faciliter le mouvement entre l'élément parent et le sous-menu */
+.dropdown-menu::after {
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 100%;
+    top: -20px;
+    left: 0;
+}
+
+/* Affichage des sous-menus au survol */
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+/* Lorsqu'on quitte le dropdown, ajouter un délai avant disparition */
+.dropdown:not(:hover) .dropdown-menu {
+    transition-delay: 0.5s;
+}
+
+/* Pour l'affichage sur mobile/tablette avec le support tactile */
+@media (hover: none) {
+    .dropdown-toggle:focus + .dropdown-menu {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* Animation pour l'apparition des menus */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Triangle au-dessus des sous-menus */
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 20%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #A7BE7D;
+}
+
+/* Menu styles spécifiques pour chaque dropdown */
+.demandes-menu {
+    min-width: 180px;
+    left: -20px;
+}
+
+.dropdown-menu a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    font-weight: normal;
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+}
+
+/* Ajustement du conteneur principal pour tenir compte de la navbar fixée */
+.container {
+    max-width: 900px;
+    margin: 70px auto 0;
+    padding: 0 15px;
+    position: relative;
+}
+
+/* Style pour les badges */
+.badge {
+    display: inline-block;
+    background-color: #ff8a65;
+    color: white;
+    border-radius: 50%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    margin-left: 5px;
+    min-width: 1.5rem;
+    text-align: center;
+}
+
+.with-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.menu-toggle-checkbox {
+    display: none;
+}
+
+.hamburger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+}
+
+/* Styles responsives */
+@media (max-width: 768px) {
+    /* Header fixe avec logo */
+    .logo-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #78866B;
+        border-radius: 0;
+        padding: 10px;
+        z-index: 300;
+        height: auto;
+        max-height: 70px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+    
+    .logo-container img {
+        height: 50px;  /* un peu plus petit sur mobile */
+        padding: 5px;
+    }
+    
+    
+    .site-logo {
+        width: 120px;
+    }
+    
+    nav {
+        width: 100%;
+        border-radius: 0;
+        padding: 12px 20px;
+        background-color: #78866B;
+    }
+    
+    .navbar-wrapper {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #78866B;
+        padding-top: 70px;
+        overflow-y: auto;
+        z-index: 150;
+    }
+    
+    .menu-toggle-checkbox:checked ~ .navbar-wrapper {
+        display: block;
+    }
+    
+    nav {
+        flex-direction: column;
+        height: auto;
+        min-height: 100px;
+    }
+    
+    #main-nav {
+        width: 100%;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    nav ul li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    nav > ul > li > a {
+        padding: 12px 20px;
+        font-size: 18px;
+        text-align: left;
+        color: white;
+        display: block;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    nav > ul > li > a.dropdown-toggle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        background-color: #78866B;
+        display: block !important;
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .dropdown.active .dropdown-menu {
+        display: block;
+    }
+    
+    .dropdown-menu a {
+        padding: 12px 40px;
+        text-align: left;
+        color: white;
+        font-size: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .dropdown-menu a:last-child {
+        border-bottom: none;
+    }
+    
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    nav > ul > li > a.dropdown-toggle {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .yellow-circle, .green-circle {
+        display: none;
+    }
+
+    /* Style du menu hamburger */
+    .menu-toggle {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        position: fixed !important;
+        top: 15px !important;
+        right: 15px !important;
+        width: 30px !important;
+        height: 30px !important;
+        z-index: 9999 !important;
+        background-color: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+
+    /* Les barres du hamburger */
+    .hamburger-line {
+        display: block !important;
+        width: 25px !important;
+        height: 3px !important;
+        background-color: white !important;
+        margin: 3px 0 !important;
+        border-radius: 1px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-logo {
+        width: 100px;
+    }
+    
+    nav ul {
+        padding: 0;
+    }
+    
+    .dropdown-menu {
+        padding: 0;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        min-width: 1.3rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .menu-toggle {
+        top: 18px;
+        right: 18px;
+    }
+    
+    .hamburger-line {
+        height: 2px;
+    }
+} 

@@ -1,0 +1,422 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Conteneur principal */
+.container {
+    width: 400px;
+    margin: 70px auto;
+    background-color: #ffffff;
+    border-radius: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    padding: 35px 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Avatar utilisateur */
+.avatar-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #fccc54;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* Infos utilisateur */
+.info-container h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #222;
+}
+
+.info-container p {
+    font-size: 14px;
+    margin: 2px 0;
+    color: #555;
+}
+
+.role {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 8px;
+    color: #333;
+}
+
+/* Bâtiments */
+.building-box {
+    margin-top: 25px;
+    background-color: #f7f7f7;
+    border-radius: 12px;
+    padding: 15px 20px;
+    width: 100%;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.building-box h4 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+}
+
+.building-list {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.building-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.building-list li::before {
+    content: "🏢";
+    font-size: 16px;
+}
+
+/* Scroll doux pour la liste si trop longue */
+.building-list::-webkit-scrollbar {
+    width: 6px;
+}
+.building-list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* Les boutons sous forme de liens ronds */
+.actions .btn-action {
+    background-color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.actions .btn-action:hover {
+    transform: scale(1.1);
+}
+
+.actions .btn-action.accept {
+    color: #2ecc71;
+    border: 2px solid #2ecc71;
+}
+
+.actions .btn-action.refuse {
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+}
+
+
+.arrow.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    border-color: #ddd;
+}
+
+.nav-arrows {
+    position: relative;
+    width: 100%;
+    height: 0;
+}
+
+/* Flèches gauche et droite */
+.nav-arrows .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    border: 2px solid #ffbe2e;
+    color: #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.25s ease;
+    z-index: 10;
+}
+
+.nav-arrows .arrow:hover {
+    background-color: #ffbe2e;
+    color: white;
+}
+
+/* Gauche et droite */
+.nav-arrows .left {
+    left: -60px;
+}
+
+.nav-arrows .right {
+    right: -60px;
+}
+
+/* Désactivé */
+.nav-arrows .disabled {
+    pointer-events: none;
+    opacity: 0.4;
+    border-color: #ccc;
+    color: #aaa;
+}
+
+/* ============================= */
+/* ✅ Popup intégrée dans le card */
+/* ============================= */
+.popup-refus {
+    margin-top: 25px;
+    width: 280px;
+    max-width: 80%;
+    background-color: #fff7f7;
+    border: 1.5px solid #e74c3c;
+    border-radius: 12px;
+    padding: 12px;
+    animation: fadeIn 0.3s ease;
+    display: none; /* masqué par défaut */
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.popup-refus p {
+    font-weight: 500;
+    font-size: 13px;
+    color: #e74c3c;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.popup-refus textarea {
+    width: 90%;
+    height: 60px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 12px;
+    resize: none;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.popup-refus .popup-btns {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Les boutons du popup */
+.popup-refus .popup-btns .popup-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.popup-refus .popup-btns .popup-btn.confirm {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Style spécifique pour le bouton Annuler avec sélecteur très spécifique */
+html body .container .popup-refus .popup-btns .popup-btn.cancel {
+    background-color: #54634C;
+    color: white;
+    border: none;
+}
+
+.popup-refus .popup-btns .popup-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.popup-refus .warning-text {
+    font-weight: 500;
+    font-size: 14px;
+    color: #e74c3c;
+    margin-bottom: 8px;
+    text-align: center;
+    position: relative;
+}
+
+.popup-refus .warning-text::before {
+    content: "⚠️"; /* Utilise un emoji d'avertissement moins agressif */
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ======================= */
+/* 📱 RESPONSIVE DESIGN 🔽 */
+/* ======================= */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 0;
+        background-color: #fafafa;
+    }
+    
+    .container {
+        width: 90%;
+        max-width: 450px;
+        margin: 180px auto 30px;
+        padding: 25px 15px;
+        border-radius: 15px;
+        position: relative;
+        z-index: 50;
+    }
+    
+    .avatar-container img {
+        width: 80px;
+        height: 80px;
+        border-width: 4px;
+    }
+    
+    .info-container h2 {
+        font-size: 20px;
+    }
+    
+    .info-container p,
+    .role {
+        font-size: 14px;
+    }
+    
+    /* Afficher les flèches de navigation sur mobile */
+    .nav-arrows {
+        display: block;
+        position: relative;
+        height: 50px;
+        margin-top: 20px;
+    }
+    
+    .nav-arrows .arrow {
+        position: relative;
+        display: inline-block;
+        margin: 0 15px;
+        top: auto;
+        transform: none;
+    }
+    
+    .nav-arrows .left,
+    .nav-arrows .right {
+        left: auto;
+        right: auto;
+    }
+    
+    /* Centrer les boutons d'action horizontalement */
+    .actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 25px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 92%;
+        margin: 180px auto 30px;
+        padding: 20px 12px;
+        border-radius: 12px;
+    }
+
+    .avatar-container img {
+        width: 70px;
+        height: 70px;
+        border-width: 3px;
+    }
+
+    .info-container h2 {
+        font-size: 18px;
+    }
+
+    .info-container p,
+    .role {
+        font-size: 13px;
+    }
+
+    .building-list li {
+        font-size: 12px;
+    }
+
+    .actions {
+        gap: 30px;
+    }
+
+    .actions .btn-action {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+    .popup-refus {
+        padding: 12px;
+        width: 90%; /* Élargir pour les mobiles */
+    }
+
+    .popup-refus textarea {
+        font-size: 13px;
+        height: 80px;
+    }
+
+    .popup-refus .popup-btns {
+        flex-direction: row; /* Garder les boutons côte à côte */
+        gap: 10px;
+    }
+
+    .popup-refus .popup-btn {
+        flex: 1; /* Les boutons se partagent l'espace */
+        padding: 8px;
+        font-size: 13px;
+    }
+}

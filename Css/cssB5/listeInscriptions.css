@@ -1,0 +1,198 @@
+/* Feuille de style - listeInscriptions.css */
+
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre */
+.container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Carte utilisateur */
+.card-user {
+    display: flex;
+    align-items: center;
+    background-color: #ddd;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+/* Effet au survol */
+.card-user:hover {
+    background-color: #cfcfcf;
+}
+
+/* Avatar (cercle orange) */
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #fccf54;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+/* Infos utilisateur */
+.user-info p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Lien cliquable de la carte */
+.card-user-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.card-user-link:hover .card-user {
+    background-color: #d0d0d0;
+}
+
+/* Supprime les effets de lien visités / actifs */
+.card-user-link:visited,
+.card-user-link:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Message si aucun utilisateur */
+.no-inscription {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    margin-top: 30px;
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+.pagination-container .prev,
+.pagination-container .next {
+    flex: 1;
+    text-align: center;
+}
+
+.pagination-container .page-numbers {
+    flex: 1;
+    text-align: center;
+}
+
+.pagination-container a {
+    text-decoration: none;
+    background-color: #FCCE54;
+    color: white;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.pagination-container a:hover {
+    background-color: #dab83e;
+}
+
+.pagination-container a.active {
+    background-color: #A9BC91;
+    color: white;
+    cursor: default;
+}
+
+/* ✅ Responsive design pour tablette et mobile */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin: 100px auto 20px;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .container h1 {
+        font-size: 20px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+    .content {
+        padding: 0 5px;
+    }
+
+    .card-user {
+        margin-bottom: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        width: 90%;
+        margin: 110px auto 20px;
+        padding: 15px 10px;
+    }
+
+    .card-user {
+        flex-direction: row;
+        padding: 10px 15px;
+    }
+
+    .avatar {
+        width: 35px;
+        height: 35px;
+        margin-right: 15px;
+    }
+
+    .user-info p {
+        font-size: 14px;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0;
+        align-items: center;
+    }
+
+    .pagination-container .page-numbers,
+    .pagination-container .prev,
+    .pagination-container .next {
+        width: 100%;
+        text-align: center;
+    }
+
+    .pagination-container a {
+        display: inline-block;
+        padding: 6px 10px;
+        margin: 3px;
+        font-size: 14px;
+    }
+}

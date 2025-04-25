@@ -1,0 +1,535 @@
+:root {
+    --primary-color: #FFC107;
+    --primary-hover: #FFB300;
+    --secondary-color: #607D8B;
+    --secondary-hover: #546E7A;
+    --danger-color: #F44336;
+    --light-color: #ECEFF1;
+    --gray-light: #CFD8DC;
+    --dark-color: #263238;
+    --kaki-color: #78866B;
+
+    --spacing: 1rem;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* Base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    color: var(--dark-color);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Container spécifique pour la page admin */
+.admin-container {
+    margin-top: 150px;
+}
+
+/* Section bienvenue admin */
+.admin-header {
+    margin-top: 0;
+}
+
+.admin-welcome {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin: 20px auto 30px;
+    padding: 20px;
+    background-color: var(--kaki-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.admin-text {
+    margin-left: 20px;
+}
+
+.admin-text h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary-color);
+    font-family: "Montserrat Alternates", sans-serif;
+}
+
+.admin-text p {
+    margin: 5px 0 0;
+    color: var(--light-color);
+    font-family: "Montserrat", sans-serif;
+}
+
+/* Icône bonhomme en jaune */
+.dropdown-btn.icon-only {
+    background-color: var(--primary-color); /* JAUNE */
+    color: white; /* Icône blanche à l'intérieur */
+    border: none;
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--box-shadow);
+}
+
+
+/* Menu déroulant */
+.dropdown.user-dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 180px;
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-light);
+    z-index: 100;
+    top: 100%;
+    margin-top: 10px;
+    padding-top: 5px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Quand le dropdown est visible */
+.dropdown-content.visible {
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background-color: transparent;
+}
+
+.dropdown-content a {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--dark-color);
+    text-decoration: none;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: var(--transition);
+}
+
+.dropdown-content a:hover {
+    background-color: var(--light-color);
+    border-left-color: var(--primary-color);
+    color: var(--primary-hover);
+}
+
+.dropdown-content a i {
+    color: var(--primary-color);
+}
+
+/* Modification pour garder le dropdown visible lors du hover */
+.dropdown.user-dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Notifications */
+.dashboard {
+    width: 80%;
+    margin: var(--spacing) auto;
+    padding: 0;
+}
+
+.notifications-section h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.notification-card {
+    background-color: #f5f5f5;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    margin: 0 auto 1rem;
+    overflow: hidden;
+    max-width: 600px;
+}
+
+.notification-header {
+    background-color: var(--light-color);
+    border-bottom: 1px solid var(--gray-light);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.notification-badge {
+    background-color: var(--danger-color);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.notification-card p {
+    padding: 1rem;
+    color: #555;
+}
+
+.notification-actions {
+    padding: 1rem;
+    background-color: #F5F5F5;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--gray-light);
+}
+
+.btn-view-demande {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 10px 20px;
+    background-color: var(--kaki-color);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: var(--transition);
+    width: 80%;
+    max-width: 250px;
+    text-align: center;
+}
+
+.btn-view-demande:hover {
+    background-color: #6b7c60;
+    transform: translateY(-2px);
+}
+
+/* Style du bouton lui-même */
+.btn-access {
+    display: inline-block;
+    background-color: var(--kaki-color);
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 500;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    max-width: 160px;
+}
+
+.btn-access:hover {
+    background-color: #6b7c60;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 8px rgba(0,0,0,0.2);
+}
+
+.btn-access i {
+    margin-right: 6px;
+}
+
+/* Style pour le conteneur du bouton valider les accès */
+.action-container {
+    text-align: center;
+    padding: 10px 0 20px 0;
+    background-color: #F5F5F5;
+    border-top: 1px solid #CFD8DC;
+}
+
+/* Style pour le bouton valider les accès */
+.btn-validate {
+    display: inline-block;
+    background-color: #78866B;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-validate i {
+    margin-right: 5px;
+}
+
+/* Ajout des media queries */
+@media (max-width: 1024px) {
+    .admin-welcome {
+        margin: 20px 15px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .admin-text {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+    
+    .dashboard {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+        width: 95%;
+    }
+    
+    .admin-header {
+        margin-top: 10px;
+    }
+    
+    .admin-welcome {
+        padding: 15px;
+        margin: 15px auto 20px;
+        width: 90%;
+        flex-direction: row;
+    }
+    
+    .admin-text {
+        margin-left: 15px;
+    }
+    
+    .admin-text h2 {
+        font-size: 22px;
+    }
+    
+    .admin-text p {
+        font-size: 14px;
+    }
+    
+    .dashboard {
+        width: 90%;
+    }
+    
+    .notifications-section {
+        width: 100%;
+    }
+    
+    .notification-card {
+        width: 90%;
+        margin: 0 auto 15px;
+    }
+    
+    .notification-header {
+        padding: 10px;
+    }
+    
+    .dropdown-btn.icon-only {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    
+    /* Amélioration du dropdown sur mobile */
+    .dropdown-content {
+        left: 0;
+        right: auto;
+        background-color: white;
+        min-width: 200px;
+        z-index: 1000;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        border: 1px solid #e0e0e0;
+    }
+    
+    .dropdown-content a {
+        padding: 12px 15px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 0 8px;
+        margin-top: 70px;
+    }
+    
+    .admin-header {
+        margin-top: 5px;
+    }
+    
+    .dropdown-btn.icon-only {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+        min-width: 45px; /* Evite le redimensionnement sur petits écrans */
+    }
+    
+    .admin-welcome {
+        padding: 12px 10px;
+        margin: 10px auto;
+        width: 95%;
+        display: flex;
+        align-items: center;
+    }
+    
+    .admin-text {
+        margin-left: 10px;
+    }
+    
+    .admin-text h2 {
+        font-size: 20px;
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+    
+    .admin-text p {
+        font-size: 12px;
+        margin: 0;
+    }
+    
+    /* Menu déroulant qui apparaît sous l'icône (comme dans l'image) */
+    .dropdown-content {
+        position: absolute;
+        width: 180px;
+        top: 100%;
+        left: -15px;
+        right: auto;
+        transform: none;
+        border: none;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 1001;
+        border-radius: 0 8px 8px 8px;
+        background-color: var(--kaki-color);
+        display: none;
+    }
+    
+    /* Animation et affichage du menu quand il est visible */
+    .dropdown-content.visible {
+        display: block !important;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(5px);
+    }
+    
+    /* Triangle indicateur au-dessus du menu */
+    .dropdown-content::before {
+        display: block;
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 30px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid var(--kaki-color);
+    }
+    
+    /* Style des liens dans le menu */
+    .dropdown-content a {
+        padding: 12px 15px;
+        font-size: 14px;
+        border-left: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+    
+    .dropdown-content a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-left-color: transparent;
+        color: white;
+    }
+    
+    .dropdown-content a i {
+        margin-right: 10px;
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+        color: white;
+    }
+    
+    .dropdown-content a:last-child {
+        border-bottom: none;
+    }
+    
+    /* Styles pour les notifications en mobile */
+    .notification-header h3 {
+        font-size: 16px;
+    }
+    
+    .notification-card p {
+        font-size: 14px;
+        padding: 12px;
+    }
+    
+    .btn-view-demande {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+}
+
+/* Support spécifique pour les appareils tactiles */
+@media (hover: none) {
+    .dropdown-btn.icon-only {
+        cursor: pointer;
+    }
+    
+    .dropdown-btn.icon-only:focus ~ .dropdown-content,
+    .dropdown-btn.icon-only:active ~ .dropdown-content {
+        display: block;
+    }
+    
+    /* Ajouter un attribut tabindex="0" sur l'élément .dropdown-btn.icon-only dans le HTML
+       pour qu'il puisse recevoir le focus */
+}
+
+/* Ajouter cette règle pour que le sous-menu reste visible quand on passe au-dessus */
+.dropdown-content:hover {
+    display: block;
+}

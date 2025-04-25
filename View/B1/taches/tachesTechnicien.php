@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tâches à réaliser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/projet/ProjetAlbatrosB1/css/styles.css">
+    <link rel="stylesheet" href="/projet/ProjetAlbatrosB1/css/styleB1.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styleB1.css">
+</head>
+<body>
+    <div class="tasks-page-container">
+        <h1 class="title">Tâches à réaliser</h1>
+        
+        <div class="tasks-grid">
+            <?php if (!empty($tasks)): ?>
+                <?php foreach ($tasks as $task): ?>
+                    <div class="task-card">
+                        <h3 class="task-title"><?= htmlspecialchars($task['sujet_tache']) ?></h3>
+                        
+                        <div class="task-details">
+                            <p class="task-date">Date de création : <?= htmlspecialchars($task['date_creation_tache']) ?></p>
+                            <p class="task-description">Description : <?= htmlspecialchars($task['description_tache'] ?: 'Aucune description') ?></p>
+                            
+                            <?php
+                            // Définir une classe CSS en fonction du nom du statut
+                            $statutClass = '';
+                            if (isset($task['nom_statut'])) {
+                                switch (strtolower($task['nom_statut'])) {
+                                    case 'nouvelle':
+                                        $statutClass = 'statut-nouvelle';
+                                        break;
+                                    case 'planifiée':
+                                        $statutClass = 'statut-planifiee';
+                                        break;
+                                    case 'demande de prix':
+                                        $statutClass = 'statut-demande-prix';
+                                        break;
+                                    case 'en commande':
+                                        $statutClass = 'statut-en-commande'; 
+                                        break;
+                                    case 'terminée':
+                                        $statutClass = 'statut-terminee';
+                                        break;
+                                    case 'annulée':
+                                        $statutClass = 'statut-annulee';
+                                        break;
+                                    default:
+                                        $statutClass = 'statut-default';
+                                        break;
+                                }
+                            }
+                            ?>
+                            <p class="task-status"><strong>Statut :</strong> <span class="statut-label <?= $statutClass ?>"><?= htmlspecialchars($task['nom_statut']) ?></span></p>
+                            </div>
+                        
+                        <div class="task-actions">
+                            <form action="index.php?action=editTask&id_tache=<?= htmlspecialchars($task['id_tache']) ?>" method="POST">
+                                <input type="hidden" name="id_tache" value="<?= htmlspecialchars($task['id_tache']) ?>">
+                                <button type="submit" class="modifier-btn">Ajouter informations</button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="no-tasks-message">Vous n'avez pas de tâches en cours.</p>
+            <?php endif; ?>
+        </div>
+        
+        <div class="return-container">
+            <a href="index.php" class="btn-return">Retour</a>
+        </div>
+    </div>
+</body>
+</html>

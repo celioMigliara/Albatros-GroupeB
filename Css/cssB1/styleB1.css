@@ -1,0 +1,1372 @@
+/* Titre des filtres */
+.filtre-container h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #f9bb30;
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: "Caveat Brush", cursive;
+  font-size: 20px;
+  font-weight: bold;
+  color: #f9bb30;
+  text-align: center;
+  margin: 0; /* Supprime les marges externes */
+  padding: 0; /* Supprime les paddings internes */
+  margin-bottom: 15px; /* Ajoute un espacement contrôlé sous le titre */
+}
+
+/* Labels des champs */
+.filtre-container label {
+  font-size: inherit; /* Hérite de la taille de police définie dans body */
+  font-weight: bold;
+  color: inherit; /* Hérite de la couleur définie dans body */
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Champs de saisie */
+.filtre-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+/* Champs de saisie */
+.filtre-container input[type="text"],
+.filtre-container input[type="date"],
+.filtre-container select {
+  width: calc(
+    100% - 20px
+  ); /* Réduit la largeur pour éviter qu'ils mordent sur la bordure */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+}
+
+/* Boutons */
+.filtre-container button,
+.filtre-container input[type="reset"] {
+  background-color: #f9bb30;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: "Caveat Brush", cursive;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.filtre-container button:hover,
+.filtre-container input[type="reset"]:hover {
+  background-color: #e0a828;
+}
+
+/* Espacement entre les champs */
+.filtre-container .form-group {
+  margin-bottom: 15px;
+}
+
+/* Icône ou texte dans les champs */
+.filtre-container input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Alignement des boutons */
+.filtre-container .button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Positionne le formulaire de filtres à droite et agrandit sa largeur */
+.filtre-form {
+  position: relative; /* Permet un positionnement fluide */
+  width: 100%; /* Prend toute la largeur disponible */
+  max-width: 25rem; /* Limite la largeur maximale */
+  background-color: #fff;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Style des labels */
+.filtre-form label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Style des champs de saisie et des listes déroulantes */
+.filtre-form input[type="text"],
+.filtre-form input[type="date"],
+.filtre-form select {
+  font-size: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+}
+
+/* Style des boutons */
+.filtre-form button,
+.filtre-form input[type="reset"] {
+  background-color: #f9bb30;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.filtre-form button:hover,
+.filtre-form input[type="reset"]:hover {
+  background-color: #e0a828;
+}
+
+.filtre-container,
+.filtre-container * {
+  font-family: inherit; /* Hérite de la police définie dans body */
+  font-size: inherit; /* Hérite de la taille de police définie dans body */
+  color: inherit; /* Hérite de la couleur définie dans body */
+}
+
+/* Titre principal */
+h1.title {
+  font-size: 2.5rem; /* Taille relative à la racine */
+  text-align: center;
+  color: #f9bb30;
+  margin-bottom: 1rem;
+}
+
+/* Conteneur principal pour les demandes et les filtres */
+.main-container {
+  display: flex;
+  justify-content: center; /* Centre horizontalement les enfants */
+  align-items: flex-start;
+  gap: 1rem; /* Ajuste l'espace entre les deux conteneurs */
+  margin: 1rem auto;
+  max-width: 1200px; /* Largeur maximale du conteneur pour éviter trop d'écart */
+}
+
+/* Conteneur des demandes */
+.demandes-container {
+  flex: 2; /* Prend plus d'espace que les filtres */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Réduit l'espacement entre les cartes */
+  margin-top: 0; /* Supprime la marge supérieure */
+  align-items: flex-start;
+}
+
+/* Formulaire de filtres */
+.filtre-form {
+  flex: 1; /* Prend moins d'espace que les demandes */
+  position: sticky; /* Reste visible lors du défilement */
+  top: 1rem; /* Distance par rapport au haut de la page */
+  max-width: 22rem; /* Limite la largeur des filtres */
+  margin-left: 0; /* Supprime toute marge gauche */
+  background-color: #fff;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* Carte individuelle */
+.demande-card {
+  background-color: #f9f9f9;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  font-family: "Montserrat Alternates", sans-serif;
+  width: 90%; /* Utilise un pourcentage pour s'adapter au conteneur */
+  max-width: 50rem; /* Limite la largeur maximale */
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  margin-left: 2rem;
+}
+
+.demande-card p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* En-tête de la carte */
+.demande-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.demande-title {
+  font-size: 1.25rem; /* Taille relative */
+  font-weight: bold;
+  color: #333;
+}
+
+.demande-number {
+  font-size: 1rem; /* Taille relative */
+  color: #666;
+}
+
+/* Corps de la carte */
+.demande-body p {
+  margin: 0.25rem 0;
+  font-size: 1rem; /* Taille relative */
+  color: #555;
+}
+
+.statut-label {
+  font-weight: bold;
+  color: #fff; /* Couleur par défaut du texte */
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  display: inline-block; /* Assure un bon rendu pour les badges */
+  text-align: center;
+}
+
+/* Boutons d'action */
+.demande-actions {
+  margin-top: 0.5rem;
+  text-align: right;
+}
+
+.action-button {
+  background-color: #f9bb30;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+  background-color: #e0a828;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.pagination-link {
+  padding: 0.5rem 1rem;
+  background-color: #f9bb30;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-link:hover {
+  background-color: #e0a828;
+}
+
+.pagination-link.active {
+  background-color: #e0a828;
+  pointer-events: none; /* Désactive le clic sur la page active */
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Boutons Appliquer et Effacer */
+.filtre-container .button-group button,
+.filtre-container .button-group .btn-reset {
+  background-color: #f9bb30; /* Couleur de fond */
+  color: #fff; /* Couleur du texte */
+  border: none; /* Pas de bordure */
+  border-radius: 10px; /* Coins arrondis */
+  padding: 10px 20px; /* Espacement interne */
+  font-size: 14px; /* Taille de la police */
+  cursor: pointer; /* Curseur en forme de main */
+  font-family: "Caveat Brush", cursive; /* Police */
+  width: 100%; /* Largeur du bouton */
+  text-align: center; /* Centrer le texte */
+  margin-top: 10px; /* Espacement au-dessus */
+}
+
+/* Effet au survol */
+.filtre-container .button-group button:hover,
+.filtre-container .button-group .btn-reset:hover {
+  background-color: #e0a828; /* Couleur de fond au survol */
+}
+
+/* Organisation en grille */
+.form-grid {
+  display: grid;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 5%;
+}
+
+/* Organisation des lignes */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Champs sur toute la largeur */
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+/* Bouton centré */
+.btn-small {
+  background-color: #28a745;
+  color: white;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+  width: auto;
+}
+
+.btn-small:hover {
+  background-color: #218838;
+}
+
+.btn-modif {
+  background-color: #218838;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+}
+.btn-modif:hover {
+  background-color: #218838;
+}
+
+.btn-return {
+  background-color: red;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+}
+.btn-return:hover {
+  background-color: red;
+}
+
+/* Responsive pour les écrans de tablettes (768px et moins) */
+@media (max-width: 768px) {
+  .filtre-form {
+    width: 90%; /* Réduit la largeur pour s'adapter à l'écran */
+    margin: 0 auto; /* Centre le formulaire */
+  }
+
+  .demandes-container {
+    margin-left: 0;
+    align-items: center;
+  }
+
+  .demande-card {
+    width: 100%; /* Les cartes prennent toute la largeur */
+  }
+
+  .pagination {
+    flex-wrap: wrap; /* Permet de passer les boutons sur plusieurs lignes si nécessaire */
+    gap: 0.25rem;
+  }
+
+  .pagination-link {
+    padding: 0.5rem;
+    font-size: 0.875rem; /* Réduit la taille de la police */
+  }
+
+  .main-container {
+    flex-direction: column; /* Les filtres passent en dessous des demandes */
+    gap: 1rem;
+  }
+
+  .filtre-form {
+    position: static; /* Supprime le positionnement sticky */
+    width: 100%; /* Prend toute la largeur */
+    max-width: none; /* Supprime la limite de largeur */
+  }
+}
+
+/* Responsive pour les écrans de smartphones (480px et moins) */
+@media (max-width: 480px) {
+  .filtre-form {
+    padding: 0.5rem;
+    font-size: 0.875rem; /* Réduit la taille de la police */
+  }
+
+  .demande-card {
+    padding: 1rem;
+  }
+
+  .demande-title {
+    font-size: 1rem;
+  }
+
+  .demande-number {
+    font-size: 0.875rem;
+  }
+
+  .pagination-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem; /* Réduit encore la taille de la police */
+  }
+}
+
+/* Conteneur principal */
+.gestion-demande {
+  max-width: 900px;
+  margin-top: 2rem;
+  margin: auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Titre principal */
+.gestion-demande h1 {
+  font-size: 2rem;
+  color: #f9bb30;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Boutons d'action */
+.buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.buttons .btn {
+  padding-block: 10px;
+  padding-inline: 42px;
+  border: none;
+  border-radius: 50px;
+  background: #f9bb30;
+  font-size: 24px;
+  font-family: "Caveat Brush";
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 20px;
+  width: 250px;
+  height: 50px;
+}
+
+.buttons .btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.buttons .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.buttons .btn-success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.buttons .btn-success:hover {
+  background-color: #218838;
+}
+
+.buttons .btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.buttons .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Tâches associées */
+.taches-associees {
+  margin-top: 2rem;
+}
+
+.taches-associees h1 {
+  font-size: 1.5rem;
+  color: #f9bb30;
+  margin-bottom: 1rem;
+}
+
+.taches-associees table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.taches-associees table th,
+.taches-associees table td {
+  border: 0.1rem solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.taches-associees table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.taches-associees table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.titleB1 {
+  font-family: "Caveat Brush", cursive;
+  font-size: 60px;
+  font-weight: 400;
+  color: #f9bb30;
+  text-align: center;
+  margin-top: 90px;
+  margin-bottom: 10px;
+}
+
+.titleB1::after {
+  content: "";
+  width: 62%;
+  margin: 1rem 1 2rem 0;
+  display: block;
+  opacity: 1;
+  background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%),
+    radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+  background-size: 15px 15px !important;
+  height: 25px;
+  position: relative;
+  margin-left: 19%;
+  margin-right: 5%;
+}
+
+.statut-container {
+  position: absolute; /* Permet de positionner le statut par rapport au parent */
+  top: 1rem; /* Distance par rapport au haut du cadre */
+  right: 1rem; /* Distance par rapport au bord droit du cadre */
+}
+
+/* Statut : Nouvelle */
+.demande-card .statut-nouvelle {
+  background-color: #f9bb30; /* Bleu */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Statut : Planifiée */
+.demande-card .statut-planifiee {
+  background-color: #007bff; /* Jaune */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Statut : Demande de prix */
+.demande-card .statut-demande-prix {
+  background-color: #17a2b8; /* Cyan */
+  color: #fff;
+}
+
+/* Statut : En commande */
+.demande-card .statut-en-commande {
+  background-color: #6f42c1; /* Violet */
+  color: #fff;
+}
+
+/* Statut : Terminée */
+.demande-card .statut-terminee {
+  background-color: #28a745; /* Vert */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Statut : Annulée */
+.demande-card .statut-annulee {
+  background-color: #dc3545; /* Rouge */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Statut par défaut */
+.demande-card .statut-default {
+  background-color: #6c757d; /* Gris */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/*Images de la demande*/
+.images-container {
+  margin-top: 20px;
+}
+
+.images-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.images-gallery a {
+  display: inline-block;
+  text-decoration: none;
+  border: none;
+}
+
+.demande-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: transform 0.2s ease; /* Animation au survol */
+}
+
+.demande-image:hover {
+  transform: scale(1.1); /* Agrandit légèrement l'image au survol */
+  cursor: pointer;
+}
+
+/* Conteneur principal des tâches */
+.taches-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Carte individuelle pour une tâche */
+.tache-card {
+  background-color: #f9f9f9;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* En-tête de la carte */
+.tache-header {
+  margin-bottom: 1rem;
+}
+
+.tache-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.tache-number {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Corps de la carte */
+.tache-body p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Actions de la carte */
+.tache-actions {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.tache-actions .btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.tache-actions .btn:hover {
+  background-color: #0056b3;
+}
+
+/* Styles pour les statuts des tâches */
+.statut-label {
+  font-weight: bold;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.statut-nouvelle {
+  background-color: #f9bb30; /* Jaune */
+  color: #fff;
+}
+
+.statut-planifiee {
+  background-color: #007bff; /* Bleu */
+  color: #fff;
+}
+
+.statut-demande-prix {
+  background-color: #17a2b8; /* Bleu clair */
+  color: #fff;
+}
+
+.statut-en-commande {
+  background-color: #6f42c1; /* Violet */
+  color: #fff;
+}
+
+.statut-terminee {
+  background-color: #28a745; /* Vert */
+  color: #fff;
+}
+
+.statut-annulee {
+  background-color: #dc3545; /* Rouge */
+  color: #fff;
+}
+
+.statut-default {
+  background-color: #6c757d; /* Gris */
+  color: #fff;
+}
+
+/* Conteneur pour le bouton "Voir mes tâches" */
+.technicien-button-container {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin: 20px auto;
+  clear: both;
+}
+
+/* Bouton vert pour les techniciens */
+.btn-green {
+  display: inline-block;
+  background-color: #28a745; /* Vert */
+  color: #fff;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-green:hover {
+  background-color: #218838; /* Vert plus foncé au survol */
+}
+
+/* Styles pour la page des tâches du technicien */
+.tasks-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tasks-title {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #f0ad4e;
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.task-card {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.task-details {
+  flex-grow: 1;
+}
+
+.task-date {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.task-description {
+  margin: 10px 0;
+}
+
+.task-status {
+  margin: 10px 0;
+}
+
+.task-actions {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.modifier-btn {
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.modifier-btn:hover {
+  background-color: #ec971f;
+}
+
+.no-tasks-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.return-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.btn-return {
+  display: inline-block;
+  padding: 8px 18px;
+  background-color: red;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.btn-return:hover {
+  background-color: red;
+}
+
+.info-message {
+  background-color: #e9ecef;
+  border-left: 5px solid #6c757d;
+  padding: 10px 15px;
+  margin: 15px 0;
+  font-style: italic;
+  color: #495057;
+}
+
+/* Styles pour la section réservée aux techniciens */
+.task-info-readonly {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-left: 5px solid #6c757d;
+}
+
+.tech-label {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.tech-textarea {
+  border: 2px solid #28a745;
+  min-height: 100px;
+}
+
+.media-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.media-item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.media-preview {
+  padding: 10px;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.media-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.media-name {
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive pour les écrans de tablettes (768px et moins) */
+@media (max-width: 768px) {
+  .filtre-form {
+    width: 90%; /* Réduit la largeur pour s'adapter à l'écran */
+    margin: 0 auto; /* Centre le formulaire */
+  }
+
+  .demandes-container {
+    margin-left: 0;
+    align-items: center;
+  }
+
+  .demande-card {
+    width: 100%; /* Les cartes prennent toute la largeur */
+  }
+
+  .pagination {
+    flex-wrap: wrap; /* Permet de passer les boutons sur plusieurs lignes si nécessaire */
+    gap: 0.25rem;
+  }
+
+  .pagination-link {
+    padding: 0.5rem;
+    font-size: 0.875rem; /* Réduit la taille de la police */
+  }
+
+  .main-container {
+    flex-direction: column; /* Les filtres passent en dessous des demandes */
+    gap: 1rem;
+  }
+
+  .filtre-form {
+    position: static; /* Supprime le positionnement sticky */
+    width: 100%; /* Prend toute la largeur */
+    max-width: none; /* Supprime la limite de largeur */
+  }
+
+  /* Augmente la taille des titres */
+  .gestion-demande h1 {
+    font-size: 2.5rem; /* Augmente légèrement la taille du titre */
+  }
+
+  /* Augmente la taille des textes dans les cartes */
+  .demande-card p,
+  .demande-title,
+  .demande-number {
+    font-size: 1.2rem; /* Augmente la taille des textes */
+  }
+
+  /* Augmente la taille des boutons */
+  .buttons .btn {
+    font-size: 18px; /* Augmente la taille de la police des boutons */
+    padding: 12px; /* Ajoute un padding confortable */
+  }
+
+  /* Augmente la taille des labels et des champs */
+  .filtre-form label,
+  .filtre-form input[type="text"],
+  .filtre-form input[type="date"],
+  .filtre-form select {
+    font-size: 1.1rem; /* Augmente la taille des champs et des labels */
+  }
+
+  /* Augmente la taille des badges de statut */
+  .statut-label {
+    font-size: 1.1rem; /* Augmente la taille des badges */
+  }
+
+  /* Augmente la taille des images */
+  .demande-image {
+    width: 120px; /* Augmente la largeur des images */
+    height: 120px; /* Augmente la hauteur des images */
+  }
+
+  .filtre-container {
+    order: -1; /* Place les filtres en haut */
+    margin-bottom: 1rem; /* Ajoute un espacement sous les filtres */
+  }
+}
+
+/* Responsive pour les écrans de smartphones (480px et moins) */
+@media (max-width: 480px) {
+  .filtre-form {
+    padding: 0.5rem;
+    font-size: 0.875rem; /* Réduit la taille de la police */
+  }
+
+  .demande-card {
+    padding: 1rem;
+  }
+
+  .demande-title {
+    font-size: 1rem;
+  }
+
+  .demande-number {
+    font-size: 0.875rem;
+  }
+
+  .pagination-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem; /* Réduit encore la taille de la police */
+  }
+
+  /* Augmente la taille des titres */
+  .gestion-demande h1 {
+    font-size: 2rem; /* Augmente légèrement la taille du titre */
+  }
+
+  /* Augmente la taille des textes dans les cartes */
+  .demande-card p,
+  .demande-title,
+  .demande-number {
+    font-size: 1.1rem; /* Augmente la taille des textes */
+  }
+
+  /* Augmente la taille des boutons */
+  .buttons .btn {
+    font-size: 16px; /* Augmente la taille de la police des boutons */
+    padding: 10px; /* Ajoute un padding confortable */
+  }
+
+  /* Augmente la taille des labels et des champs */
+  .filtre-form label,
+  .filtre-form input[type="text"],
+  .filtre-form input[type="date"],
+  .filtre-form select {
+    font-size: 1rem; /* Augmente la taille des champs et des labels */
+  }
+
+  /* Augmente la taille des badges de statut */
+  .statut-label {
+    font-size: 1rem; /* Augmente la taille des badges */
+  }
+
+  /* Augmente la taille des images */
+  .demande-image {
+    width: 100px; /* Augmente la largeur des images */
+    height: 100px; /* Augmente la hauteur des images */
+  }
+
+  /* Conteneur principal */
+  .gestion-demande {
+    padding: 1rem;
+    font-size: 1rem; /* Augmente légèrement la taille du texte */
+  }
+
+  /* Titre principal */
+  .gestion-demande h1 {
+    font-size: 1.5rem; /* Réduit légèrement la taille du titre */
+    text-align: center;
+  }
+
+  /* Carte de la demande */
+  .demande-card {
+    /*centrage de la carte*/
+    margin: 0 auto; /* Centre la carte */
+    width: 90%; /* Prend 90% de la largeur de l'écran */
+    padding: 1rem;
+    box-shadow: none; /* Supprime les ombres pour un design plus simple */
+    border: 1px solid #ddd; /* Ajoute une bordure légère */
+    border-radius: 5px;
+  }
+
+  .demande-header p {
+    font-size: 1rem; /* Augmente la taille des textes */
+    margin-bottom: 0.5rem;
+  }
+
+  /* Images associées */
+  .images-gallery {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(100px, 1fr)
+    ); /* Grille flexible */
+    gap: 10px; /* Espacement entre les images */
+  }
+
+  .demande-image {
+    width: 100%; /* Les images prennent toute la largeur de leur conteneur */
+    height: auto; /* Conserve les proportions */
+    border-radius: 5px; /* Ajoute des coins arrondis */
+  }
+
+  /* Formulaire de commentaire admin */
+  .admin-comment textarea {
+    width: 100%; /* Prend toute la largeur disponible */
+    font-size: 1rem; /* Taille de texte adaptée */
+  }
+
+  .admin-comment button {
+    width: 100%; /* Bouton large pour mobile */
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  /* Liste des tâches */
+  .taches-container {
+    display: flex;
+    flex-direction: column; /* Les tâches s'empilent verticalement */
+    gap: 1rem; /* Espacement entre les tâches */
+  }
+
+  .tache-card {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: none;
+  }
+
+  .tache-header h3 {
+    font-size: 1.2rem; /* Taille du titre de la tâche */
+  }
+
+  .tache-body p {
+    font-size: 1rem; /* Taille des textes dans les tâches */
+  }
+
+  .tache-actions button {
+    width: 100%; /* Bouton large pour mobile */
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .filtre-container {
+    order: -1; /* Place les filtres en haut */
+    margin-bottom: 1rem; /* Ajoute un espacement sous les filtres */
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .media-preview {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease;
+  }
+
+  .media-preview:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+
+  .media-icon {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .media-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .media-name {
+    font-size: 0.8rem;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 90%;
+    padding: 0 5px;
+  }
+
+  .btn-return {
+    width: auto; /* or a percentage that works better in mobile */
+    min-width: 60px; /* Ensures minimum clickable area */
+    margin: 10px auto;
+    display: block;
+  }
+
+  .media-item {
+    display: inline-block;
+    margin: 5px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mobile-return {
+    width: 70%;
+    font-size: 16px;
+    padding: 12px 20px;
+    margin: 15px auto;
+    text-align: center;
+    border-radius: 50px;
+    display: block;
+    background-color: #dc3545;
+    transition: background-color 0.3s ease;
+  }
+
+  .mobile-return:hover {
+    background-color: #bd2130;
+  }
+
+  /* Styles pour la page de modification de tâche */
+  .form-grid {
+    padding: 10px;
+    margin: 0;
+    width: 95%;
+    max-width: 95%;
+    box-sizing: border-box;
+  }
+
+  /* Réduire légèrement la taille du titre */
+  .titleB1 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .titleB1::after {
+    height: 10px; /* Réduire la hauteur du séparateur */
+  }
+
+  /* Mise en page formulaire : afficher chaque élément en pleine largeur et en dessous */
+  .form-row {
+    display: block; /* Remplacer flex par block pour empiler verticalement */
+    margin-bottom: 15px;
+  }
+
+  /* S'assurer que les groupes de formulaire sont bien contenus */
+  .form-group {
+    padding: 0;
+    margin-bottom: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Ajuster la taille des labels */
+  label {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  /* Assurer que les dates sont correctement formatées */
+  input[type="date"] {
+    min-height: 40px;
+  }
+
+  /* S'assurer que les select n'ont pas de texte qui déborde */
+  select {
+    text-overflow: ellipsis;
+  }
+
+  /* Ajuster la taille et la police des inputs pour éviter débordements */
+  .input,
+  select,
+  textarea,
+  input[type="date"],
+  input[type="text"] {
+    font-size: 0.9rem;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  /* Champ commentaire technicien */
+  .tech-textarea {
+    min-height: 100px;
+    font-size: 1rem;
+  }
+
+  /* Galerie média pour mobile - une colonne uniquement */
+  .media-gallery {
+    grid-template-columns: 1fr; /* Une seule colonne pour éviter les éléments trop petits */
+  }
+
+  .media-item {
+    margin: 10px 0;
+  }
+
+  /* Réduire la taille des boutons tout en gardant une bonne surface tactile */
+  .btn-small,
+  .btn-return,
+  .modifier-btn {
+    width: 90%;
+    margin: 10% 0;
+    padding: 10px;
+    font-size: 1rem;
+  }
+}

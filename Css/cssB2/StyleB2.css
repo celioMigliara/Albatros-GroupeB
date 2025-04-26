@@ -1,0 +1,696 @@
+/* === IMPORT DES POLICES === */
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700&display=swap');
+
+/* === STRUCTURE DE BASE === */
+.page-demande-B2 {
+    color: #333;
+    font-family: 'Caveat Brush', cursive; /* ou une autre police que tu veux */
+    font-size: 16px;
+    margin: 0;
+    padding: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    overflow-x: hidden;
+    cursor: crosshair;
+}
+
+.container-B2 {
+    width: 100%;
+    max-width: 800px;
+    padding: 0 10px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.page-demande-B2 header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-B2{
+    font-family: "Caveat Brush", cursive;
+    font-size: 2.5rem;    
+    font-weight: 400;
+    color: #F9BB30;
+    text-align: center;
+    margin-bottom: 0.2rem;     
+    margin-top: 50px;
+}
+.separateur-double-ligne-B2 {
+    width: 95%;
+    margin: 0 auto;
+    display: block;
+    background: 
+        radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%),
+        radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+    background-size: 15px 15px;
+    background-repeat: repeat;
+    height: 25px;
+    opacity: 1;
+}
+
+
+/* === FORMULAIRE === */
+.obligatoire-B2 {
+    color: red;
+    font-weight: bold;
+}
+
+.formulaire-container-B2 {
+    border: 2px solid #cbcbcb;
+    padding: 25px;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    max-width: 100%;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.page-demande-B2 form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 10px;
+}
+
+.formulaire-champs-B2 {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.label-B2,
+.legend {
+    font-family: 'Caveat Brush';
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    margin-left: 10px;
+    line-height: 1.4;
+}
+
+.input-B2 {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    background-color: #E4E4E4;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+.page-demande-B2 textarea.input-B2 {
+    height: 100px;
+    resize: none;
+    padding-right: 50px;
+    padding-top: 30px;
+}
+
+.page-demande-B2 #sujet {
+    height: 40px;
+    padding: 10px 15px;
+    font-size: 16px;
+    line-height: 1.2;
+    resize: none;
+    overflow-y: hidden; /*Sup vertical bar*/
+}
+.page-demande-B2 ::placeholder {
+    color: #999;
+    font-style: italic;
+    opacity: 1; 
+  }
+.page-demande-B2 small {
+    font-size: 14px;
+    color: #666;
+    margin-left: 6px;
+}
+
+.page-demande-B2 #description {
+    height: 100px;
+    padding: 20px 15px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.input-B2.erreur,
+.champ-invalide {
+    border: 2px solid #C2433F;
+    background-color: #f2ecec;
+}
+
+.nom-fichier-B2 {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 180px;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.required,
+.obligatoire-B2::after {
+    content: "*";
+    color: #C2433F;
+    margin-left: 5px;
+    font-size: 5px;
+}
+
+/* === GRILLE FLUIDE CHAMPS LOCALISATION === */
+.form-row-B2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.form-row-B2 .formulaire-champs-B2 {
+    flex: 1 1 100%;
+    min-width: 0;
+}
+
+/* === BOUTONS === */
+.btnStyle1,
+.btn-Envoyer-B2 {
+    background-color: #F9BB30;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-family: "Caveat Brush";
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.btn-Annuler-B2 {
+    background-color: #f2ecec;
+    color: black;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-family: "Caveat Brush";
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.btn-B2:hover {
+    transform: scale(1.05);
+}
+
+.form-buttons-B2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+}
+
+/* === ERREURS === */
+.erreur-champs-B2,
+.message-erreur {
+    display: none;
+    color: #d32f2f;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    margin-left: 1%;
+    font-weight: 500;
+}
+
+.Taille-dépassée {
+    border: 2px solid red;
+}
+
+/* === POPUP === */
+.popup-overlay-B2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    display: none;
+}
+
+.popup-B2 {
+    position: fixed;
+    top: -300px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 200px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #f0eeee;
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
+    display: none;
+    padding: 20px;
+    text-align: center;
+    z-index: 1000;
+    animation: slideDownPopup 0.5s ease-out forwards;
+}
+.popup-message-erreur {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+@keyframes slideDownPopup {
+    0% {
+        top: -300px;
+        opacity: 0;
+    }
+    100% {
+        top: 100px;
+        opacity: 1;
+    }
+}
+/*Filtre arriere page*/
+.blurred-B2 {
+    filter: blur(4px);
+    transition: filter 0.3s ease;
+    pointer-events: none; /* pour empêcher les clics */
+    user-select: none;
+}
+
+.popup-logo-B2 {
+    width: 55%;
+    height: 60px;
+    object-fit: contain;
+}
+
+.popup-content-B2 {
+    font-size: 18px;
+    color: #333;
+}
+
+.popup-B2 button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #f4a81b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.popup-B2 button:hover {
+    background: #d48e10;
+}
+
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* === FIELDSET === */
+.page-demande-B2 fieldset {
+    border: 2px dashed #f4a81b;
+    border-radius: 15px;
+    padding: 25px 20px 20px;
+    margin: 0 auto 30px auto;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.page-demande-B2 legend {
+    font-family: "Caveat Brush", cursive;
+    color: #020202;
+    background-color: #ffffff;
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    line-height: 1;
+    font-size: 25px;
+}
+
+/* === FIELDSET COMPACT === */
+.fieldset-petite-section-B2 {
+    padding: 15px 20px 10px;
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+    border: 2px dashed #f4a81b;
+    border-radius: 15px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.fieldset-petite-section-B2 legend {
+    font-size: 25px;
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    line-height: 1;
+}
+
+.fieldset-petite-section-B2 .btn-upload-B2 {
+    width: 60%;
+    max-width: 240px;
+    font-size: 16px;
+    margin: 10px auto 5px auto;
+    background-color: #F9BB30;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.fieldset-petite-section-B2 .NomFichier-B2 {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.page-demande-B2 #remove-file {
+    background: transparent;
+    border: none;
+    color: #c0392b;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+    padding: 0;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.page-demande-B2 #remove-file:hover {
+    transform: scale(1.2);
+    color: #e74c3c;
+}
+
+.fichier-ligne-B2 {
+    justify-content: space-evenly;
+    padding: 2px 2px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+.btn-remove-B2 {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* === DÉCORATIONS CERCLES === */
+.circle-deco-container-B2,
+.circle-deco-container2-B2 {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.circle-deco-container-B2{
+    top: 65%;
+    right: 3%;
+    z-index: -1;
+}
+
+.circle-deco-container2-B2 {
+    top: 35%;
+    left: -30%;
+    z-index: -1;
+}
+
+.circle-deco-B2 {
+    width: 420%;
+}
+
+.circle-deco2-B2 {
+    width: 340px;
+}
+
+/* === FOCUS === */
+.page-demande-B2 input:focus,
+textarea:focus,
+select:focus {
+    
+    background-color: #fffbe6;
+    transition: border 0.2s ease;
+    outline: none;
+    box-shadow: none;
+}
+/* === MEDIA QUERIES RESPONSIVE === */
+
+/* ≤ 1200px */
+@media screen and (max-width: 1300px) {
+   
+    .circle-deco-container-B2,
+    .circle-deco-container2-B2 {
+     display: none;
+    }
+    
+ 
+   
+    .page-demande-B2 legend {
+        font-size: 25px;
+    }
+    .fieldset-petite-section-B2 .NomFichier-B2 {
+        font-size: 18px;
+    }
+
+    .fieldset-petite-section-B2 legend {
+        font-size: 25.5px;
+       
+    }
+    
+    .nom-fichier-B2 {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;       /* Ne permet PAS le retour à la ligne */
+        max-width: 180px;    
+        font-size: 13px;
+        font-size: 18px;
+    }
+   
+}
+
+
+/* ≤ 600px */
+@media screen and (max-width: 600px) {
+    
+    .page-demande-B2 ::placeholder {
+        color: #999;
+        font-style: italic;
+        opacity: 1; 
+        font-size: 13px;
+      }
+    
+    .circle-deco-B2,.circle-deco2-B2{
+        display: none;
+    }
+    .title {
+        font-size: 40px;
+    }
+
+    .form-row-B2 .formulaire-champs-B2 {
+        flex: 1 1 48%;
+    }
+
+    .fieldset-petite-section-B2 {
+        padding: 10px 15px;
+    }
+
+    .page-demande-B2 legend {
+        font-size: 20px;
+    }
+
+    .fieldset-petite-section-B2 legend {
+        font-size: 18px;
+    }
+
+    .fieldset-petite-section-B2 .btn-upload-B2 {
+        width: 100%;
+        font-size: 13px;
+    }
+    .nom-fichier-B2 {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 45%;
+        word-break: break-word;
+    }
+    .label-B2, .legend{
+        font-size: 16px;
+    }
+    .fieldset-petite-section-B2 .btn-upload-B2{
+        padding: 5px 10px;
+    }
+
+    .page-demande-B2 #sujet{
+        height:50px;
+    }
+
+    .input-B2 {
+        font-size: 12px;
+        font-weight: bold;
+      
+    }
+
+    .fieldset-petite-section-B2 .NomFichier-B2 {
+        font-size: 14px
+    }
+    .erreur-champs-B2,
+     .message-erreur {
+ 
+    font-size: 11px;
+    margin-top: 6px;
+    margin-left: 1%;
+  
+}
+}
+
+/* 900px */
+@media screen and (max-width: 900px)
+ {
+    .title-B2{
+        font-family: "Caveat Brush", cursive;
+        font-size: 1.8rem;    
+        font-weight: 400;
+        color: #F9BB30;
+        text-align: center;
+        margin-bottom: 0.2rem;     
+        margin-top: 100px;
+    }
+
+    .nom-fichier-B2 {
+    
+        font-size: 20px;
+    }
+  
+   
+    .fichier-ligne-B2 {
+        justify-content: center;
+        flex-wrap: nowrap;
+        font-size: 9px;
+        max-width: 130%;
+    }
+
+    .nom-fichier-B2 {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;       /* Ne permet PAS le retour à la ligne */
+        max-width: 120px;    
+        font-size: 13px;
+    }
+  
+    .popup-B2 {
+    
+        width: 270px;
+      
+    }
+
+    #sujet.input-B2,
+#description.input-B2 {
+    font-size: 14px;        /* plus petit */
+    font-weight: 400;       /* normal */
+    line-height: 1.4;       /* un peu plus d'espace entre les lignes */
+}
+}
+
+/* ≤ 400px */
+@media screen and (max-width: 400px) {
+    .circle-deco-B2,.circle-deco2-B2{
+        display: none;
+    }
+    .title-B2 {
+        font-size: 32px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .container-B2 {
+      max-width: 850px;
+    }
+
+    .circle-deco-container-B2,
+.circle-deco-container2-B2 {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.circle-deco-container-B2{
+    top: 65%;
+    right: 5%;
+    z-index: -1;
+}
+
+.circle-deco-container2-B2 {
+    top: 29%;
+    left: -30%;
+    z-index: -1;
+}
+
+.circle-deco-B2 {
+    width: 550%;
+}
+
+.circle-deco2-B2 {
+    width: 450px;
+}
+
+  }
+.noscript-message-B2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffdddd;
+    color: #a10000;
+    text-align: center;
+    padding: 1em;
+    font-weight: bold;
+    font-family: sans-serif;
+    z-index: 9999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+/* === STYLE SPÉCIFIQUE POUR LES <select> === */
+select.input-B2 {
+    appearance: none; /* Supprime le style natif */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #E4E4E4;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    box-sizing: border-box;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%3E%3Cpolygon%20points='0,0%2020,0%2010,10'%20fill='%23666'%3E%3C/polygon%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+/* Pour éviter que le texte passe sous la flèche */
+select.input-B2:focus {
+    background-color: #fffbe6;
+    outline: none;
+}

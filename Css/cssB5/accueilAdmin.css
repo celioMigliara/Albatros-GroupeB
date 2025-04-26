@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700&display=swap');
 :root {
     --primary-color: #FFC107;
     --primary-hover: #FFB300;
@@ -25,7 +27,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 0 15px;
 }
@@ -37,23 +39,24 @@ body {
 
 /* Section bienvenue admin */
 .admin-header {
-    margin-top: 0;
+    margin-top: 15%;
 }
 
 .admin-welcome {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 100%;
-    margin: 20px auto 30px;
+    width: 70%;
+    margin: auto;
     padding: 20px;
     background-color: var(--kaki-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
+    margin-top: -10%;
 }
 
 .admin-text {
-    margin-left: 20px;
+    margin: auto;
 }
 
 .admin-text h2 {
@@ -90,6 +93,7 @@ body {
 /* Menu déroulant */
 .dropdown.user-dropdown {
     position: relative;
+    margin-right:-10%;
 }
 
 .dropdown-content {
@@ -159,7 +163,7 @@ body {
 
 /* Notifications */
 .dashboard {
-    width: 80%;
+    width: 100%;
     margin: var(--spacing) auto;
     padding: 0;
 }

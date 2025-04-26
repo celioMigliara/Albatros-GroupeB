@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700&display=swap');
 /* Logo dans le coin supérieur gauche */
 .logo-container {
     position: fixed;
@@ -25,14 +28,14 @@
 }
 
 .yellow-circle {
-    width: 500px;
+    width: 400px;
     height: auto;
     bottom: -150px;
-    left: -150px;
+    left: -100px;
 }
 
 .green-circle {
-    width: 500px;
+    width: 400px;
     height: auto;
     top: 25%;
     right: -150px;
@@ -46,7 +49,7 @@
     right: 0;
     z-index: 300;
     padding: 0;
-    margin: 0;
+ 
     display: flex;
     background-color: transparent;
 }
@@ -54,17 +57,15 @@
 /* Navbar styles */
 nav {
     display: flex;
-    background-color: #FFCC4D;
+    background-color: #f9bb30;
     padding: 10px 20px;
     align-items: center;
-    border-radius: 0 0 20px 20px;
+    border-radius: 0 0 50px 50px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-
-    /* Réserve 200px à gauche et centre ensuite */
-    margin-left: 300px; /* Laisse 200px à gauche pour le logo */
-    width: calc(100% - 200px); /* Ajuste la largeur */
-    max-width: 900px; /* Limite la largeur de la navbar */
-    justify-content: center; /* Centre la navbar horizontalement */
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto; /* Centre proprement */
+    justify-content: center;
 }
 
 
@@ -89,9 +90,11 @@ nav ul li {
 }
 
 nav ul li a {
+    font-family: 'Caveat Brush', cursive; 
+    font-weight: bold;
+    font-size: 20px;
     color: white;
     text-decoration: none;
-    font-weight: bold;
     padding: 8px 16px;
     display: block;
 }

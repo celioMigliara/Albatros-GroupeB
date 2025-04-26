@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../Model/B5/User.php';
+require_once __DIR__ . '/../Model/B5/User.php';
 
 class FicheUtilisateurController
 {

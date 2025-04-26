@@ -4,7 +4,8 @@
 //Http ou Https, permet de gérer le cas où l'application est sur un serveur local ou en ligne
 //scriptPath recup le chemin jusqu'a la racine du projet
 //  coupe tout après "/Controller" ou "/View" pour revenir à la racine du projet, ça dépend du final voulu.
-function getBaseUrl() {
+function getBaseUrl()
+{
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'];
     $scriptPath = explode('/Controller', $_SERVER['SCRIPT_NAME'])[0];

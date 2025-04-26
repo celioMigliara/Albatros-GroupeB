@@ -1,12 +1,8 @@
 <?php
-
 $pageActuelle = isset($pageActuelle) ? (int)$pageActuelle : 1;
 $totalPages = isset($totalPages) ? (int)$totalPages : 1;
 $demandes = $demandes ?? [];
 $filters = $filters ?? [];
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -17,13 +13,20 @@ $filters = $filters ?? [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
+    <?php if ($_SESSION['user_role'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-   
+<?php else: ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+<?php endif; ?>
 </head>
 
 <body>
     <header>
+    <?php if ($_SESSION['user_role'] == 1): ?>
     <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
+    <?php else: ?>
+        <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
+        <?php endif; ?>
     </header>
     
     
@@ -115,7 +118,7 @@ $filters = $filters ?? [];
     <!-- Pagination -->
     <div class="pagination">
         <?php if ($pageActuelle > 1): ?>
-            <form method="POST" action="index.php">
+            <form method="POST" action="<?= BASE_URL ?>/ListeDemandes">
                 <input type="hidden" name="page" value="<?= $pageActuelle - 1 ?>">
                 <?php foreach ($_GET as $key => $value): ?>
                     <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">
@@ -125,7 +128,7 @@ $filters = $filters ?? [];
         <?php endif; ?>
 
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-            <form method="POST" action="index.php">
+            <form method="POST" action="<?= BASE_URL ?>/ListeDemandes">
                 <input type="hidden" name="page" value="<?= $i ?>">
                 <?php foreach ($_GET as $key => $value): ?>
                     <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">
@@ -137,7 +140,7 @@ $filters = $filters ?? [];
         <?php endfor; ?>
 
         <?php if ($pageActuelle < $totalPages): ?>
-            <form method="POST" action="index.php">
+            <form method="POST" action="<?= BASE_URL ?>/ListeDemandes">
                 <input type="hidden" name="page" value="<?= $pageActuelle + 1 ?>">
                 <?php foreach ($_GET as $key => $value): ?>
                     <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">

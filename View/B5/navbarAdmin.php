@@ -14,10 +14,12 @@ if (!isset($nbComptesEnAttente)) {
 <!-- Checkbox pour contrôler l'affichage du menu -->
 <input type="checkbox" id="menu-toggle-checkbox" class="menu-toggle-checkbox">
 
+
 <!-- Logo dans le coin supérieur gauche -->
 <div class="logo-container">
-    <a href="<?= BASE_URL ?>/AccueilAdmin.php">
+    <a href="<?= BASE_URL ?>/AccueilAdmin">
         <img src="<?= BASE_URL ?>/Assets/B5/logo.png" alt="logo institut albatros" class="site-logo">
+        <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
     </a>
 </div>
 
@@ -42,8 +44,9 @@ if (!isset($nbComptesEnAttente)) {
                 <a href="#" class="dropdown-toggle">Demandes</a>
                 <div class="dropdown-menu demandes-menu">
                 <a href="<?= BASE_URL ?>/ListeDemandes"">Gérer les demandes</a>
-                    <a href="#">Créer une demande d'intervention</a>
-                    <a href="#">Crées une récurrence</a>
+        
+                   <a href="<?= BASE_URL ?>/demande">Nouvelle Demande</a>
+                    <a href="<?= BASE_URL ?>/recurrence">Gérer récurrence</a>
                 </div>
             </li>
             <li class="dropdown">

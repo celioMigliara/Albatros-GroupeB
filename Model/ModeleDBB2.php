@@ -12,16 +12,18 @@ if (!isset($_ENV['DB_ENV'])) {
     }
 }
 
-class Database {
+class Database
+{
     private static ?Database $instance = null;
     private PDO $conn;
 
-    private function __construct() {
+    private function __construct()
+    {
         $env = $_ENV['DB_ENV'] ?? 'PROD';
         $type = strtoupper($_ENV['DB_TYPE'] ?? 'MYSQL');
         $prefix = $env . '_' . $type . '_';
 
-         
+
         $host     = $_ENV[$prefix . "SERVEUR"];
         $port     = $_ENV[$prefix . "PORT"];
         $dbname   = $_ENV[$prefix . "NOMDB"];
@@ -44,19 +46,21 @@ class Database {
         }
     }
 
-    public static function getInstance(): Database {
+    public static function getInstance(): Database
+    {
         if (self::$instance === null) {
             self::$instance = new Database();
         }
         return self::$instance;
     }
 
-    public function getConnection(): PDO {
+    public function getConnection(): PDO
+    {
         return $this->conn;
     }
 
-    public static function resetInstance(): void {
+    public static function resetInstance(): void
+    {
         self::$instance = null;
     }
 }
-

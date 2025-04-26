@@ -9,16 +9,23 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-</head>
-s
-<?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
-
-
-
     <?php if ($_SESSION['user_role'] == 1): ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+<?php else: ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+<?php endif; ?>
+</head>
+
+<header>
+    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
+    <?php else: ?>
+        <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
+        <?php endif; ?>
+    </header>
+
+
+    <?php if ($_SESSION['user_role'] == 2): ?>
         <h1 class="title">Gestion de la demande </h1>
     <?php else: ?>
         <h1 class="title">Gestion de ma demande </h1>
@@ -149,7 +156,7 @@ s
                 <div class="images-gallery">
                     <?php foreach ($images as $image): ?>
                         <a href="<?= BASE_URL ?>/Public/Uploads/<?= htmlspecialchars($image['url_media']) ?>" target="_blank">
-                            <img src="../uploads/<?= htmlspecialchars($image['url_media']) ?>" alt="Image associée" class="demande-image">
+                            <img src="<?= BASE_URL ?>/Public/Uploads/<?= htmlspecialchars($image['url_media']) ?>" alt="Image associée" class="demande-image">
                         </a>
                     <?php endforeach; ?>
                 </div>

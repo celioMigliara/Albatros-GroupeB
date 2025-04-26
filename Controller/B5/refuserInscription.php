@@ -1,12 +1,5 @@
 <?php
 
-//Permet de "calculer" dynamiquement l'URL de base du projet
-//Http ou Https, permet de gérer le cas où l'application est sur un serveur local ou en ligne
-//scriptPath recup le chemin jusqu'a la racine du projet
-
-
-// On coupe tout après "/Controller" ou "/View" pour revenir à la racine du projet
-
 require_once __DIR__ . '/../../BaseUrl/Config.php';
 require_once __DIR__ . '/../../Model/B5/User.php';
 require_once __DIR__ . '/../../Config/B5/mailer.php'; //  Fichier contenant la fonction PHPMailer
@@ -41,6 +34,5 @@ if (!$success) {
 User::supprimerUtilisateur($id);
 
 // 5. Redirige vers la liste avec confirmation visuelle
-header("Location: " . getBaseUrl(). "/inscriptions?status=refus");
+header("Location: " . getBaseUrl() . "/inscriptions?status=refus");
 exit;
-?>

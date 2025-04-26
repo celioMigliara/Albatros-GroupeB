@@ -11,9 +11,11 @@ $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
+    <?php if ($_SESSION['user_role'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+<?php else: ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+<?php endif; ?>
 
 </head>
 <body>

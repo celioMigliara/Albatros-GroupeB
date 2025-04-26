@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <title>Tâches à réaliser</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/projet/ProjetAlbatrosB1/css/styles.css">
-    <link rel="stylesheet" href="/projet/ProjetAlbatrosB1/css/styleB1.css">
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/styleB1.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
+    <?php if ($_SESSION['user_role'] == 1): ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+<?php else: ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+<?php endif; ?>
+
 </head>
 <body>
+<header>
+    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
+    <?php else: ?>
+        <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
+        <?php endif; ?>
+    </header>
     <div class="tasks-page-container">
         <h1 class="title">Tâches à réaliser</h1>
         
@@ -69,7 +80,7 @@
         </div>
         
         <div class="return-container">
-            <a href="index.php" class="btn-return">Retour</a>
+            <a href="<?= BASE_URL ?>/ListeDemandes" class="btn-return">Retour</a>
         </div>
     </div>
 </body>

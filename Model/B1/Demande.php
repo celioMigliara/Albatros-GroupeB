@@ -283,29 +283,32 @@ public static function getByUserAndBuilding($userId, $filters, $offset, $limit) 
 
 public static function getTotalByUserAndBuilding($userId, $filters) {
     $pdo = Database::getInstance()->getConnection(); 
+
     $query = "
         SELECT COUNT(*) AS total
         FROM demande d
         JOIN utilisateur u ON d.id_utilisateur = u.id_utilisateur
         JOIN lieu l ON d.id_lieu = l.id_lieu
         JOIN batiment b ON l.id_batiment = b.id_batiment
+        JOIN est e ON d.id_demande = e.id_demande  -- Joindre la table est pour récupérer id_statut
+        JOIN statut s ON e.id_statut = s.id_statut  -- Joindre la table statut pour récupérer le statut
         WHERE (d.id_utilisateur = :userId OR b.id_batiment IN (
             SELECT id_batiment FROM travaille WHERE id_utilisateur = :userId
         ))
     ";
 
-    // Ajouter les filtres dynamiquement
+    // Ajouter les filtres dynamiques
     if (!empty($filters['keywords'])) {
         $query .= " AND (d.sujet_dmd LIKE :keywords OR d.description_dmd LIKE :keywords)";
     }
     if (!empty($filters['statut'])) {
-        $query .= " AND d.id_statut = :statut";
+        $query .= " AND s.id_statut = :statut";  // Utiliser s.id_statut ici, pas d.id_statut
     }
     if (!empty($filters['site'])) {
-        $query .= " AND d.id_site = :site";
+        $query .= " AND d.id_site = :site";  // Si vous avez cette colonne dans demande
     }
     if (!empty($filters['batiment'])) {
-        $query .= " AND b.id_batiment = :batiment";
+        $query .= " AND b.id_batiment = :batiment"; // Utilisez b.id_batiment pour le filtre par bâtiment
     }
     if (!empty($filters['date_debut'])) {
         $query .= " AND d.date_creation_dmd >= :date_debut";
@@ -340,6 +343,7 @@ public static function getTotalByUserAndBuilding($userId, $filters) {
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 }
+
 
 public static function updateDemande($id, $data) {
     $pdo = Database::getInstance()->getConnection(); 
@@ -448,7 +452,23 @@ public static function recalcDemandStatus($id_demande) {
     ]);
 }
 
-
+public static function getDemandesByUser($userId, $offset = 0, $limit = 10) {
+    $pdo = Database::getInstance()->getConnection(); 
+    $stmt = $pdo->prepare("
+        SELECT d.*, s.nom_statut
+        FROM demande d
+        JOIN est e ON d.id_demande = e.id_demande
+        JOIN statut s ON e.id_statut = s.id_statut
+        WHERE d.id_utilisateur = :userId
+        ORDER BY d.date_creation_dmd DESC
+        LIMIT :offset, :limit
+    ");
+    $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
 }

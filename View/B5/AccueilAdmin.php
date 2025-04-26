@@ -8,14 +8,16 @@ $nbComptesEnAttente = User::countUtilisateursEnAttente();
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Institut Albatros</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/accueilAdmin.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css"">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/accueilAdmin.css"">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 <body>
     <?php require_once __DIR__ . '/navbarAdmin.php'; ?>
 
@@ -36,8 +38,10 @@ $nbComptesEnAttente = User::countUtilisateursEnAttente();
                     </div>
                 </div>
 
-                <div class="admin-text">
-                    <h2>Bienvenue, <span class="admin-name">Alexandre</span> !</h2>
+            <div class="admin-text">
+                    <h2>Bonjour, <span class="admin-name">
+                            <?= htmlspecialchars(($_SESSION['user_prenom'] ?? '') . ' ' . ($_SESSION['user_nom'] ?? '')) ?>
+                        </span> !</h2>
                     <p>Content de vous revoir.</p>
                 </div>
             </div>
@@ -54,69 +58,70 @@ $nbComptesEnAttente = User::countUtilisateursEnAttente();
                         <span class="notification-badge"><?= $nbComptesEnAttente ?></span>
                     </div>
                     <p>Comptes utilisateurs à valider. Dernière demande il y a quelques minutes.</p>
-                    
+
                     <div class="action-container">
-                    <a href="<?= BASE_URL ?>/inscriptions" class="btn-validate">
-                    <i class="fas fa-eye"></i> valider les accès
+                        <a href="<?= BASE_URL ?>/inscriptions" class="btn-validate">
+                            <i class="fas fa-eye"></i> valider les accès
                         </a>
                     </div>
                 </div>
             </section>
         </main>
     </div>
-    
+
     <!-- Script pour ajuster l'espacement et gérer le menu utilisateur -->
     <script>
-    function adjustSpacing() {
-        // Ajuste l'espacement selon la taille de l'écran
-        const spacingElement = document.getElementById('spacing-element');
-        if (spacingElement) {
-            if (window.innerWidth <= 480) {
-                spacingElement.style.height = '100px';
-            } else if (window.innerWidth <= 768) {
-                spacingElement.style.height = '80px';
-            } else {
-                spacingElement.style.height = '60px';
+        function adjustSpacing() {
+            // Ajuste l'espacement selon la taille de l'écran
+            const spacingElement = document.getElementById('spacing-element');
+            if (spacingElement) {
+                if (window.innerWidth <= 480) {
+                    spacingElement.style.height = '100px';
+                } else if (window.innerWidth <= 768) {
+                    spacingElement.style.height = '80px';
+                } else {
+                    spacingElement.style.height = '60px';
+                }
             }
         }
-    }
 
-    // Exécuter au chargement de la page
-    window.onload = function() {
-        adjustSpacing();
-        
-        // Ajuster aussi lors du redimensionnement de la fenêtre
-        window.addEventListener('resize', adjustSpacing);
-        
-        // Améliorer le comportement du menu déroulant utilisateur sur appareils tactiles
-        const userBtn = document.querySelector('.dropdown-btn.icon-only');
-        const dropdownContent = document.querySelector('.dropdown-content');
-        
-        if (userBtn && dropdownContent) {
-            userBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Ajouter/supprimer la classe 'visible' pour l'animation
-                dropdownContent.classList.toggle('visible');
-            });
-            
-            // Fermer le menu quand on clique ailleurs
-            document.addEventListener('click', function(e) {
-                if (!userBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
-                    dropdownContent.classList.remove('visible');
-                }
-            });
-            
-            // Ajouter un gestionnaire pour les liens du menu
-            const menuLinks = dropdownContent.querySelectorAll('a');
-            menuLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    dropdownContent.classList.remove('visible');
+        // Exécuter au chargement de la page
+        window.onload = function () {
+            adjustSpacing();
+
+            // Ajuster aussi lors du redimensionnement de la fenêtre
+            window.addEventListener('resize', adjustSpacing);
+
+            // Améliorer le comportement du menu déroulant utilisateur sur appareils tactiles
+            const userBtn = document.querySelector('.dropdown-btn.icon-only');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            if (userBtn && dropdownContent) {
+                userBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Ajouter/supprimer la classe 'visible' pour l'animation
+                    dropdownContent.classList.toggle('visible');
                 });
-            });
-        }
-    };
+
+                // Fermer le menu quand on clique ailleurs
+                document.addEventListener('click', function (e) {
+                    if (!userBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
+                        dropdownContent.classList.remove('visible');
+                    }
+                });
+
+                // Ajouter un gestionnaire pour les liens du menu
+                const menuLinks = dropdownContent.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', function () {
+                        dropdownContent.classList.remove('visible');
+                    });
+                });
+            }
+        };
     </script>
 </body>
+
 </html>

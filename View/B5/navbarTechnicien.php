@@ -2,7 +2,7 @@
 /**
  * Navigation bar component pour technicien
  */
-session_start(); // Assure-toi que les sessions sont bien démarrées
+//session_start(); // Assure-toi que les sessions sont bien démarrées
 
 // Pour test temporaire (à supprimer plus tard) :
 // $_SESSION['role'] = 'Technicien'; // à commenter ou enlever dans l'intégration finale
@@ -13,8 +13,9 @@ session_start(); // Assure-toi que les sessions sont bien démarrées
 
 <!-- Logo dans le coin supérieur gauche -->
 <div class="logo-container">
-    <a href="<?= BASE_URL ?>/View//B5/AccueilTechnicien.php">
-        <img src="<?= BASE_URL ?>/Image/logo.png" alt="logo institut albatros" class="site-logo">
+    <a href="<?= BASE_URL ?>/View/AccueilTechnicien.php">
+        <img src="<?= BASE_URL ?>/Assets/B5/logo.png" alt="logo institut albatros" class="site-logo">
+        <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
     </a>
 </div>
 
@@ -34,12 +35,16 @@ session_start(); // Assure-toi que les sessions sont bien démarrées
 <!-- Menu navigation -->
 <div class="navbar-wrapper">
     <nav id="main-nav">
-        <ul>
+        <ul> 
+            <li >
+          <a href="<?= BASE_URL ?>/AccueilTechnicien" >Accueil</a>
+      </li>
             <li class="dropdown">
+          
                 <a href="#" class="dropdown-toggle">Demandes</a>
                 <div class="dropdown-menu demandes-menu">
-                    <a href="#">Nouvelle demande</a>
-                    <a href="#">Voir mes demandes</a>
+                    <a href="<?= BASE_URL ?>/demande">Nouvelle demande</a>
+                    <a href="<?= BASE_URL ?>/ListeDemandes">Voir mes demandes</a>
 
                     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Technicien'): ?>
                         <a href="#">Voir mes tâches</a>
@@ -53,6 +58,7 @@ session_start(); // Assure-toi que les sessions sont bien démarrées
         </ul>
     </nav>
 </div>
+
 
 <!-- Script JS pour le menu déroulant -->
 <script>

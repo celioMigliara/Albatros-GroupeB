@@ -9,7 +9,7 @@ $token = generateCsrfToken();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB2/style_maintenance.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
-    <?php if ($_SESSION['user_role'] == 1): ?>
+   <?php if ($_SESSION['user_role'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
 <?php else: ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">

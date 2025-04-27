@@ -25,10 +25,9 @@ Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains
 
 RewriteEngine On
 
-# Si c'est un fichier ou un dossier existant → ne rien faire
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+# Si la requête n'est pas un fichier ou un dossier existant
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 
-# Sinon → rediriger vers index.php
-RewriteRule ^ index.php [QSA,L]
+# Alors rediriger vers index.php
+RewriteRule ^(.*)$ index.php [QSA,L]

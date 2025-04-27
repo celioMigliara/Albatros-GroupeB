@@ -1,4 +1,5 @@
 <?php
+
 // Inclusion du modèle User (accès aux méthodes liées à la table utilisateur)
 require_once __DIR__ . '/../Model/B5/User.php';
 

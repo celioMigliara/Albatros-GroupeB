@@ -452,6 +452,7 @@ public static function recalcDemandStatus($id_demande) {
     ]);
 }
 
+/*Petite logique pour l'accueil, on va aller rechercher les demandes de l'uti par rapport a son id dans la db.*/
 public static function getDemandesByUser($userId, $offset = 0, $limit = 10) {
     $pdo = Database::getInstance()->getConnection(); 
     $stmt = $pdo->prepare("

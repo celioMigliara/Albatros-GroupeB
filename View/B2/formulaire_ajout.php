@@ -26,8 +26,8 @@ $token = generateCsrfToken();
     <h1 class="titre">Formulaire d'ajout de maintenance</h1>
     <div class="separateur-double-ligne-B2"></div>
     <div class="frm-add-recurr">
-        <form class="frmAdd-recurr" name="frmAdd" action="index.php?action=maintenance_ajouter" method="POST">
-            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+    <form class="frmAdd-recurr" name="frmAdd" action="<?= BASE_URL ?>/maintenance_ajouter" method="POST">
+    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
 
             <div class="demo-form-row-titre">
                 <label for="titre">Titre de la demande <span class="error">*</span></label><br>

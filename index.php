@@ -1,27 +1,34 @@
 <?php
 session_start();
 
-// Pour test local uniquement — à retirer plus tard
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_prenom'] = "Admin"; // ID de l'utilisateur connecté
-    $_SESSION['nom'] = "Admin";
-    $_SESSION['user_id'] = 1; // ID de l'utilisateur connecté (à remplacer par la logique d'authentification réelle)
-    $_SESSION['user_role'] = 1;    
+// Sécurisation minimale de la session pour éviter fixation d'identité
+if (!isset($_SESSION['initiated'])) {
+    session_regenerate_id();
+    $_SESSION['initiated'] = true;
 }
 
+// ----- [À retirer plus tard : simulation utilisateur connecté en local]
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['user_prenom'] = "Ilhan";
+    $_SESSION['nom'] = "Ilhan";
+    $_SESSION['user_id'] = 1;
+    $_SESSION['user_role'] = 2; // 1 = Admin, 2 = Technicien
+}
+
+// Définition d'une constante BASE_URL
 define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
 
-// Autoloader
+// Autoload
 require_once __DIR__ . '/vendor/autoload.php';
 
-// ----------------------------
-// ROUTAGE AVEC ?action=..., utilise pour des index.php?action=
-// ----------------------------
+// ===================================
+// ROUTAGE PAR ?action=...
+// ===================================
 if (isset($_GET['action'])) {
-
-    switch ($_GET['action']) {
-
-        /************** B1 : Demandes **************/
+    $action = htmlspecialchars($_GET['action']); // sécurisation
+    switch ($action) {
+        
+        // ---- Demandes
         case 'index':
         case 'show':
         case 'refuserDemande':
@@ -30,34 +37,17 @@ if (isset($_GET['action'])) {
         case 'updateDemande':
             require_once __DIR__ . '/Controller/B1/DemandesController.php';
             $controller = new DemandesController();
-
-            switch ($_GET['action']) {
-                case 'index':
-                    $controller->index();
-                    break;
-                case 'show':
-                    if (isset($_GET['id'])) {
-                        $controller->show($_GET['id']);
-                    } else {
-                        echo "ID manquant pour l'action 'show'";
-                    }
-                    break;
-                case 'refuserDemande':
-                    $controller->refuserDemande();
-                    break;
-                case 'updateCommentaire':
-                    $controller->updateCommentaire();
-                    break;
-                case 'annulerDemande':
-                    $controller->annulerDemande();
-                    break;
-                case 'updateDemande':
-                    $controller->updateDemande();
-                    break;
-            }
+            match ($action) {
+                'index' => $controller->index(),
+                'show' => isset($_GET['id']) ? $controller->show((int)$_GET['id']) : error('ID manquant pour show'),
+                'refuserDemande' => $controller->refuserDemande(),
+                'updateCommentaire' => $controller->updateCommentaire(),
+                'annulerDemande' => $controller->annulerDemande(),
+                'updateDemande' => $controller->updateDemande(),
+            };
             break;
 
-        /************** B1 : Tâches **************/
+        // ---- Tâches
         case 'createTask':
         case 'storeTask':
         case 'editTask':
@@ -65,34 +55,16 @@ if (isset($_GET['action'])) {
         case 'tasksForTechnicien':
             require_once __DIR__ . '/Controller/B1/TachesController.php';
             $taskController = new TachesController();
-
-            switch ($_GET['action']) {
-                case 'createTask':
-                    $taskController->create();
-                    break;
-                case 'storeTask':
-                    $taskController->store();
-                    break;
-                case 'editTask':
-                    if (isset($_GET['id_tache'])) {
-                        $taskController->edit($_GET['id_tache']);
-                    } else {
-                        echo "ID tâche manquant pour 'editTask'";
-                    }
-                    break;
-                case 'updateTask':
-                    $taskController->update();
-                    break;
-                case 'tasksForTechnicien':
-                    $taskController->tasksForTechnicien();
-                    break;
-            }
+            match ($action) {
+                'createTask' => $taskController->create(),
+                'storeTask' => $taskController->store(),
+                'editTask' => isset($_GET['id_tache']) ? $taskController->edit((int)$_GET['id_tache']) : error('ID manquant pour editTask'),
+                'updateTask' => $taskController->update(),
+                'tasksForTechnicien' => $taskController->tasksForTechnicien(),
+            };
             break;
 
-        //************** B2 **************/
-
-       
-
+        // ---- Maintenance (B2)
         case 'maintenance_ajouter':
             require_once 'Controller/B2/controllerMaintenance.php';
             ajouterMaintenance();
@@ -103,60 +75,50 @@ if (isset($_GET['action'])) {
             modifierMaintenance();
             break;
 
-
         default:
-            echo "Action inconnue : " . htmlspecialchars($_GET['action']);
-            break;
+            error("Action inconnue : $action");
     }
     exit;
 }
 
-// ----------------------------
-// ROUTAGE PAR URI / URI REWRITE
-// ----------------------------
+// ===================================
+// ROUTAGE PAR URL (sans ?action=...)
+// ===================================
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$scriptName = dirname($_SERVER['SCRIPT_NAME']);
-$uri = str_replace($scriptName, '', $uri);
+$scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+$uri = str_replace($scriptDir, '', $uri);
 $uri = trim($uri, '/');
 
-//Si dans l'utl AccueilAdmin alors ok redirection 
-if (strpos($uri, 'AccueilAdmin') !== false) {
+// Correction spéciale pour les pages d'accueil
+if (str_contains($uri, 'AccueilAdmin')) {
     $uri = 'AccueilAdmin';
 }
-
-if (strpos($uri, 'AccueilTechnicien') !== false) {
+if (str_contains($uri, 'AccueilTechnicien')) {
     $uri = 'AccueilTechnicien';
 }
-if ($uri === 'index.php') {
-    $uri = '';
-}
-if ($uri === '') {
-    if (isset($_SESSION['user_role'])) {
-        if ($_SESSION['user_role'] == 1) {
-            require 'View/B5/AccueilAdmin.php'; // Rôle Admin
-        } elseif ($_SESSION['user_role'] == 2) {
-            require 'View/B5/AccueilTechnicien.php'; // Rôle Technicien
-        } else {
-            // Si autre rôle inconnu
-            echo "Accès non autorisé.";
+if ($uri === 'index.php' || $uri === '') {
+    if (!empty($_SESSION['user_role'])) {
+        switch ($_SESSION['user_role']) {
+            case 1: require 'View/B5/AccueilAdmin.php'; break;
+            case 2: require 'View/B5/AccueilTechnicien.php'; break;
+            default: error('Accès non autorisé.');
         }
-    } 
+    } else {
+        error('Session invalide.');
+    }
+    exit;
 }
 
+// Routes spécifiques
 switch ($uri) {
 
-    /************** Accueil **************/
-    
-
-    /************** B5 : Administration **************/
     case 'AccueilAdmin':
         require 'View/B5/AccueilAdmin.php';
         break;
 
-        case 'AccueilTechnicien':
-            require 'View/B5/AccueilTechnicien.php';
-            break;
-    
+    case 'AccueilTechnicien':
+        require 'View/B5/AccueilTechnicien.php';
+        break;
 
     case 'admin':
         require 'View/B5/menuAdmin.php';
@@ -166,48 +128,57 @@ switch ($uri) {
         require 'View/B5/confirmationInscription.php';
         break;
 
-    case 'confirmationInscription':
-
     case 'inscriptions':
-
     case 'ListeInscriptions':
         require 'View/B5/ListeInscriptions.php';
         break;
 
-
-
-    /************** B1 : Demandes **************/
-
     case 'ListeDemandes':
         require_once __DIR__ . '/Controller/B1/DemandesController.php';
-        $controller = new DemandesController();
-        $controller->index();
+        (new DemandesController())->index();
         break;
-
-
-    /************** B2 : Demandes intervention **************/
 
     case 'demande':
-        require_once 'View/B2/demande_intervention.php';
+        require 'View/B2/demande_intervention.php';
         break;
 
-        case 'recurrence':
-            require_once 'Controller/B2/controllerMaintenance.php';
-            accueil();
-            break;
-    /************** Routes dynamiques **************/
+    case 'recurrence':
+        require_once 'Controller/B2/controllerMaintenance.php';
+        accueil();
+        break;
+
+    // Routes dynamiques
     default:
-        // Route de type /utilisateur/4
-        if (preg_match('#^utilisateur/(\d+)$#', $uri, $matches)) {
-            $_GET['id'] = $matches[1];
-            require 'View/B5/DetailUtilisateur.php';
-
-            // Route de validation d'inscription
-        } elseif (preg_match('#^validationInscription/(\d+)$#', $uri, $matches)) {
-            $_GET['id'] = $matches[1];
-            require 'Controller/B5/validerInscription.php';
-        } else {
-            http_response_code(404);
-        }
+        routeDynamique($uri);
         break;
+}
+
+// ===================================
+// Fonctions utilitaires
+// ===================================
+
+/**
+ * Gestion simple d'erreur affichable
+ */
+function error(string $message) {
+    http_response_code(400);
+    echo htmlspecialchars($message);
+    exit;
+}
+
+/**
+ * Routes dynamiques
+ */
+function routeDynamique(string $uri) {
+    if (preg_match('#^utilisateur/(\d+)$#', $uri, $matches)) {
+        $_GET['id'] = (int)$matches[1];
+        require 'View/B5/DetailUtilisateur.php';
+    } elseif (preg_match('#^validationInscription/(\d+)$#', $uri, $matches)) {
+        $_GET['id'] = (int)$matches[1];
+        require 'Controller/B5/validerInscription.php';
+    } else {
+        http_response_code(404);
+        echo '404 - Page non trouvée';
+        exit;
+    }
 }

@@ -10,8 +10,8 @@ require_once(__DIR__ . '/../../Model/B2/DemandeB2.php');
 /**
  * Gère l’upload des fichiers envoyés via le formulaire
  * @return array Résultat avec tableau de fichiers ou message d’erreur
- */function gererUpload(array $files): array
-{
+ */ function gererUpload(array $files): array
+ {
     $resultats = [];
 
     if (!isset($files['piece_jointe']) || empty($files['piece_jointe']['name'][0])) {
@@ -46,30 +46,41 @@ require_once(__DIR__ . '/../../Model/B2/DemandeB2.php');
         $cheminFinal = __DIR__ . '/../../Public/Uploads/' . $nomUnique;
         $cheminTest = __DIR__ . '/../../Test/Uploads/' . $nomUnique;
 
-        // Vérifier si le répertoire existe, sinon le créer
-        if (!is_dir(dirname($cheminFinal))) {
-            mkdir(dirname($cheminFinal), 0777, true); // Crée le répertoire avec des permissions appropriées
-        }
-
+        // Vérifie si le code est exécuté dans un contexte de test (PHPUnit)
         if (defined('PHPUNIT_RUNNING')) {
+
+            // Vérifie si le fichier temporaire existe bien avant de tenter de le déplacer
             if (!file_exists($tmp_name)) {
+                // Si le fichier temporaire n'existe pas, retourne une erreur spécifique pour les tests
                 return ['erreur' => true, 'message' => "Fichier temporaire inexistant pour le test : $tmp_name"];
             }
+
+            // Vérifie si le répertoire de destination pour les tests existe, sinon le crée
+            if (!is_dir(dirname($cheminTest))) {
+                mkdir(dirname($cheminTest), 0777, true); // Crée le dossier en autorisant aussi les dossiers parents
+            }
+            // Déplace le fichier temporaire vers le répertoire de test (Test/Uploads)
             rename($tmp_name, $cheminTest);
         } else {
+            // Sinon, on est en situation réelle (pas en test)
+            // Vérifie si le répertoire de destination réel existe (Public/Uploads), sinon le crée
+            if (!is_dir(dirname($cheminFinal))) {
+                mkdir(dirname($cheminFinal), 0777, true); // Crée le dossier en autorisant aussi les dossiers parents
+            }
+            // Déplace le fichier temporaire vers le répertoire public avec move_uploaded_file (sécurisé)
             move_uploaded_file($tmp_name, $cheminFinal);
         }
+
 
         // Retourner le chemin correctement formaté sans double '/Public/Uploads/'
         $resultats[] = [
             'nomOriginal' => $nom,
-           'chemin' => $nomUnique
+            'chemin' => $nomUnique
         ];
     }
 
     return ['erreur' => false, 'files' => $resultats];
 }
-
 /**
  * Fonction principale pour traiter une soumission de formulaire
  */

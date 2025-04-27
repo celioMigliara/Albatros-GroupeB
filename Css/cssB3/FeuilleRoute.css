@@ -1,0 +1,525 @@
+/* ========================================================================== */
+/* ================================== BODY ================================== */
+/* ========================================================================== */
+
+body {
+  background-image: url("../Assets/Images/fond.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Caveat Brush", cursive;
+}
+
+/* Overlay semi-transparent avec effet de flou */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(128, 128, 128, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  z-index: -999;
+}
+
+/* Conteneur principal pour le bloc entier */
+.block_taches {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: auto; /* Permet de s'ajuster dynamiquement */
+  overflow-y: auto; /* Permet de défiler dans le bloc si nécessaire */
+
+  max-width: 90%;
+  max-height: 90%;
+  border: 1px solid #d1d1d1;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.85);
+  overflow: hidden;
+  align-items: flex-start;
+  overflow: hidden; /* Empêche le débordement du contenu */
+
+  padding: 20px;
+  font-family: "Caveat Brush", cursive;
+}
+
+h1 {
+  font-family: "ceavat brush", cursive;
+  font-size: 2.5em;
+  color: #f9bb30;
+  text-align: center;
+  margin-block: 0px;
+  margin-inline: 0px;
+  margin-bottom: 10px;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ========================== Pagination Container ========================= */
+#pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* ========================== Pagination Buttons ========================== */
+#pagination button {
+  background-color: #f9bb30;  /* Orange primary */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover effect for pagination buttons */
+#pagination button:hover {
+  background-color: #f8a51c;
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(249, 187, 48, 0.2);
+}
+
+/* Disabled button effect */
+#pagination button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Active page button */
+#pagination button.active {
+  background: linear-gradient(135deg, #f9bb30, #fcd281); /* Gradient effect for active page */
+  box-shadow: 0 5px 15px rgba(249, 187, 48, 0.3);
+}
+
+/* Pagination text styling */
+#pagination span {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  padding: 0 15px;
+}
+
+
+/* ========================== CONTAINER TECHNICIEN ========================== */
+.container_technicien {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  background: rgba(249, 187, 48, 0.05);
+  border-radius: 8px;
+  align-items: center;
+}
+
+/* ========================== SELECT PERSONNALISÉ ========================= */
+#technicienSelect {
+  width: 60%;
+  padding: 12px;
+  border: 2px solid #f9bb30;
+  border-radius: 8px;
+  background-color: rgba(249, 187, 48, 0.1);
+  color: #2c3e50;
+  font-size: 16px;
+  appearance: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(249, 187, 48, 0.1);
+  width: 30%;
+}
+
+#technicienSelect:hover {
+  background-color: rgba(249, 187, 48, 0.15);
+  box-shadow: 0 2px 8px rgba(249, 187, 48, 0.2);
+}
+
+#technicienSelect:focus {
+  outline: none;
+  border-color: #9bac7e;
+  box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+}
+
+/* ========================== BOUTONS ========================= */
+.buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+button {
+  background-color: #f9bb30; /* Orange principal */
+  color: white;
+  padding: 12px 25px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Caveat Brush", cursive;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Style pour les boutons survolés */
+button:hover {
+  background: linear-gradient(135deg, #f9bb30, #fcd281); /* Dégradé orange */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(249, 187, 48, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* ========================== FILTRES ET SELECTIONS ========================= */
+.filters {
+  margin: 25px 0;
+  padding: 20px;
+  /* background: #f8f9fa; */
+  border-radius: 10px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#searchInput,
+#statusFilter,
+#startDate,
+#endDate {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  font-family: "Montserrat Alternates", sans-serif;
+  min-width: 250px;
+  transition: border-color 0.3s ease;
+  border-color: #f9bb30;
+}
+
+#searchInput:focus,
+#statusFilter:focus,
+#startDate:focus,
+#endDate:focus {
+  border-color: #f9bb30;
+  outline: none;
+}
+
+#statusFilter {
+  width: 200px;
+}
+
+/* Pour les champs de date avec placeholder */
+#startDate::placeholder,
+#endDate::placeholder {
+  color: #aaa; /* Gris pour un placeholder plus discret */
+  font-style: italic;
+}
+
+
+/* ================================ TABLEAU ================================= */
+#tasksTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
+}
+
+#tasksTable th,
+#tasksTable td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+#tasksTable th {
+  background: linear-gradient(to bottom, #f9bb30, #f8a51c);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+#tasksTable tr:nth-child(even) {
+  background: linear-gradient(
+    to right,
+    rgba(249, 187, 48, 0.2) 0%,
+    rgba(249, 187, 48, 0.05) 100%
+  );
+}
+
+#tasksTable tr:nth-child(even):hover {
+  background: linear-gradient(
+    to right,
+    rgba(249, 187, 48, 0.3) 0%,
+    rgba(249, 187, 48, 0.15) 100%
+  );
+}
+
+/* Animation hover plus cohérente */
+#tasksTable tr {
+  transition: all 0.2s ease-in-out;
+}
+
+#tasksTable tr:hover {
+  transform: scale(1.005);
+  box-shadow: 0 2px 8px rgba(249, 187, 48, 0.1);
+}
+
+#tasksTable tr:hover td {
+  color: #2c3e50; /* Garde la couleur du texte lisible */
+  background: rgba(249, 187, 48, 0.1);
+}
+#tasksTable td {
+  transition: color 0.3s ease;
+}
+
+/* ========================== STRUCTURE GLOBALE ========================== */
+.block_taches {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filters {
+  width: 100%;
+  margin: 0;
+  padding: 15px 0;
+}
+
+/* ========================================================================== */
+/* ======================= LISTE IMPRESSION SPECIFIQUE ====================== */
+/* ========================================================================== */
+
+[data-page="ListeImpression"] .block_taches {
+  align-items: center;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Boutons de navigation */
+.back-btn {
+  background: linear-gradient(135deg, #9bac7e, #9faf7f);
+  color: white !important;
+  text-decoration: none;
+  padding: 12px 25px;
+  margin: 10px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(155, 172, 126, 0.3);
+}
+
+/* Tableau principal */
+#printTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
+}
+
+#printTable th {
+  background: linear-gradient(to bottom, #f9bb30, #f8a51c);
+  color: white;
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+#printTable td {
+  padding: 15px;
+  border-bottom: 1px solid #f3f3f3;
+  background: rgba(249, 187, 48, 0.05);
+}
+/* Dans la section Liste Impression Spécifique */
+#printTable td:nth-child(2) {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Si vous avez des boutons dans la colonne Actions */
+#printTable td:nth-child(2) button {
+  white-space: nowrap;
+  margin: 2px;
+  padding: 8px 15px;
+  font-size: 0.9em;
+}
+
+
+/* ========================== POPUP TECHNICIENS ========================== */
+
+/* Popup techniciens */
+#techPopup {
+  position: fixed;
+  width: 90%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+  padding: 25px;
+  border: 1px solid #f9bb30;
+}
+
+#techListTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
+}
+
+#techListTable th {
+  background: linear-gradient(to bottom, #f9bb30, #f8a51c);
+  color: white;
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+#techListTable td {
+  padding: 15px;
+  border-bottom: 1px solid #f3f3f3;
+  background: rgba(249, 187, 48, 0.05);
+}
+
+#techListTable td:nth-child(2) {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.drop-zone {
+  margin-top: 5px;
+  display: none;
+  background: rgba(255, 0, 0, 0.733);
+  color: #333;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  border: 2px dashed #f9bb30;
+  cursor: pointer;
+}
+.drop-zone.active {
+  display: block;
+}
+
+
+/* Bouton fermer popup */
+#closeTechPopup {
+  background: #f9bb30;
+  margin-top: 15px;
+  float: right;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-wrapper .terms-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-wrapper .terms-label .label-text {
+  margin-left: 10px;
+}
+
+.checkbox-wrapper .checkbox-svg {
+  width: 30px;
+  height: 30px;
+}
+
+.checkbox-wrapper .checkbox-box {
+  fill: rgba(207, 205, 205, 0.425);
+  stroke: #f9bb30;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper .checkbox-tick {
+  stroke: #f9bb30;
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-box,
+  .checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-tick {
+  stroke-dashoffset: 0;
+}
+
+.pagination_container {
+  width: 100%;
+  transform: scale(0.95); /* Réduit légèrement la taille */
+}
+
+.pagination_container {
+  transform: scale(1); /* Rétablit la taille normale pour le contenu interne */
+}
+
+.block_taches {
+  transform: scale(1); /* Rétablit la taille normale pour le contenu interne */
+}
+
+tr.drop-target {
+  border: 2px dashed #4CAF50 !important;
+}
+
+tr.drop-before {
+  border-top: 2px solid #2196F3 !important;
+}
+
+tr.drop-after {
+  border-bottom: 2px solid #2196F3 !important;
+}
+
+/*PAS DE RESPONSIVE CAR LA PAGE CONTIENT UN TABLEAU*/

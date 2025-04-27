@@ -118,9 +118,8 @@ class DemandesController {
       Demande::updateCommentaireAdmin($id, $commentaire);
 
       // Rediriger vers la page de la demande
-      header('Location: index.php?action=show&id=' . $id);
-      exit;
-  } else {
+      header('Location: listedemande/' . $id);
+    } else {
       echo "Requête invalide.";
   }
 }
@@ -254,8 +253,8 @@ public function updateDemande() {
             }
         }
 
-        // Rediriger vers la page de la demande
-        header('Location: index.php?action=show&id=' . $id);
+         // Rediriger vers la page de la demande
+         header('Location: listedemande/' . $id);
         exit;
     } else {
         die("Requête invalide.");

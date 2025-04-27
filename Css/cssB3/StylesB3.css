@@ -1,0 +1,1142 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* ========================================================================== */
+/* ================================== BODY ================================== */
+/* ========================================================================== */
+
+/* Style général du body avec une image de fond et un effet centré */
+body {
+  background-image: url("../Assets/Images/fond.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Caveat Brush", cursive;
+}
+
+/* Overlay semi-transparent avec effet de flou */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(128, 128, 128, 0.5);
+  /* Gris avec transparence */
+  -webkit-backdrop-filter: blur(2px);
+  /* Ajoute un effet de flou */
+  backdrop-filter: blur(2px);
+  /* Support pour Safari */
+  pointer-events: none;
+  /* Permet de ne pas interférer avec les interactions utilisateur */
+  z-index: -999;
+  /* Assure que l'overlay est derrière le contenu */
+}
+
+/* ========================================================================== */
+/* ============================== BLOCK ENTIER ============================== */
+/* ========================================================================== */
+
+/* Conteneur principal pour le bloc entier */
+.block {
+  display: flex;
+  margin: 0 auto;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 70%;
+  /* Largeur maximale du bloc */
+  height: 100%;
+  max-height: 95%;
+  /* Hauteur maximale du bloc */
+  border: 1px solid black;
+  /* Bordure noire */
+  border-radius: 10px;
+  /* Coins arrondis */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* Ombre légère */
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Fond semi-transparent */
+  overflow: hidden;
+  /* Masque le contenu débordant */
+}
+
+/* ========================================================================== */
+/* ============================== BLOCK GAUCHE ============================== */
+/* ========================================================================== */
+
+.left {
+  display: flex;
+  height: 100%;
+  width: 30%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-image: url("../Assets/Images/fond2.png");
+  background-position: center;
+}
+
+/* L'image */
+.logo_Albatros {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  /* taille du logo */
+  height: auto;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.button {
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  flex: 1;
+  width: 100%;
+  z-index: 1;
+}
+
+.btnConnexion,
+.btnInscription {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 50px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+  font-size: 25px;
+  text-decoration: none;
+}
+
+.btnConnexion {
+  border-top-left-radius: 90px;
+  background-image: linear-gradient(to right, #ea742f, #fece58);
+}
+
+.btnInscription {
+  border-bottom-left-radius: 90px;
+  background-image: linear-gradient(to right, #9bac7e, #9faf7f);
+}
+
+.btnConnexion:hover,
+.btnInscription:hover {
+  transform: translateX(-2px);
+}
+
+.btnConnexion:active,
+.btnInscription:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================================================== */
+/* ============================== BLOCK DROITE ============================== */
+/* ========================================================================== */
+.right {
+  display: flex;
+  height: 100%;
+  width: 85%;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  justify-content: center;
+  padding: 50px;
+}
+
+/* Css pour le titre du formulaire */
+h2 {
+  font-family: "Caveat Brush", cursive;
+  font-size: 40px;
+  font-weight: bold;
+  margin-block: 0;
+  margin-inline: 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* ============== BOUTONS MOBILE DESACTIVER PAR DEFAUT ET ACTIVE PAR LE RESPONSIVE================= */
+.mobile-buttons {
+  display: none;
+  /* Caché par défaut */
+}
+
+.btn-mobile {
+  display: none;
+  /* Caché par défaut */
+}
+
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding-block: 15px;
+  padding-inline: 50px;
+  width: 79%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  justify-content: space-evenly;
+  align-items: center;
+  height: auto;
+  align-content: center;
+  gap: 10px;
+}
+
+/* ===================================================================================== */
+/* ===================================================================================== */
+/* ================= CSS PARTIE ROLES CHECKBOX (INSCRIPTION UNIQUEMENT)================= */
+/*Partie role pour la page inscription uniquement */
+.role-label {
+  font-family: "Caveat Brush", cursive;
+  font-size: 20px;
+  font-weight: bold;
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+/* Checkbox pour les roles */
+.checkbox-wrapper-radio {
+  display: flex;
+  width: 100%;
+  max-height: 200px;
+  padding-bottom: 20px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  align-content: center;
+  border-bottom: #f9bb30 solid 2px;
+}
+
+.checkbox-wrapper-radio input[type="radio"] {
+  display: none;
+}
+
+.checkbox-wrapper-radio .terms-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.checkbox-wrapper-radio .terms-label .label-text {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.checkbox-wrapper-radio .checkbox-svg {
+  width: 30px;
+  height: 30px;
+}
+
+.checkbox-wrapper-radio .checkbox-box {
+  fill: rgba(207, 205, 205, 0.425);
+  stroke: #f9bb30;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper-radio .checkbox-tick {
+  stroke: #f9bb30;
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper-radio
+  input[type="radio"]:checked
+  + .terms-label
+  .checkbox-box,
+.checkbox-wrapper-radio
+  input[type="radio"]:checked
+  + .terms-label
+  .checkbox-tick {
+  stroke-dashoffset: 0;
+}
+
+/* Animation focus */
+.terms-label:focus-within {
+  box-shadow: 0 0 0 2px #f9bb30;
+}
+
+.terms-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: #f8f8f8;
+}
+
+.terms-label:hover {
+  background: #fff3e0;
+  transform: translateY(-2px);
+}
+
+.checkbox-svg {
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+/* Fin du CSS pour les check box radio*/
+/* ========================================================================== */
+/* ========================================================================== */
+/* ========================================================================== */
+
+/* ================= CHAMPS INPUT ================= */
+/* ================= CSS PARTIE NOM PRENOM (INSCRIPTION) ================= */
+/* CSS pour les deux input nom et prenom */
+.formulaire-champs-cote-a-cote {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 15px;
+}
+
+/* CSS PARTIE BATIMENTS */
+/* Css pour le label du bouton sélectionnez batiments */
+.label-batiments {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: black;
+  font-size: 21px;
+}
+
+/* Css pour le conteneur qui englobe les batiments */
+/* Conteneur principal des bâtiments */
+.formulaire-champs-batiment {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Amélioration des styles du bouton pour ouvrir la popup */
+.Bouton-Select-Batiment {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  background: #f8f8f8 !important;
+  color: #666 !important;
+  border: 2px dashed #f9bb30 !important;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.Bouton-Select-Batiment:hover {
+  background: #f9bb30 !important;
+  color: #fff !important;
+  /* Changement de couleur pour une meilleure lisibilité */
+  cursor: pointer;
+  transform: scale(1.05);
+  /* Légère mise en avant pour attirer l'attention */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Ajout d'une ombre pour un effet de profondeur */
+}
+
+/* ================= CSS PARTIE BATIMENT ET CHECKBOX ================= */
+/* CSS pour le label de chaque batiment */
+.terms-label-batiment-choix {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: #f8f8f8;
+  justify-content: flex-start;
+  align-content: center;
+  flex-direction: row;
+}
+
+.terms-label-batiment-choix:hover {
+  background: #fff3e0;
+  transform: translateY(-2px);
+}
+
+.modal-checkbox-batiment {
+  margin: 4.5px 0;
+  width: 93%;
+}
+
+/* Checkbox pour les batiment */
+.checkbox-wrapper-checkbox {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 20px 0;
+  border: 3px solid #eee;
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.checkbox-wrapper-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-wrapper-checkbox .terms-label-batiment-choix {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.checkbox-wrapper-checkbox .terms-label-batiment-choix .label-text {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.checkbox-wrapper-checkbox .checkbox-svg {
+  width: 30px;
+  height: 30px;
+}
+
+.checkbox-wrapper-checkbox .checkbox-box {
+  fill: rgba(207, 205, 205, 0.425);
+  stroke: #f9bb30;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper-checkbox .checkbox-tick {
+  stroke: #f9bb30;
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  transition: stroke-dashoffset 0.6s ease-in;
+}
+
+.checkbox-wrapper-checkbox
+  input[type="checkbox"]:checked
+  + .terms-label-batiment-choix
+  .checkbox-box,
+.checkbox-wrapper-checkbox
+  input[type="checkbox"]:checked
+  + .terms-label-batiment-choix
+  .checkbox-tick {
+  stroke-dashoffset: 0;
+}
+
+/* CSS pour le bouton valider la selection des batiment */
+.btn {
+  background-color: #f9bb30;
+  padding: 14px 40px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px dashed #f9bb30;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: 0.4s;
+}
+
+.btn span:last-child {
+  display: none;
+}
+
+.btn:hover {
+  transition: 0.4s;
+  border: 2px dashed #f9bb30;
+  background-color: #fff;
+  color: #f9bb30;
+}
+
+.btn:active {
+  background-color: #ac8023;
+}
+
+/* Fin du CSS pour les check box pour accepter plusieur choix*/
+/* ========================================================================== */
+
+/* TOUT LES AUTRES CHAMPS */
+.champs-normal {
+  border-top: solid 2px #f9bb30;
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+/* CSS pour les règles de tous les champs */
+.input-group-custom {
+  position: relative;
+  width: 100%;
+}
+
+/* CSS pour le input de chaque champ */
+.input-custom {
+  border: solid 1.5px #9e9e9e;
+  border-radius: 1rem;
+  background: none;
+  padding: 1rem;
+  font-size: 16px;
+  color: black;
+  transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.user-label-custom {
+  position: absolute;
+  left: 1rem;
+  color: black;
+  pointer-events: none;
+  transform: translateY(1rem);
+  transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: transparent;
+  font-size: 1.1em;
+}
+
+/* Animations des labels */
+/* Bordure orange par défaut quand valide */
+.input-custom:focus,
+.input-custom:valid {
+  outline: none;
+  border: 1.5px solid #f9bb30;
+}
+
+.input-custom:focus ~ .user-label-custom,
+.input-custom:valid ~ .user-label-custom {
+  transform: translateY(-50%) scale(0.8);
+  background-color: white;
+  padding: 0 0.2em;
+  color: #f9bb30;
+}
+
+.input-custom:focus ~ .user-label-custom,
+.input-custom:not(:placeholder-shown) ~ .user-label-custom {
+  transform: translateY(-50%) scale(0.8);
+  background-color: white;
+  padding: 0 0.2em;
+  color: #f9bb30;
+}
+
+/* Style spécifique pour les champs invalides après interaction */
+.input-custom:not(:placeholder-shown):invalid {
+  border-color: #ff4444;
+}
+
+.input-custom:not(:placeholder-shown):invalid ~ .user-label-custom {
+  color: #ff4444;
+}
+
+/* Style de focus pour les champs invalides */
+.input-custom:not(:placeholder-shown):invalid:focus {
+  border-color: #ff4444;
+}
+
+.input-custom:not(:placeholder-shown):invalid:focus ~ .user-label-custom {
+  color: #ff4444;
+}
+
+/* Style quand l'input invalide est focus */
+.input-custom:invalid:focus {
+  border-color: #ff4444;
+}
+
+.input-custom:invalid:focus ~ .user-label-custom {
+  color: #ff4444;
+}
+
+/* CSS pour l'icône dans le champ mot de passe pour les conseils */
+.info-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 30px;
+  color: #f9bb30;
+  padding-left: 10px;
+  border-left: #f9bb30 solid 2px;
+}
+
+/* Cibler spécifiquement les inputs texte, email et password */
+.input-custom:focus,
+input[type="text"]:valid,
+input[type="email"]:valid,
+input[type="password"]:valid {
+  outline: none;
+  border: 1.5px solid #f9bb30;
+}
+
+.input-custom:focus ~ label,
+input[type="text"]:valid ~ label,
+input[type="email"]:valid ~ label,
+input[type="password"]:valid ~ label {
+  transform: translateY(-50%) scale(0.8);
+  background-color: white;
+  padding: 0 0.2em;
+  color: #f9bb30;
+}
+
+/* Style pour l'astérisque des champs obligatoires */
+.required-asterisk {
+  color: red;
+  margin-left: 3px;
+}
+
+.required-note {
+  color: #666;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* ================= ZONE MOTS DE PASSE OUBLIE POUR CONNEXION UNIQUEMENT ================= */
+.zoneMots_dePasse {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  align-content: center;
+  width: 100%;
+  justify-content: center;
+  padding-top: 25px;
+}
+
+/* Mots de passe oublié */
+.forgot_mdp_utilisateur {
+  color: black;
+  text-align: right;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 20px;
+  width: 100%;
+}
+
+/* ================= ERREURS DE VALIDATION (SUBMIT) ================= */
+
+.input-custom:user-invalid {
+  border-color: #ff4444;
+}
+
+.input-custom:user-invalid ~ .user-label-custom {
+  color: #ff4444;
+}
+
+.error-message {
+  color: #ff4444;
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-top: 5px;
+  display: none;
+  font-family: "Montserrat Alternates", sans-serif;
+  position: absolute;
+  bottom: -20px;
+  left: 15px;
+  white-space: nowrap;
+}
+
+.invalid .error-message {
+  display: block;
+}
+
+.invalid .input-custom {
+  border-color: #ff4444;
+}
+
+.invalid .user-label-custom {
+  color: #ff4444;
+}
+
+/* Le bouton de connexion */
+.zone-bouton-final {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding-top: 20px;
+}
+
+.cssbuttons-io-button {
+  background: #f9bb30;
+  color: white;
+  font-family: "Caveat Brush", cursive;
+  padding: 0.35em;
+  padding-left: 1.2em;
+  font-size: 20px;
+  font-weight: 500;
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 1.6em -0.6em #c1922c;
+  overflow: hidden;
+  position: relative;
+  height: 50px;
+  cursor: pointer;
+  width: 45%;
+  justify-content: center;
+  align-content: center;
+}
+
+.cssbuttons-io-button .icon {
+  background: white;
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #b98a25;
+  right: 0.3em;
+  transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+  width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+  width: 1.1em;
+  transition: transform 0.3s;
+  color: #f9bb30;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+  transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+  transform: scale(0.95);
+}
+
+/* ===================================CSS PARTIE POPUP=================================== */
+/* ======================= CSS PARTIE POPUP  ================== */
+/* Style de la modale(popup generale du site) */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* CSS pour le bouton de fermeture du popup */
+.fermer-popup {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #fff;
+  color: black;
+  border: 2px solid #f9bb30;
+  font-size: 30px;
+  font-weight: 300;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: 0.5s ease;
+}
+
+.fermer-popup:hover {
+  background-color: #f9bb30;
+  border: 2px solid white;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* CSS pour le titre de la popup */
+.popup-content h3 {
+  font-size: x-large;
+  font-family: "Montserrat", sans-serif;
+}
+
+/*CSS pour gerer le contenu de la popup */
+.popup-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 35%;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: "Montserrat", sans-serif;
+}
+
+.button-back {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.back-button-item {
+  display: flex;
+  position: relative;
+  height: 3em;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border: none;
+  background: #f9bb30;
+  margin: 0;
+  padding: 0;
+}
+ .back-button-item > svg {
+  margin-right: 5px;
+  margin-left: 5px;
+  font-size: 20px;
+  transition: all 0.4s ease-in;
+ }
+ 
+ .back-button-item:hover > svg {
+  font-size: 1.2em;
+  transform: translateX(-5px);
+ }
+ 
+ .back-button-item:hover {
+  box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+  transform: translateY(-2px);
+ }
+
+ .paragraphe {
+  font-size: 20px;
+  color: black;
+  text-align: center;
+  margin-top: 10px;
+ }
+
+/*=======================================================================================================*/
+/*====================================== RESPONSIVE DESIGN POUR TABLETTE ET PLUS ==================================*/
+/*=======================================================================================================*/
+
+/* Largeur minimale de 768px et hauteur minimale de 1024px (tablettes en mode portrait) */
+@media (min-width: 768px) and (min-height: 1024px) {
+  .block {
+    max-width: 95%;
+    max-height: 95%;
+  }
+
+  .formulaire 
+  {
+    width: 95%;
+}
+
+.btnConnexion, .btnInscription {
+
+  width: 100%;
+
+}
+
+}
+
+/*=======================================================================================================*/
+/*====================================== RESPONSIVE DESIGN POUR MOBILE ==================================*/
+/*=======================================================================================================*/
+
+/* Largeur inférieure à 576px (téléphones) */
+@media (max-width: 576px) {
+  /* Correction de l'espace blanc en mobile */
+  html {
+    height: -webkit-fill-available;
+    /* Prend en compte la hauteur réelle disponible */
+  }
+
+  body {
+    height: 100%;
+    min-height: -webkit-fill-available;
+    /* Pour les navigateurs WebKit */
+    width: 100%;
+  }
+
+  .block {
+    background-image: url(../Assets/Images/fond.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: -webkit-fill-available;
+    /* Prend en compte la hauteur réelle disponible */
+    max-width: 100%;
+    max-height: 100%;
+    border: none;
+  }
+
+  .overlay {
+    display: none;
+  }
+
+  .title {
+    margin-top: 10px;
+    font-size: 28px;
+  }
+
+  .required-note {
+    color: #666;
+    font-size: 18px;
+    text-align: center;
+    margin: 5px;
+  }
+
+  .left {
+    display: none;
+    visibility: shown;
+    width: 0;
+    height: 0;
+  }
+
+  .right {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+  }
+
+  .button-back {
+    display: none;
+  }
+
+  .formulaire {
+    margin: 0px;
+    margin-top: 3px;
+    height: auto;
+    width: auto;
+    padding-top: 10px;
+    box-shadow: none;
+    background-color: transparent;
+    border-radius: 0px;
+    border-top: #f9bb30 solid 2px;
+  }
+
+  .formulaire-champs-cote-a-cote {
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 10px;
+
+}
+
+  .input-group-custom {
+    max-width: 100%;
+  }
+
+  .Bouton-Select-Batiment {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+
+  .popup-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .btnConnexion,
+  .btnInscription {
+    display: none;
+    /* Cache les boutons se connecter et inscription de base*/
+  }
+
+  .mobile-buttons {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .btn-mobile {
+    text-decoration: none;
+    display: block;
+    width: auto;
+    padding: 10px;
+    font-size: 15px;
+    background-image: linear-gradient(to right, #ea742f, #fece58);
+    color: white;
+    border: none;
+    border-radius: 200px;
+    cursor: pointer;
+    transition: background-color 0.3sease, transform 0.2sease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: "Caveat Brush", cursive;
+  }
+
+  .champs-normal {
+    border-top: none;
+    gap: 5px;
+    padding-top: 0px;
+  }
+
+  .cssbuttons-io-button {
+    font-size: 16px;
+    height: 2.5em;
+    padding-right: 2.5em;
+  }
+
+  .cssbuttons-io-button .icon {
+    height: 2em;
+    width: 2em;
+  }
+
+  .checkbox-wrapper-radio,
+  .checkbox-wrapper-checkbox {
+    max-height: 150px;
+    overflow-y: auto;
+  }
+
+  .checkbox-wrapper-radio {
+    gap: 2px;
+    padding-bottom: 0px;
+    border-bottom: none;
+  }
+
+  .role-label {
+    font-size: 20px;
+    margin-bottom: 0px;
+    width: max-content;
+    padding-right: 5px;
+  }
+
+  .zone-bouton-final {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 0px;
+  }
+
+  .paragraphe {
+    font-size: 16px;
+    color: black;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}
+
+/* Largeur inférieure à 576px (téléphones) plus petit de hauteur  */
+@media (max-width: 576px) and (max-height: 670px) {
+ 
+  .label-batiments {
+    display: none;
+  }
+
+  .formulaire-champs-batiment
+    {
+    margin: 0px;
+  }
+
+  .formulaire-champs-cote-a-cote {
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+}
+
+/* Largeur inférieure à 576px (téléphones) plus petit de hauteur  */
+@media (max-width: 576px) and (max-height: 740px) {
+  .label-batiments {
+    display: none;
+  }
+
+  .formulaire-champs-batiment
+    {
+    margin: 0px;
+  }
+
+  .formulaire-champs-cote-a-cote {
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+}
+
+/* Activation du scroll en dessous de 630px de hauteur */
+@media (max-height: 600px) {
+  body {
+    overflow-y: auto;
+    min-height: 100vh;
+  }
+
+  .block {
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+  }
+
+  .right {
+    min-height: 100vh;
+    overflow: visible;
+    justify-content: flex-start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .formulaire-connexion {
+    overflow: visible;
+    height: auto;
+    min-height: calc(100vh - 100px);
+  }
+}

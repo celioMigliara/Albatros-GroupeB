@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
 
 /* TITRE PRINCIPAL */
+
 .titre {
     font-family: 'Caveat Brush', cursive;
     text-align: center;
@@ -10,20 +11,21 @@
     margin-bottom: 0.2rem;
     font-weight: normal;
 }
+
 .separateur-double-ligne-B2 {
     width: 78%;
     margin: 0 auto;
     display: block;
-    background: 
-        radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%),
-        radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+    background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
     background-size: 15px 15px;
     background-repeat: repeat;
     height: 25px;
     opacity: 1;
 }
 
+
 /* CONTAINER PRINCIPAL CENTRÉ */
+
 .container-recurr {
     display: flex;
     justify-content: center;
@@ -32,14 +34,16 @@
     margin-top: 13px;
 }
 
+
 /* TABLE STYLE */
+
 .tbl-qa-recurr {
     width: 80%;
     font-size: 1em;
     background-color: #f5f5f5;
     border-radius: 15px;
     border: 1px solid #555;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
 }
 
@@ -59,7 +63,9 @@
     border-bottom: 1px solid #ddd;
 }
 
+
 /* BOUTON AJOUTER */
+
 .add_recurr {
     background-color: #F9BB30;
     color: #fff;
@@ -76,49 +82,56 @@
     transition: background-color 0.3s ease;
 }
 
+
 /* Ajoute une hauteur fixe au tbody si trop d’enregistrements */
+
 .tbl-qa-recurr tbody {
     display: block;
     max-height: 440px;
     overflow-y: auto;
 }
 
+
 /* Fixe aussi la largeur pour aligner les colonnes */
-.tbl-qa-recurr thead, 
+
+.tbl-qa-recurr thead,
 .tbl-qa-recurr tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
 }
 
-.modif_recurr{
+.modif_recurr {
     background-color: #4151AC;
     color: #f5f5f5;
     font-size: 1.1em;
     border: none;
     text-decoration: none;
-    padding: 6px 15px; /* Ajoute de l'espace à l'intérieur du bouton */
-    border-radius: 15px; /* bordure du bouton (arrondie)*/
+    padding: 6px 15px;
+    /* Ajoute de l'espace à l'intérieur du bouton */
+    border-radius: 15px;
+    /* bordure du bouton (arrondie)*/
 }
 
 .add:hover {
     background-color: #e0a727;
 }
-.error{
+
+.error {
     color: red;
 }
 
 .error-border {
     border: 2px solid red;
 }
-.frm-add-recurr{
+
+.frm-add-recurr {
     font-family: 'Inter', sans-serif;
     width: 91%;
     margin: auto;
 }
 
-.frmAdd-recurr{
-    
+.frmAdd-recurr {
     display: flex;
     align-items: flex-start;
     flex-wrap: wrap;
@@ -134,24 +147,27 @@
     padding: 50px;
 }
 
-.demo-form-row-titre{
+.demo-form-row-titre {
     margin: auto;
     text-align: center;
-    width: 150%;   
+    width: 150%;
 }
-.demo-form-field-titre{
-    width:350px;
-    padding:7px;
-    background-color:  #DFD9D9;
+
+.demo-form-field-titre {
+    width: 350px;
+    padding: 7px;
+    background-color: #DFD9D9;
     border: none;
     border-radius: 5px;
 }
-.demo-form-row-descr{
+
+.demo-form-row-descr {
     margin: auto;
     text-align: center;
-    width: 100%;   
+    width: 100%;
 }
-.demo-form-des{
+
+.demo-form-des {
     flex-direction: column;
     width: 50%;
     height: 120px;
@@ -159,53 +175,66 @@
     background-color: #DFD9D9;
     border: none;
     border-radius: 15px;
-    text-align: left; /* Aligner le texte à gauche */
+    text-align: left;
+    /* Aligner le texte à gauche */
 }
-.demo-form-row{
+
+.demo-form-row {
     margin: auto;
-    width: 30%;   
+    width: 30%;
 }
-.demo-form-field{
-    width:150px;
-    padding:7px;
-    background-color:  #DFD9D9;
-    border: none;
-    border-radius: 5px;
-}
-.demo-form-freq{
-    width: 50px;
+
+.demo-form-field {
+    width: 150px;
     padding: 7px;
-    background-color:  #DFD9D9;
+    background-color: #DFD9D9;
     border: none;
     border-radius: 5px;
 }
 
-.add2_recurr{
+.demo-form-freq {
+    width: 50px;
+    padding: 7px;
+    background-color: #DFD9D9;
+    border: none;
+    border-radius: 5px;
+}
+
+.add2_recurr {
     background-color: #F9BB30;
     color: #f5f5f5;
     font-size: 0.9em;
     border: none;
-    padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
-    border-radius: 15px; /* bordure du bouton (arrondie)*/
+    padding: 10px 25px;
+    /* Ajoute de l'espace à l'intérieur du bouton */
+    border-radius: 15px;
+    /* bordure du bouton (arrondie)*/
 }
-.supp-btn_recurr{
+
+.supp-btn_recurr {
     background-color: #f93030;
     color: #f5f5f5;
     font-size: 0.9em;
     border: none;
     text-decoration: none;
-    padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
-    border-radius: 15px; /* bordure du bouton (arrondie)*/
+    padding: 10px 25px;
+    /* Ajoute de l'espace à l'intérieur du bouton */
+    border-radius: 15px;
+    /* bordure du bouton (arrondie)*/
 }
-.retour_liste_recurr{
+
+.retour_liste_recurr {
     background-color: #4151AC;
     color: #f5f5f5;
     font-size: 0.7em;
     border: none;
     text-decoration: none;
-    padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
-    border-radius: 15px; /* bordure du bouton (arrondie)*/
+    padding: 10px 25px;
+    /* Ajoute de l'espace à l'intérieur du bouton */
+    border-radius: 15px;
+    /* bordure du bouton (arrondie)*/
 }
+
 .filter-btn {
     font-family: 'Inter', sans-serif;
     cursor: pointer;
@@ -216,26 +245,30 @@
 }
 
 .dropdown {
-    position: relative; /* Permet de positionner le menu par rapport à ce div */
+    position: relative;
+    /* Permet de positionner le menu par rapport à ce div */
     display: inline-block;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    top: 100%; /* Affiche en dessous du bouton */
+    top: 100%;
+    /* Affiche en dessous du bouton */
     left: 0;
     background-color: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     padding: 10px;
     font-size: 23px;
-    width: 150px; /* Largeur du menu */
+    width: 150px;
+    /* Largeur du menu */
     border-radius: 5px;
     z-index: 100;
 }
 
 .dropdown.show .dropdown-content {
-    display: block; /* Affiche le menu quand on clique */
+    display: block;
+    /* Affiche le menu quand on clique */
     font-family: 85em;
 }
 
@@ -249,7 +282,7 @@
 .popup {
     display: none;
     position: absolute;
-    background :#DFD9D9;
+    background: #DFD9D9;
     color: #000000;
     font-size: 1.5em;
     top: 30%;
@@ -259,13 +292,13 @@
     padding: 20px;
     z-index: 1000;
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .popupDel {
     display: none;
     position: absolute;
-    background :#DFD9D9;
+    background: #DFD9D9;
     color: #000000;
     font-size: 1.5em;
     top: 30%;
@@ -275,35 +308,39 @@
     padding: 20px;
     z-index: 1000;
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .popup.error {
     border-color: red;
 }
-.popup-ok-btn{
+
+.popup-ok-btn {
     font-size: 1.0em;
     background: #F9BB30;
     color: white;
     border: none;
     border-radius: 15px;
-    padding: 5px 15px; /* Ajoute de l'espace à l'intérieur du bouton */
+    padding: 5px 15px;
+    /* Ajoute de l'espace à l'intérieur du bouton */
 }
+
 .popup-close {
     float: right;
     cursor: pointer;
     font-weight: bold;
 }
 
+
 /*Responsive pour l'écran d'inscription*/
-@media screen and (max-width: 1000px){
+
+@media screen and (max-width: 1000px) {
     .titre {
         font-size: 50px;
     }
     label {
         font-size: 18px;
     }
-
     /* TABLE STYLE */
     .tbl-qa-recurr {
         width: 100%;
@@ -311,10 +348,9 @@
         background-color: #f5f5f5;
         border-radius: 15px;
         border: 1px solid #555;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         overflow-x: auto;
     }
-
     .tbl-qa-recurr th.table-header {
         padding: 8px;
         text-align: center;
@@ -323,8 +359,6 @@
         color: #000000;
         border-bottom: 1px solid #ccc;
     }
-    
-
     /* Ajoute une hauteur fixe au tbody si trop d’enregistrements */
     .tbl-qa-recurr tbody {
         display: block;
@@ -332,65 +366,66 @@
         max-height: 320px;
         overflow-y: auto;
     }
-
     /* Fixe aussi la largeur pour aligner les colonnes */
-    .tbl-qa-recurr thead, 
+    .tbl-qa-recurr thead,
     .tbl-qa-recurr tbody tr {
         display: table;
         width: 100%;
         table-layout: fixed;
     }
-
     .filter-btn {
         font-family: 'Inter', sans-serif;
         font-size: 0.9em;
-        padding: 4px ;
+        padding: 4px;
         cursor: pointer;
         background-color: #F9BB30;
         border: none;
         border-radius: 5px;
     }
-
-    .modif_recurr{
+    .modif_recurr {
         background-color: #4151AC;
         color: #f5f5f5;
         font-size: 0.7em;
         border: none;
         text-decoration: none;
-        bottom: 15px; /* Distance du bas */
-        left: 15px; /* Distance de la gauche */
-        padding: 8px 15px; /* Ajoute de l'espace à l'intérieur du bouton */
-        border-radius: 15px; /* bordure du bouton (arrondie)*/
+        bottom: 15px;
+        /* Distance du bas */
+        left: 15px;
+        /* Distance de la gauche */
+        padding: 8px 15px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
+        border-radius: 15px;
+        /* bordure du bouton (arrondie)*/
     }
-
-    .add2_recurr{
+    .add2_recurr {
         background-color: #F9BB30;
         color: #f5f5f5;
         font-size: 0.9em;
         border: none;
-        padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
-        border-radius: 15px; /* bordure du bouton (arrondie)*/
+        padding: 10px 25px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
+        border-radius: 15px;
+        /* bordure du bouton (arrondie)*/
     }
-
-    .retour{
+    .retour {
         background-color: #4151AC;
         color: #f5f5f5;
         font-size: 0.5em;
         border: none;
         text-decoration: none;
-        left: 15px; /* Distance de la gauche */
-        padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
-        border-radius: 15px; /* bordure du bouton (arrondie)*/
+        left: 15px;
+        /* Distance de la gauche */
+        padding: 10px 25px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
+        border-radius: 15px;
+        /* bordure du bouton (arrondie)*/
     }
-    
 }
 
 @media screen and (max-width: 500px) {
-
     .titre {
         font-size: 1.95em;
     }
-
     /* TABLE STYLE */
     .tbl-qa-recurr {
         width: 95%;
@@ -398,10 +433,9 @@
         background-color: #f5f5f5;
         border-radius: 15px;
         border: 1px solid #555;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         overflow-x: auto;
     }
-
     .tbl-qa-recurr th.table-header {
         padding: 10px;
         text-align: center;
@@ -410,8 +444,6 @@
         color: #000000;
         border-bottom: 1px solid #ccc;
     }
-    
-
     /* Ajoute une hauteur fixe au tbody si trop d’enregistrements */
     .tbl-qa-recurr tbody {
         display: block;
@@ -419,34 +451,28 @@
         max-height: 500px;
         overflow-y: auto;
     }
-
     .tbl-qa-recurr tr.table-row td {
         padding: 10px;
     }
-
     /* Fixe aussi la largeur pour aligner les colonnes */
-    .tbl-qa-recurr thead, 
+    .tbl-qa-recurr thead,
     .tbl-qa-recurr tbody tr {
         display: table;
         width: 95%;
         table-layout: fixed;
     }
-
-
     .filter-btn {
         font-family: 'Inter', sans-serif;
         font-size: 0.7em;
-        padding: 3px ;
+        padding: 3px;
         cursor: pointer;
         background-color: #F9BB30;
         border: none;
         border-radius: 5px;
     }
-
     .dropdown.show .dropdown-content {
         font-family: 15em;
     }
-
     /* BOUTON AJOUTER */
     .add_recurr {
         background-color: #F9BB30;
@@ -463,28 +489,31 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-    .modif_recurr{
+    .modif_recurr {
         background-color: #4151AC;
         color: #f5f5f5;
         font-size: 0.5em;
         border: none;
         text-decoration: none;
-        bottom: 15px; /* Distance du bas */
-        left: 15px; /* Distance de la gauche */
-        padding: 8px 15px; /* Ajoute de l'espace à l'intérieur du bouton */
-        border-radius: 15px; /* bordure du bouton (arrondie)*/
+        bottom: 15px;
+        /* Distance du bas */
+        left: 15px;
+        /* Distance de la gauche */
+        padding: 8px 15px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
+        border-radius: 15px;
+        /* bordure du bouton (arrondie)*/
     }
-
 }
 
-@media screen and (max-height : 700px) {
+@media screen and (max-height: 700px) {
     /* Ajoute une hauteur fixe au tbody si trop d’enregistrements */
     .tbl-qa-recurr tbody {
         max-height: 350px;
     }
 }
 
-@media screen and (min-height: 1080px){
+@media screen and (min-height: 1080px) {
     .titre {
         font-size: 4em;
         margin-bottom: 17px;
@@ -492,7 +521,6 @@
     label {
         font-size: 18px;
     }
-
     /* TABLE STYLE */
     .tbl-qa-recurr {
         width: 85%;
@@ -500,10 +528,9 @@
         background-color: #f5f5f5;
         border-radius: 15px;
         border: 1px solid #555;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         overflow-x: auto;
     }
-
     .tbl-qa-recurr th.table-header {
         padding: 30px;
         text-align: center;
@@ -512,8 +539,6 @@
         color: #000000;
         border-bottom: 1px solid #ccc;
     }
-    
-
     /* Ajoute une hauteur fixe au tbody si trop d’enregistrements */
     .tbl-qa-recurr tbody {
         display: block;
@@ -521,15 +546,13 @@
         max-height: 750px;
         overflow-y: auto;
     }
-
     /* Fixe aussi la largeur pour aligner les colonnes */
-    .tbl-qa-recurr thead, 
+    .tbl-qa-recurr thead,
     .tbl-qa-recurr tbody tr {
         display: table;
         width: 100%;
         table-layout: fixed;
     }
-
     .filter-btn {
         font-family: 'Inter', sans-serif;
         font-size: 0.8em;
@@ -539,7 +562,6 @@
         border: none;
         border-radius: 5px;
     }
-
     /* BOUTON AJOUTER */
     .add_recurr {
         background-color: #F9BB30;
@@ -556,43 +578,48 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-
-
-    .modif_recurr{
+    .modif_recurr {
         background-color: #4151AC;
         color: #f5f5f5;
         font-size: 1.2em;
         border: none;
         text-decoration: none;
-        bottom: 15px; /* Distance du bas */
-        left: 15px; /* Distance de la gauche */
-        padding: 8px 15px; /* Ajoute de l'espace à l'intérieur du bouton */
-        border-radius: 15px; /* bordure du bouton (arrondie)*/
+        bottom: 15px;
+        /* Distance du bas */
+        left: 15px;
+        /* Distance de la gauche */
+        padding: 8px 15px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
+        border-radius: 15px;
+        /* bordure du bouton (arrondie)*/
     }
-
-    .add2_recurr{
+    .add2_recurr {
         background-color: #F9BB30;
         color: #f5f5f5;
-        font-family: 'Inter',sans-serif;
+        font-family: 'Inter', sans-serif;
         font-size: 1.2em;
-        text-decoration: none; /* Enlève le soulignement */
+        text-decoration: none;
+        /* Enlève le soulignement */
         border: none;
-        position: absolute; /* Fixe l'élément par rapport à l'écran */
-        bottom: 15px; /* Distance du bas */
-        right: 15px; /* Distance de la droite */
-        padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
+        bottom: 15px;
+        /* Distance du bas */
+        right: 15px;
+        /* Distance de la droite */
+        padding: 10px 25px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
         border-radius: 15px;
     }
-
-    .retour{
+    .retour {
         background-color: #4151AC;
         color: #f5f5f5;
         font-size: 0.5em;
         border: none;
         text-decoration: none;
-        left: 15px; /* Distance de la gauche */
-        padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
-        border-radius: 15px; /* bordure du bouton (arrondie)*/
+        left: 15px;
+        /* Distance de la gauche */
+        padding: 10px 25px;
+        /* Ajoute de l'espace à l'intérieur du bouton */
+        border-radius: 15px;
+        /* bordure du bouton (arrondie)*/
     }
-    
 }

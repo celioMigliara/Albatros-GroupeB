@@ -104,7 +104,7 @@ class TachesController {
                  Demande::recalcDemandStatus($data['id_demande']);
 
                 // Rediriger vers la page show.php avec l'ID de la demande
-                header('Location: index.php?action=show&id=' . $data['id_demande']);
+                header('Location: ' . BASE_URL . '/listedemande/' . $data['id_demande']);
                 exit;
             } else {
                 die("Erreur lors de la création de la tâche.");
@@ -173,14 +173,10 @@ class TachesController {
     
             $success = Taches::updateTask($data);
             if ($success) {
-                // Recalculer le statut de la demande après la mise à jour de la tâche
-                Demande::recalcDemandStatus($data['id_demande']);
-    
-                // Rediriger selon le rôle
                 if ($_SESSION['user_role'] == 2) { // Technicien
-                    header('Location: index.php?action=tasksForTechnicien');
-                } else { // Admin ou autre
-                    header('Location: index.php?action=show&id=' . $data['id_demande']);
+                    header('Location: ' . BASE_URL . '/tasksForTechnicien'); 
+                } else { // Admin
+                    header('Location: ' . BASE_URL . '/listedemande/' . $data['id_demande']);
                 }
                 exit;
             } else {

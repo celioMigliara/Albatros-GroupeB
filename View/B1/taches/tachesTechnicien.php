@@ -67,10 +67,9 @@
                             </div>
                         
                         <div class="task-actions">
-                            <form action="index.php?action=editTask&id_tache=<?= htmlspecialchars($task['id_tache']) ?>" method="POST">
-                                <input type="hidden" name="id_tache" value="<?= htmlspecialchars($task['id_tache']) ?>">
-                                <button type="submit" class="modifier-btn">Ajouter informations</button>
-                            </form>
+                        <div class="task-actions">
+                        <a href="<?= BASE_URL ?>/taches/modifier/<?= htmlspecialchars($task['id_tache']) ?>" class="modifier-btn">Ajouter informations</a>
+                        </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

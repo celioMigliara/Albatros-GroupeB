@@ -1,5 +1,5 @@
 // Attendre que le DOM soit entièrement chargé avant d’exécuter le JS
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
 
     // === Sélection des éléments du DOM ===
     const form = document.getElementById("form-demande");
@@ -16,10 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let locationData = {}; // ce sera rempli par un fetch au chargement
 
-    fetch(BASE_URL + "/Controller/B2/LocationControllerB2.php") //Appelle le controller
+    fetch(BASE_URL + '/Controller/B2/LocationControllerB2.php') //Appelle le controller
         .then(res => res.json()) // Récupère la réponse JSON
         .then(data => { // Traite la réponse JSON
-         
+
             locationData = data; // Remplit le tableau locationData avec les données du backend
             remplirSelect(site, locationData.sites, "SITE"); // Remplit le select site avec les données du backend
         });
@@ -34,12 +34,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /************Compteur caractere sujet et description*******************/
-    document.getElementById("sujet").addEventListener("input", function () { //Selectione champ sujet et ajout une écouteru d'evenement input
+    document.getElementById("sujet").addEventListener("input", function() { //Selectione champ sujet et ajout une écouteru d'evenement input
         let text = this.value; //Récup texte actuel du champ 
         document.getElementById("caracteresCount").textContent = text.length; //Met a jour le compteur de caractere sujet
     });
 
-    document.getElementById("description").addEventListener("input", function () {
+    document.getElementById("description").addEventListener("input", function() {
         let text = this.value;
         document.getElementById("caracteresCountDescription").textContent = text.length;
     });
@@ -221,13 +221,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // === Affiche une popup avec le message du backend ===
     const afficherPopup = (message, success = true) => {
         popupMessage.textContent = message;
-    
+
         // Applique un style différent selon le succès ou l’erreur
         popupMessage.classList.remove("popup-message-erreur");
         if (!success) {
             popupMessage.classList.add("popup-message-erreur");
         }
-    
+
         popup.style.display = "block";
         document.getElementById("popup-overlay-B2").style.display = "block";
         document.querySelector(".container-B2").classList.add("blurred-B2");
@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // === Envoi du formulaire avec Fetch (AJAX) ===
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async(e) => {
         e.preventDefault(); // Empêche rechargement de la page
 
 
@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
             afficherPopup(data.message, data.success);
 
             // Si la demande a été traitée avec succès, on réinitialise tout le formulaire
-            if (    data.success) resetFormulaire();
+            if (data.success) resetFormulaire();
 
         } catch (error) {
             console.error("Erreur AJAX :", error);

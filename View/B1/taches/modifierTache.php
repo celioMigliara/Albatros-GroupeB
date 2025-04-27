@@ -27,7 +27,8 @@ $isTechnicien = $_SESSION['user_role'] == 2; // Vérifier si l'utilisateur est u
 
     <h1 class="titleB1"><?= $isTechnicien ? "Ajout d'informations à la tâche" : "Modification d'une tâche" ?></h1>
 
-    <form method="POST" action="index.php?action=updateTask" enctype="multipart/form-data" class="form-grid" id="updateTaskForm">
+    + <form method="POST" action="<?= BASE_URL ?>/updateTask" enctype="multipart/form-data" class="form-grid" id="updateTaskForm">
+    <input type="hidden" name="id_tache" value="<?= htmlspecialchars($tache['id_tache']) ?>">
 
 
         <input type="hidden" name="id_tache" value="<?= htmlspecialchars($tache['id_tache']) ?>">
@@ -266,8 +267,8 @@ $isTechnicien = $_SESSION['user_role'] == 2; // Vérifier si l'utilisateur est u
         <div class="form-row">
             <div class="form-group full-width" style="text-align: center;">
                 <button type="submit" class="btn-small"><?= $isTechnicien ? "Enregistrer les informations" : "Modifier la tâche" ?></button>
-                <a href="<?= $isTechnicien ? 'index.php?action=tasksForTechnicien' : 'index.php?action=show&id=' . htmlspecialchars($tache['id_demande']) ?>" class="btn-return">Retour</a>
-            </div>
+                <a href="<?= $isTechnicien ? (BASE_URL . '/tasksForTechnicien') : (BASE_URL . '/listedemande/' . htmlspecialchars($tache['id_demande'])) ?>" class="btn-return">Retour</a>
+                </div>
         </div>
     </form>
 

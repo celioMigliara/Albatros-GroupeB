@@ -1,6 +1,8 @@
 <?php
 require_once(__DIR__ .'/../../Secure/B2/session.php'); // Pour que la session soit démarrée et que le token soit généré
 $token = generateCsrfToken();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,7 +26,7 @@ $token = generateCsrfToken();
     <h1 class="titre">Formulaire de modification d'une maintenance</h1>
     <div class="separateur-double-ligne-B2"></div>
     <div class="frm-add-recurr">
-    <form class="frmAdd-recurr" name="frmAdd" action="index.php?action=maintenance_modifier&id=<?php echo $maintenance['id_recurrence']; ?>" method="POST">
+    <form class="frmAdd-recurr" name="frmAdd" action="<?= BASE_URL ?>/maintenance/modifier/<?php echo $maintenance['id_recurrence']; ?>" method="POST">
     <input type="hidden" name="id_recurrence" value="<?php echo $maintenance['id_recurrence']; ?>">
         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
 

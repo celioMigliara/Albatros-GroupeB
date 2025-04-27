@@ -7,8 +7,8 @@
 
 <div class="filtre-container">
     <!-- modification pour que le controller des demandes soit executé avec les filtres -->
-<form method="POST" action="index.php?action=index" class="filtre-form">
-        <h2>Filtre(s) :</h2>
+    <form method="POST" action="<?= BASE_URL ?>/ListeDemandes" class="filtre-form">
+    <h2>Filtre(s) :</h2>
         <!-- Mot(s) Clé(s) -->
         <div class="form-group">
             <label for="keywords">Mot(s) Clé(s) :</label>
@@ -85,7 +85,7 @@
         <!-- Boutons -->
         <div class="button-group">
             <button type="submit">Appliquer</button>
-            <a href="index.php?action=index" class="btn-reset">Effacer</a> <!-- Bouton pour réinitialiser le filtre, passe aussi l'index pour ce soit exécuté-->  
-        </div>
+            <a href="<?= BASE_URL ?>/ListeDemandes" class="btn-reset">Effacer</a>
+            </div>
     </form>
 </div>

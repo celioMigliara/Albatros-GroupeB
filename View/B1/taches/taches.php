@@ -23,7 +23,7 @@ $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
 <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
 
     <h1 class="title">Création d'une tâche</h1>
-    <form id="createTaskForm" method="POST" action="index.php?action=storeTask" enctype="multipart/form-data" class="form-grid">
+    <form id="createTaskForm" method="POST" action="<?= BASE_URL ?>/creerTacheStore/<?= htmlspecialchars($demande['id_demande']) ?>" enctype="multipart/form-data" class="form-grid">
     <!-- Ajouter ceci juste après l'ouverture du formulaire -->
     <input type="hidden" name="id_demande" value="<?= htmlspecialchars($idDemande) ?>">    
     
@@ -117,12 +117,12 @@ $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
 
        <!-- Bouton -->
        <button type="submit" class="btn-small">Créer la tâche</button>
-       <a href="index.php?action=show&id=<?= htmlspecialchars($demande['id_demande']) ?>" class="btn-return mobile-return">Retour</a>
+       <a href="<?= BASE_URL ?>/listedemande/<?= htmlspecialchars($demande['id_demande']) ?>" class="btn-return mobile-return">Retour</a>
     
     </form>
     
 
-    <div>
+    <div> 
         <p id="errorMessage"></p>
     </div>
     <script>

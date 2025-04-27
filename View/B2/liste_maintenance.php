@@ -2,6 +2,19 @@
 require_once(__DIR__ . '/../../Secure/B2/session.php'); // Pour que la session soit démarrée et que le token soit généré
 $token = generateCsrfToken();
 
+
+if (isset($_SESSION['popup_message'])) { 
+    $message = $_SESSION['popup_message']; //Stock  le message de la session
+    $success = $_SESSION['popup_success'];
+
+    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showPopup(" . json_encode($message) . ", " . ($success ? 'false' : 'true') . ");
+    });
+    </script>";
+
+    unset($_SESSION['popup_message'], $_SESSION['popup_success']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -27,7 +40,18 @@ $token = generateCsrfToken();
 <script src="<?= BASE_URL ?>/Javascript/B2/script.js" defer></script>
 
 <body>
+<div id="popup" class="popup" style="display: none;">
+    <span id="popup-close" class="popup-close">&times;</span>
+    <p id="popup-message"></p>
+    <button id="popup-ok-btn">OK</button>
+</div>
 
+<!-- Pop-up d’erreur -->
+<div id="error-popup" class="popup error" style="display: none;">
+    <span id="error-popup-close" class="popup-close">&times;</span>
+    <p id="error-message"></p>
+    <button id="error-ok-btn">OK</button>
+</div>
     <h1 class="titre">Liste des maintenances</h1>
     <div class="separateur-double-ligne-B2"></div>
 
@@ -84,7 +108,7 @@ $token = generateCsrfToken();
                                 <td><?= htmlspecialchars($row["nom_site"]) ?></td>
                                 <td><?= htmlspecialchars($row["nom_batiment"]) ?></td>
                                 <td>
-                                    <a class="modif_recurr" href="index.php?action=maintenance_modifier&id=<?= $row['id_recurrence'] ?>">Modifier</a>
+                                    <a class="modif_recurr" href="<?= BASE_URL ?>/maintenance/modifier/<?= $row['id_recurrence'] ?>">Modifier</a>
                                 </td>
                             </tr>
                     <?php
@@ -96,7 +120,7 @@ $token = generateCsrfToken();
         </div>
 
         <div class="container">
-            <a href="index.php?action=maintenance_ajouter" class="add_recurr">Ajouter</a>
+            <a href="<?= BASE_URL ?>/maintenance/ajouter" class="add_recurr">Ajouter</a>
         </div>
     </form>
 </body>

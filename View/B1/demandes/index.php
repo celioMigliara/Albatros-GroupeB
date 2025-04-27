@@ -90,10 +90,7 @@ $filters = $filters ?? [];
                             <p><strong>Statut :</strong> <span class="statut-label <?= $statutClass ?>"><?= htmlspecialchars($demande['nom_statut']) ?></span></p>
                         </div>
                         <div class="demande-actions">
-                            <form action="index.php?action=show&id=<?= htmlspecialchars($demande['id_demande']) ?>" method="POST">
-                                <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
-                                <button type="submit" class="action-button">Voir</button>
-                            </form>
+                                <a href="<?= BASE_URL ?>/listedemande/<?= htmlspecialchars($demande['id_demande']) ?>" class="action-button">Voir</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -110,7 +107,7 @@ $filters = $filters ?? [];
     <div class="technicien-button-container">
             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 2): ?>
                 <!-- Lien vers la liste de tâches du technicien -->
-                <a href="index.php?action=tasksForTechnicien" class="btn-green">Voir mes tâches</a>
+                <a href="<?= BASE_URL ?>/tasksForTechnicien" class="btn-green">Voir mes tâches</a>
             <?php endif; ?>
     </div>
 

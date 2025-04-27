@@ -26,8 +26,8 @@ function accueil()
 
        // Récupérer tous les résultats
        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        require "view/B2/liste_maintenance.php";
-    } catch (PDOException $e) {
+       require __DIR__ . '/../../View/B2/Liste_maintenance.php';
+        } catch (PDOException $e) {
         $msgError = 'Echec de la connexion : ' .  $e->getMessage();
     }
 }
@@ -128,17 +128,15 @@ function modifierMaintenance() {
             );
     
             if ($result["success"]) {
-                echo "<script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        showPopup(" . json_encode($result["message"]) . ", false);
-                    });
-                </script>";
+                $_SESSION['popup_message'] = $result["message"]; // on passe le message en session
+                $_SESSION['popup_success'] = true;
+                header('Location: ' . BASE_URL . '/recurrence');
+                exit;
             } else {
-                echo "<script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        showPopup(" . json_encode($result["message"]) . ", true);
-                    });
-                </script>";
+                $_SESSION['popup_message'] = $result["message"];
+                $_SESSION['popup_success'] = false;
+                header('Location: ' . BASE_URL . '/recurrence');
+                exit;
             }
 
         }

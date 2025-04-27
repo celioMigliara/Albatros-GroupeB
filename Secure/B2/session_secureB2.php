@@ -58,6 +58,6 @@ if (!isset($_SESSION['user_agent'])) {
     exit;
 }
 
-$_SESSION['user_id'] = 1; // L'ID de l'utilisateur fictif
-$_SESSION['user_role'] =1; // Rôle de l'utilisateur fictif
+$_SESSION['user_id'] = 2; // L'ID de l'utilisateur fictif
+$_SESSION['user_role'] =2; // Rôle de l'utilisateur fictif
 ?>

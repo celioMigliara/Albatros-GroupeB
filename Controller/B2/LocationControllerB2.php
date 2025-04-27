@@ -16,13 +16,7 @@ function getLocationJson(): string {
     return json_encode($data, JSON_UNESCAPED_UNICODE);
 }
 
-
-// Émission de la réponse uniquement si appelé directement via navigateur
-//API serveur et cli si c est executé en smd donc intersesant pour les test 
-//S execute pas si on fait des tests 
-//Chemin du ficheir actuel 
-//extrait nom fichier 
-if (PHP_SAPI !== 'cli' && basename(__FILE__) === basename($_SERVER["SCRIPT_FILENAME"])) {
-    header("Content-Type: application/json");
-    echo getLocationJson();
-}
+// Toujours renvoyer du JSON
+header('Content-Type: application/json');
+echo getLocationJson();
+exit;

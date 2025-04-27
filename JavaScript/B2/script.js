@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter(cb => cb !== selectAll && cb.checked)
             .map(cb => cb.value);
 
-       
+
         tableRows.forEach(row => {
             const rowSite = row.getAttribute('data-site');
             row.style.display = checkedSites.includes(rowSite) ? '' : 'none';
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.prepend(errorContainer); // Ajoute le conteneur d'erreur en haut du formulaire
 
         inputs.forEach(input => {
-            input.addEventListener("blur", function () {
+            input.addEventListener("blur", function() {
                 if (this.value.trim() === "") {
                     this.classList.add("error-border");
                     afficherMessageErreur(this, "Ce champ est obligatoire !");
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener("submit", function(event) {
             let isValid = true;
             errorContainer.style.display = "none"; // Cache le message global d'erreur
-            
+
             inputs.forEach(input => {
                 if (input.value.trim() == "") {
                     input.classList.add("error-border");
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-    
+
 document.addEventListener('DOMContentLoaded', () => {
     const siteSelect = document.getElementById('choixSite');
     const batimentSelect = document.getElementById('choixBatiment');
@@ -131,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(BASE_URL + '/Controller/B2/ajax.php?get_sites=1')
         .then(response => response.json())
         .then(data => {
-            
-             // Supprimer toutes les options sauf la première
+
+            // Supprimer toutes les options sauf la première
             siteSelect.innerHTML = '<option value="">Sélectionnez un site</option>';
             data.forEach(site => {
                 const option = document.createElement('option');
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         option.textContent = batiment.nom_batiment;
                         batimentSelect.appendChild(option);
                     });
-                    
+
                     const selectedBatiment = batimentSelect.getAttribute('data-selected');
                     if (selectedBatiment) {
                         batimentSelect.value = selectedBatiment;
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lieuSelect.innerHTML = '<option value="">Sélectionnez un lieu</option>';
 
         if (batimentId) {
-            fetch(BASE_URL +`/Controller/B2/ajax.php?batiment_id=${batimentId}`)
+            fetch(BASE_URL + `/Controller/B2/ajax.php?batiment_id=${batimentId}`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(lieu => {
@@ -207,27 +207,23 @@ function showPopup(message, isError = false) {
     const popup = isError ? document.getElementById("error-popup") : document.getElementById("popup");
     const popupMessage = isError ? document.getElementById("error-message") : document.getElementById("popup-message");
     const okBtn = isError ? document.getElementById("error-ok-btn") : document.getElementById("popup-ok-btn");
-    popupMessage.textContent = message;  // Ajoute le message au pop-up
+    popupMessage.textContent = message; // Ajoute le message au pop-up
     popup.style.display = 'block'; // Affiche le pop-up
-    
+
     // Gérer le bouton OK
-    okBtn.addEventListener('click', function () {
-        if (isError) {
-            window.location.href = window.location.href; // Reste sur la même page en cas d'erreur
-        } else {
-            window.location.href = "recurrence";
-        }
-        popup.style.display = 'none'; // Ferme le pop-up
+    okBtn.addEventListener('click', function() {
+        popup.style.display = 'none';
+        window.location.href = BASE_URL + '/recurrence'; // <<< LA BONNE LIGNE !
     });
 
     // Gérer le bouton de fermeture
     const closeBtn = document.querySelector(isError ? '#error-popup-close' : '#popup-close');
-    closeBtn.addEventListener('click', function () {
+    closeBtn.addEventListener('click', function() {
         popup.style.display = 'none'; // Ferme le pop-up si on clique sur la croix
     });
 }
 document.querySelectorAll('.supp-btn_recurr').forEach(btn => {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function() {
         const id = this.dataset.id;
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -241,38 +237,39 @@ document.querySelectorAll('.supp-btn_recurr').forEach(btn => {
         popupDel.style.display = 'block';
 
         const onOkClick = () => {
-            fetch(BASE_URL +'/Controller/B2/ajax-suppression.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' 
+            fetch(BASE_URL + '/Controller/B2/ajax-suppression.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
 
-                },
-                body: `id=${encodeURIComponent(id)}&csrf_token=${encodeURIComponent(csrfToken)}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if (data.success) {
-                    window.location.href = "recurrence";
-                } else {
-                    popupDel.style.display = 'none';
-                }
-            })
-            .catch(err => {
-                alert("Erreur réseau !");
-                console.error(err);
-            });
+                    },
+                    body: `id=${encodeURIComponent(id)}&csrf_token=${encodeURIComponent(csrfToken)}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) {
+                        window.location.href = BASE_URL + "/recurrence";
+                    } else {
+                        popupDel.style.display = 'none';
+                    }
+                })
+                .catch(err => {
+                    alert("Erreur réseau !");
+                    console.error(err);
+                });
 
             okBtn.removeEventListener('click', onOkClick);
         };
 
         okBtn.addEventListener('click', onOkClick);
-       
+
 
         closeBtn.addEventListener('click', () => {
             popupDel.style.display = 'none';
             okBtn.removeEventListener('click', onOkClick);
         });
-        
+
         NoBtn.addEventListener('click', () => {
             popupDel.style.display = 'none';
             okBtn.removeEventListener('click', onOkClick);

@@ -1,6 +1,5 @@
 <?php
 // Model/Demande.php
-
 require_once __DIR__ . '/../ModeleDBB2.php';
 class Demande {
    
@@ -86,9 +85,10 @@ public static function getFilteredWithPagination($filters, $offset, $limit) {
 
     $params = [];
 
-     if(empty($filters['statut']) || $filters['statut'] != 6) {
-        $query .= " AND s.id_statut != 6"; // Exclure les demandes annulées 
-     }  
+    // Par défaut, exclure les demandes annulées (sauf si le filtre demande explicitement ce statut)
+    if (empty($filters['statut']) || $filters['statut'] != 6) { // Supposons que 6 est l'ID du statut "Annulée"
+        $query .= " AND s.id_statut != 6"; // Exclure les demandes annulées
+    }
 
     // Ajout du filtre par statut
     if (!empty($filters['statut'])) {
@@ -283,32 +283,29 @@ public static function getByUserAndBuilding($userId, $filters, $offset, $limit) 
 
 public static function getTotalByUserAndBuilding($userId, $filters) {
     $pdo = Database::getInstance()->getConnection(); 
-
     $query = "
         SELECT COUNT(*) AS total
         FROM demande d
         JOIN utilisateur u ON d.id_utilisateur = u.id_utilisateur
         JOIN lieu l ON d.id_lieu = l.id_lieu
         JOIN batiment b ON l.id_batiment = b.id_batiment
-        JOIN est e ON d.id_demande = e.id_demande  -- Joindre la table est pour récupérer id_statut
-        JOIN statut s ON e.id_statut = s.id_statut  -- Joindre la table statut pour récupérer le statut
         WHERE (d.id_utilisateur = :userId OR b.id_batiment IN (
             SELECT id_batiment FROM travaille WHERE id_utilisateur = :userId
         ))
     ";
 
-    // Ajouter les filtres dynamiques
+    // Ajouter les filtres dynamiquement
     if (!empty($filters['keywords'])) {
         $query .= " AND (d.sujet_dmd LIKE :keywords OR d.description_dmd LIKE :keywords)";
     }
     if (!empty($filters['statut'])) {
-        $query .= " AND s.id_statut = :statut";  // Utiliser s.id_statut ici, pas d.id_statut
+        $query .= " AND d.id_statut = :statut";
     }
     if (!empty($filters['site'])) {
-        $query .= " AND d.id_site = :site";  // Si vous avez cette colonne dans demande
+        $query .= " AND d.id_site = :site";
     }
     if (!empty($filters['batiment'])) {
-        $query .= " AND b.id_batiment = :batiment"; // Utilisez b.id_batiment pour le filtre par bâtiment
+        $query .= " AND b.id_batiment = :batiment";
     }
     if (!empty($filters['date_debut'])) {
         $query .= " AND d.date_creation_dmd >= :date_debut";
@@ -344,21 +341,36 @@ public static function getTotalByUserAndBuilding($userId, $filters) {
     return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 }
 
-
 public static function updateDemande($id, $data) {
     $pdo = Database::getInstance()->getConnection(); 
 
-    $stmt = $pdo->prepare("
-        UPDATE demande
-        SET description_dmd = :description_dmd,
-            id_lieu = (SELECT id_lieu FROM lieu WHERE nom_lieu = :nom_lieu LIMIT 1)
-        WHERE id_demande = :id
-    ");
-    $stmt->execute([
-        ':description_dmd' => $data['description_dmd'],
-        ':nom_lieu' => $data['nom_lieu'],
-        ':id' => $id,
-    ]);
+    // Si nom_lieu est vide, on ne met à jour que la description
+    if (empty($data['nom_lieu'])) {
+        $stmt = $pdo->prepare("
+            UPDATE demande
+            SET description_dmd = :description_dmd
+            WHERE id_demande = :id
+        ");
+        $stmt->execute([
+            ':description_dmd' => $data['description_dmd'] ?? '',
+            ':id' => $id,
+        ]);
+    } else {
+        // Sinon, on met à jour la description et le lieu
+        $stmt = $pdo->prepare("
+            UPDATE demande
+            SET description_dmd = :description_dmd,
+                id_lieu = (SELECT id_lieu FROM lieu WHERE nom_lieu = :nom_lieu LIMIT 1)
+            WHERE id_demande = :id
+        ");
+        $stmt->execute([
+            ':description_dmd' => $data['description_dmd'] ?? '',
+            ':nom_lieu' => $data['nom_lieu'],
+            ':id' => $id,
+        ]);
+    }
+    
+    return true;
 }
 
 public static function getImagesByDemandeId($idDemande) {
@@ -379,7 +391,6 @@ public static function updateStatut($idDemande, $nouveauStatut) {
         ':statut' => $nouveauStatut,
         ':id' => $idDemande,
     ]);
-  
 }
 
 public static function getByIdforMail($idDemande) {

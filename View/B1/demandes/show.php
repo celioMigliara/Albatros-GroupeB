@@ -128,10 +128,14 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             <!-- Section d'upload de fichier -->
             <?php if ($isDemandeModifiable): ?>
                 <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="media">Ajouter un média :</label>
-                        <input type="file" id="media" name="media" accept="image/*,video/*,audio/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
-                        <small>Formats acceptés : images, vidéos, audio, PDF, documents Office, texte...</small>
+                <div class="form-group full-width">
+                <form method="POST" action="<?= BASE_URL ?>/updateDemande" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
+                            <label for="media">Ajouter un média :</label>
+                            <input type="file" id="media" name="media" accept="image/*,video/*,audio/*,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"> 
+                            <small>Formats acceptés : images, vidéos, audio, PDF, documents Office, texte...</small>
+                            <button type="submit" class="btn-confirm">Confirmer l'ajout</button>
+                        </form>
                     </div>
                 </div>
             <?php endif; ?>

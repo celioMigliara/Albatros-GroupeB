@@ -101,7 +101,13 @@ switch ($segments[0]) {
         }
         break;
        
-
+        case 'updateDemande':
+            require_once __DIR__ . '/Controller/B1/DemandesController.php';
+            $DemandesController = new DemandesController();
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $DemandesController->updateDemande();
+            }
+            break;
     case 'utilisateur':
         if (isset($segments[1])) {
             $_GET['id'] = (int)$segments[1];

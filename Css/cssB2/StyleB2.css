@@ -6,7 +6,6 @@
 /* === STRUCTURE DE BASE === */
 
 .page-demande-B2 {
-    color: #333;
     font-family: 'Caveat Brush', cursive;
     /* ou une autre police que tu veux */
     font-size: 16px;
@@ -16,7 +15,6 @@
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    background-color: #f9f9f9;
     overflow-x: hidden;
     cursor: crosshair;
 }
@@ -300,10 +298,9 @@
 /*Filtre arriere page*/
 
 .blurred-B2 {
-    filter: blur(4px);
+    filter: blur(1.5px);
     transition: filter 0.3s ease;
     pointer-events: none;
-    /* pour empêcher les clics */
     user-select: none;
 }
 
@@ -314,7 +311,7 @@
 }
 
 .popup-content-B2 {
-    font-size: 18px;
+    font-size: 23px;
     color: #333;
 }
 

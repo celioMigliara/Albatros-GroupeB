@@ -18,6 +18,10 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
 </head>
 
 <body class="page-demande-B2">
+
+
+<!-- Div englobant-->
+
 <header>
 
     <?php if ($_SESSION['user_role'] == 1): ?>
@@ -32,8 +36,8 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
     </div>
   </noscript>
 
+ 
   <div class="container-B2">
-  
     <header>
       <h1 class="title-B2">Demande d'intervention</h1>
       <div class="separateur-double-ligne-B2"></div>
@@ -126,7 +130,7 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
       </form>
     </div>
   </div>
-
+  
   <div id="popup-overlay-B2" class="popup-overlay"></div>
 
   <div id="popup" class="popup-B2">

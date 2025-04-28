@@ -11,8 +11,8 @@ if (!isset($_SESSION['initiated'])) {
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['user_prenom'] = "Ilhan";
     $_SESSION['nom'] = "Ilhan";
-    $_SESSION['user_id'] = 1;
-    $_SESSION['user_role'] = 1; // 1 = Admin, 2 = Technicien
+    $_SESSION['user_id'] = 2;
+    $_SESSION['user_role'] = 2; // 1 = Admin, 2 = Technicien
 }
 
 // Définir BASE_URL

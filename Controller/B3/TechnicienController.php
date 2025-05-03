@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Modeles/UserCredentials.php';
-require_once 'Modeles/Technicien.php';
+require_once 'Model/B3/UserCredentials.php';
+require_once 'Model/B3/Technicien.php';
 
 class TechnicienController
 {

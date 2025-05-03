@@ -3,7 +3,7 @@
 require_once 'db_connect.php';
 require_once 'User.php';
 
-class UserProfile extends User
+class UserProfile extends UserB3
 {
     public function __construct($newUserId)
     {

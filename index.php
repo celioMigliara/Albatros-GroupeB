@@ -34,6 +34,14 @@ $uri = trim($uri, '/');
 // Découper en segments
 $segments = explode('/', $uri);
 
+require_once 'Controller/B3/UserControlleur.php';
+require_once 'Controller/B3/AuthController.php';
+require_once 'Controller/B3/PasswordController.php';
+require_once 'Controller/B3/PrintController.php';
+require_once 'Controller/B3/ProfileController.php';
+require_once 'Controller/B3/TaskController.php';
+require_once 'Controller/B3/TechnicienController.php';
+
 // Gestion de la page d'accueil
 if ($segments[0] === '' || $segments[0] === 'index.php') {
     if (!empty($_SESSION['user_role'])) {
@@ -52,6 +60,9 @@ if ($segments[0] === '' || $segments[0] === 'index.php') {
     }
     exit;
 }
+
+// Mise à true quand la page demandée n'est pas trouvée
+$pageNotFound = false;
 
 // Gestion de routage manuel
 switch ($segments[0]) {
@@ -214,10 +225,120 @@ switch ($segments[0]) {
         }
         break;
 
+    // B3 Use Cases
+    // Authentification
+    case 'inscription':
+        (new AuthController())->register();
+        break;
+
+    case 'connexion':
+        (new AuthController())->login();
+        break;
+
+    case 'deconnexion':
+        (new AuthController())->logout();
+        break;
+
+    // Mot de passe
+    case 'motdepasse':
+        if (!isset($segments[1])) 
+        {
+            $pageNotFound = true;
+            break;
+        }
+
+        switch ($segments[1]) {
+            case 'reset': 
+                (new PasswordController())->sendResetEmail();
+                break;
+            case 'changer':
+                (new PasswordController())->ChangePassword();
+                break;
+            default:
+            $pageNotFound = true;
+            break;
+        }
+        break;
+
+    // Profil
+    case 'profil':
+        if (!isset($segments[1])) 
+        {
+            $pageNotFound = true;
+            break;
+        }
+        if ($segments[1] === 'modifier') { 
+            (new ProfileController())->updateProfile();
+        }
+        break;
+
+    case 'taches':
+        (new TaskController())->getTasksForTechnician();
+        break;
+
+    // Feuille de route
+    case 'feuillederoute':
+        if (isset($segments[1])) {
+            switch ($segments[1]) {
+                case 'imprimer': // anciennement 'imprimerFeuilleDeRoute'
+                    (new PrintController())->print();
+                    break;
+                case 'ordre':
+                    if (isset($segments[2]) && $segments[2] === 'update') { // anciennement 'updateOrdre'
+                        (new TaskController())->updateTasksOrder();
+                    }
+                    else
+                    {
+                        $pageNotFound = true;
+                    }
+                    break;
+
+                case 'liste':
+                    if (isset($segments[2])) {
+                        switch ($segments[2]) {
+                            case 'taches': // anciennement 'voirTachesParTechnicien' + 'getTaches'
+                                (new TaskController())->index();
+                                break;
+                            case 'impression': // anciennement 'voirListeImpression'
+                                (new PrintController())->index();
+                                break;
+                            case 'techniciens': // anciennement 'getTechnicienUser'
+                                (new TechnicienController())->getTechniciens();
+                                break;
+
+                            default:
+                                $pageNotFound = true;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        $pageNotFound = true;
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            $pageNotFound = true;
+        }
+        break;
+
+    // Page d'accueil connexion (DEV seulement)
+    case 'AccueilConnexion':
+        (new UserControlleur())->accueil();
+        break;
+
     default:
-        http_response_code(404);
-        echo "404 - Page non trouvée : " . htmlspecialchars($uri);
-        exit;
+        $pageNotFound = true;
+        break;
+}
+
+if ($pageNotFound)
+{
+    http_response_code(404);
+    echo "404 - Page non trouvée : " . htmlspecialchars($uri);
+    exit;
 }
 
 // ===================================

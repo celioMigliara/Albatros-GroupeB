@@ -1,8 +1,8 @@
 <?php
 
-require_once 'Modeles/UserCredentials.php';
-require_once 'Modeles/UserProfile.php';
-require_once 'Modeles/Security.php';
+require_once 'Model/B3/UserCredentials.php';
+require_once 'Model/B3/UserProfile.php';
+require_once 'Model/B3/Security.php';
 
 class ProfileController
 {
@@ -22,7 +22,7 @@ class ProfileController
 
                 // On setup le message d'erreur pour la vue
                 $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
-                require 'Vue/PageErreur.php';
+                require 'View/B3/PageErreur.php';
                 return false;
             }
 
@@ -174,14 +174,14 @@ class ProfileController
                 $csrf_token = $securityObj->genererCSRFToken();
                 
                 // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
-                require 'Vue/ModifierProfil.php';
+                require 'View/B3/ModifierProfil.php';
                 return true;
 
             } else {
                 
                 // On setup le message d'erreur pour la vue
                 $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
-                require 'Vue/PageErreur.php';
+                require 'View/B3/PageErreur.php';
                 return false;
             }
         }

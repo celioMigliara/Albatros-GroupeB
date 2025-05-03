@@ -1,10 +1,10 @@
 <?php
 
-require_once 'Modeles/UserCredentials.php';
-require_once 'Modeles/Technicien.php';
-require_once 'Modeles/Tache.php';
-require_once 'Modeles/Security.php';
-require_once 'Modeles/MessageErreur.php';
+require_once 'Model/B3/UserCredentials.php';
+require_once 'Model/B3/Technicien.php';
+require_once 'Model/B3/Tache.php';
+require_once 'Model/B3/Security.php';
+require_once 'Model/B3/MessageErreur.php';
 
 class TaskController
 {
@@ -22,14 +22,14 @@ class TaskController
             // Générer le token CSRF pour la liste des taches
             $securityObj = new Security();
             $csrf_token = $securityObj->genererCSRFToken();
-            require 'Vue/ListeTachesParTechnicien.php';
+            require 'View/B3/ListeTachesParTechnicien.php';
         }
         else
         {
             http_response_code(403);
             
             $errorMsg = new MessageErreur("Chargement de la page impossible", "Il faut être connecté en tant qu'administrateur");
-            require 'Vue/PageErreur.php';
+            require 'View/B3/PageErreur.php';
             exit();
         }
     }

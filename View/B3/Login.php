@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Connexion</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/StylesB3.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
             </div>
 
             <!-- Logo de l'application -->
-            <img src="<?= BASE_URL ?>/Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
+            <img src="<?= BASE_URL ?>/Assets/B3/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
 
         </div>
 
@@ -124,7 +124,7 @@
         const BASE_URL = <?= json_encode(BASE_URL) ?>;
     </script>
     <!-- Inclusion du script pour gérer les champs obligatoires -->
-    <script src="<?= BASE_URL ?>/JavaScript/General.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/B3/General.js"></script>
 
 </body>
 

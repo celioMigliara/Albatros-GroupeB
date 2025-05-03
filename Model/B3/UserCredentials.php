@@ -5,7 +5,7 @@ require_once 'Role.php';
 require_once 'User.php';
 require_once 'Security.php';
 
-class UserCredentials extends User 
+class UserCredentials extends UserB3 
 {
     public const LongueurMinimumPassword = 8;
     public const LongueurMaximumPassword = 64;

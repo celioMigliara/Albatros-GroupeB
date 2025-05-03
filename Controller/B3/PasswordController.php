@@ -1,9 +1,9 @@
 <?php
 
-require_once 'Modeles/Token.php';
-require_once 'Modeles/Email.php';
-require_once 'Modeles/UserCredentials.php';
-require_once 'Modeles/Security.php';
+require_once 'Model/B3/Token.php';
+require_once 'Model/B3/Email.php';
+require_once 'Model/B3/UserCredentials.php';
+require_once 'Model/B3/Security.php';
 
 class PasswordController
 {
@@ -142,7 +142,7 @@ class PasswordController
             $csrf_token = $securityObj->genererCSRFToken();
             
             // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
-            require 'Vue/ResetPassword.php';
+            require 'View/B3/ResetPassword.php';
             return true;
         }
     }
@@ -247,7 +247,7 @@ class PasswordController
             {
                 // On setup le message d'erreur pour la vue
                 $errorMsg = new MessageErreur("Chargement de la page impossible", "Token invalide ou expiré");
-                require 'Vue/PageErreur.php';
+                require 'View/B3/PageErreur.php';
                 return false;
             }
 
@@ -256,7 +256,7 @@ class PasswordController
 
             // Génération du token csrf 
             $csrf_token = $securityObj->genererCSRFToken();
-            require 'Vue/ChangerPassword.php';
+            require 'View/B3/ChangerPassword.php';
             return true;
         }
     }

@@ -7,7 +7,7 @@
 
 /* Style général du body avec une image de fond et un effet centré */
 body {
-  background-image: url("../Assets/Images/fond.png");
+  background-image: url("/Assets/B3/fond.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -83,7 +83,7 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  background-image: url("../Assets/Images/fond2.png");
+  background-image: url("../../Assets/B3/fond2.png");
   background-position: center;
 }
 
@@ -903,7 +903,7 @@ input[type="password"]:valid ~ label {
   }
 
   .block {
-    background-image: url(../Assets/Images/fond.png);
+    background-image: url(/Assets/B3/fond.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

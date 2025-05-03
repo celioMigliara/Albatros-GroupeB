@@ -9,12 +9,14 @@ require_once 'ProfileController.php';
 require_once 'TaskController.php';
 require_once 'TechnicienController.php';
 
+// C'est une classe qui centralise les accès aux autres
+// controlleurs pour les tests, pour la backward compatibility
 class UserControlleur
 {
     // Pour le dev only : 
     public function accueil()
     {
-        require 'Vue/AccueilConnexion.php';
+        require 'View/B3/AccueilConnexion.php';
     }
     // Pour maintenir les tests intacts
     // FOnction pour la création d'un utilisateur

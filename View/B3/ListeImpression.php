@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title>Liste d'impression des techniciens présents</title>
-  <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/FeuilleRoute.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
 </head>
 
 <body data-page="ListeImpression">
@@ -52,7 +52,7 @@
     const BASE_URL = <?= json_encode(BASE_URL) ?>;
   </script>
   
-  <script src="<?= BASE_URL ?>/JavaScript/ListeImpression.js"></script>
+  <script src="<?= BASE_URL ?>/JavaScript/B3/ListeImpression.js"></script>
 
 </body>
 

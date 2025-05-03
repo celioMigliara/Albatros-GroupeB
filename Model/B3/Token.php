@@ -3,7 +3,6 @@ require_once 'db_connect.php';
 
 class Token
 {
-
     // Attributs de la classe    
     private $tokenValue = null;
     private $tokenExpirationDate = null;

@@ -1,6 +1,6 @@
 <?php
 
-abstract class User
+abstract class UserB3
 {
     // L'id du user en DB
     protected $userId = 0;

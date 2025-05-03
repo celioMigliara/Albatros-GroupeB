@@ -1,9 +1,9 @@
 <?php
 
-require_once 'Modeles/UserCredentials.php';
-require_once 'Modeles/Role.php';
-require_once 'Modeles/Batiment.php';
-require_once 'Modeles/Security.php';
+require_once 'Model/B3/UserCredentials.php';
+require_once 'Model/B3/Role.php';
+require_once 'Model/B3/Batiment.php';
+require_once 'Model/B3/Security.php';
 
 class AuthController
 {
@@ -138,7 +138,7 @@ class AuthController
             $csrf_token = $securityObj->genererCSRFToken();
             
             // Si le formulaire n'est pas soumis, affiche le formulaire
-            require 'Vue/Register.php';
+            require 'View/B3/Register.php';
             return true;
         }
     }
@@ -235,7 +235,7 @@ class AuthController
             $csrf_token = $securityObj->genererCSRFToken();
             
             // Affichage du formulaire de connexion si la méthode n'est pas POST
-            require 'Vue/Login.php';
+            require 'View/B3/Login.php';
             return true;
         }
     }

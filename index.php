@@ -34,6 +34,7 @@ $uri = trim($uri, '/');
 // Découper en segments
 $segments = explode('/', $uri);
 
+// Les require pour les B3
 require_once 'Controller/B3/UserControlleur.php';
 require_once 'Controller/B3/AuthController.php';
 require_once 'Controller/B3/PasswordController.php';
@@ -272,7 +273,9 @@ switch ($segments[0]) {
         }
         break;
 
-    case 'taches':
+    // Dans le projet B3, c'était le endpoint 'taches'
+    // mais il est déjà utilisé au dessus
+    case 'tasks':
         (new TaskController())->getTasksForTechnician();
         break;
 
@@ -322,11 +325,6 @@ switch ($segments[0]) {
         {
             $pageNotFound = true;
         }
-        break;
-
-    // Page d'accueil connexion (DEV seulement)
-    case 'AccueilConnexion':
-        (new UserControlleur())->accueil();
         break;
 
     default:

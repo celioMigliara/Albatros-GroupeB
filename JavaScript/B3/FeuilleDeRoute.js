@@ -300,7 +300,7 @@ function closeMediaPopup() {
 // Fonction pour charger les tâches pour un technicien donné
 function loadTachesForTechnicien(Technicien) {
     const start = (currentPage - 1) * tasksPerPage;
-    const url = BASE_URL + `/taches?technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}`;
+    const url = BASE_URL + `/tasks?technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);

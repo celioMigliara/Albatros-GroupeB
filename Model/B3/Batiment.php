@@ -2,7 +2,7 @@
 
 require_once 'db_connect.php';
 
-class Batiment
+class BatimentB3
 {
     private $userId;
     private $batiments;

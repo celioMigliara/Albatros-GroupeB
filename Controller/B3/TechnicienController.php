@@ -17,7 +17,7 @@ class TechnicienController
         if ($_SERVER['REQUEST_METHOD'] == "GET") {
             // Vérifier si l'utilisateur est connecté
             if (!UserCredentials::isAdminConnected()) {
-                echo json_encode(['status' => 'error', "message' => 'Veuillez vous connecter en tant qu'admin pour voir les techniciens."]);
+                echo json_encode(['status' => 'error', 'message' => "Veuillez vous connecter en tant qu'admin pour voir les techniciens."]);
                 return false;
             }
 

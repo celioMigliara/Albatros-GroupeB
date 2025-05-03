@@ -68,7 +68,7 @@ class AuthController
 
             // On assigne tous les batiments aux techniciens
             if ($role == Role::TECHNICIEN) {
-                $allBatiments = Batiment::getBatiments();
+                $allBatiments = BatimentB3::getBatiments();
                 $batiments = $allBatiments ? array_column($allBatiments, 'Id_batiment') : [];
 
                 if (empty($batiments)) {
@@ -78,7 +78,7 @@ class AuthController
             }
             
             // Créer l'objet ici avec les bons bâtiments
-            $BatimentObj = new Batiment($batiments);
+            $BatimentObj = new BatimentB3($batiments);
             if (!$BatimentObj->validateBatiments()) {
                 echo json_encode([
                     'status' => 'error',
@@ -132,7 +132,7 @@ class AuthController
         } else {
 
             // On génére les batiments pour la page Register
-            $batiments = Batiment::getBatiments();
+            $batiments = BatimentB3::getBatiments();
 
             // Et le token CSRF aussi pour le formulaire
             $csrf_token = $securityObj->genererCSRFToken();

@@ -1,8 +1,7 @@
 <?php
 
-
-require_once __DIR__ . '/../../Model/B3/UserCredentials.php';
-require_once __DIR__ . '/../../Model/B3/Technicien.php';
+require_once 'Modeles/UserCredentials.php';
+require_once 'Modeles/Technicien.php';
 
 class TechnicienController
 {
@@ -18,7 +17,7 @@ class TechnicienController
         if ($_SERVER['REQUEST_METHOD'] == "GET") {
             // Vérifier si l'utilisateur est connecté
             if (!UserCredentials::isAdminConnected()) {
-                echo json_encode(['status' => 'error', 'message' => 'Veuillez vous connecter pour voir les techniciens.']);
+                echo json_encode(['status' => 'error', "message' => 'Veuillez vous connecter en tant qu'admin pour voir les techniciens."]);
                 return false;
             }
 

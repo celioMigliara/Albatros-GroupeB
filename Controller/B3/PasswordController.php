@@ -1,21 +1,35 @@
 <?php
 
-require_once __DIR__ . '/../../Model/B3/Token.php';
-require_once __DIR__ . '/../../Model/B3/Email.php';
-require_once __DIR__ . '/../../Model/B3/UserCredentials.php';
+require_once 'Modeles/Token.php';
+require_once 'Modeles/Email.php';
+require_once 'Modeles/UserCredentials.php';
+require_once 'Modeles/Security.php';
+
 class PasswordController
 {
     // Fonction pour afficher la page de réinitialisation du mot de passe
     // et envoyer l'email de réinitialisation
     public function sendResetEmail()
     {
-        // Démarrage de session ABSOLUMENT EN PREMIER
+        // Object Security pour les sessions sécurisées et pour le CSRF Token
+        $securityObj = new Security();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Définir un code HTTP 400 (Bad Request) par défaut
             http_response_code(400);
 
             // On renvoie du JSON par défaut (AJAX)
             header("Content-Type: application/json");
+
+            // Vérification du token CSRF
+            if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? ''))
+            {
+                http_response_code(403);
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => "Token CSRF invalide."
+                ]);
+                return false;
+            }
 
             // On vérifie que l'email a bien été fournie
             $email = $_POST['mail_utilisateur'] ?? null;
@@ -65,13 +79,28 @@ class PasswordController
 
             // Créer le lien de réinitialisation
             // Le lien du site Web Albatros : https://www.albatros-asbl.be/
-            $reset_link = "localhost/albatrosB3/index.php?action=changemdp&token=" . $token->GetToken();
+            $defaultResetLink = "localhost/albatrosB3";
+            
+            // Si on est en prod, on utilise le mail prod, sinon on utilise l'email de dev locale (localhost). On a de l'erreur checking pour éviter tout bug
+            $reset_link = (($_ENV['APP_ENV'] ?? '') === 'production') ? ($_ENV['MAIL_URL_PROD_RESET_MDP'] ?? $defaultResetLink) : ($_ENV['MAIL_URL_LOCALE_RESET_MDP'] ?? $defaultResetLink);  
+            $reset_link .= "/motdepasse/changer?token=" . $token->GetToken();
 
             // Envoyer l'email
-            $subject = "Réinitialisation de votre mot de passe";
-            $message = "Bonjour,<br><br>Cliquez sur ce lien pour réinitialiser votre mot de passe :<br>" . $reset_link;
+            $subject = "Réinitialisation de votre mot de passe - Albatros";
+            $message = "
+            <p>Bonjour,</p>
 
-            // On utilise la classe Email pour envoyer l'email
+            <p>Vous avez demandé la réinitialisation de votre mot de passe pour accéder à la plateforme <strong>Albatros</strong>.</p>
+
+            <p>Pour définir un nouveau mot de passe, veuillez cliquer sur le lien ci-dessous :</p>
+
+            <p><a href=\"$reset_link\">Réinitialiser mon mot de passe</a></p>
+
+            <p>Ce lien est valable seulement une heure. Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email en toute sécurité.</p>
+
+            <p>Cordialement,<br>L'équipe Albatros</p>
+        ";
+
             $emailObject = new Email($email, $subject, $message);
 
             // On vérifie que l'email a bien été envoyé
@@ -99,7 +128,7 @@ class PasswordController
             }
 
             // Si jamais on veut debug le token pour le reset de mdp
-            $debugMailToken = true;
+            $debugMailToken = filter_var($_ENV['DEBUG_MAIL_TOKEN'] ?? false, FILTER_VALIDATE_BOOLEAN);
             if ($debugMailToken)
             {
                 $retourJson['debug'] = 'Debug: voici le lien : ' . $reset_link;
@@ -108,6 +137,10 @@ class PasswordController
             echo json_encode($retourJson);
             return $mailEnvoye;
         } else {
+
+            // Génére le token CSRF
+            $csrf_token = $securityObj->genererCSRFToken();
+            
             // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
             require 'Vue/ResetPassword.php';
             return true;
@@ -117,22 +150,8 @@ class PasswordController
     // Fonction pour changer le mot de passe
     public function ChangePassword()
     {
-        // Démarrage de session ABSOLUMENT EN PREMIER
-        if (session_status() === PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
-
-        // Génération du token AVANT TOUTE CHOSE
-        $csrf_token = genererCSRFToken();
-
+        // Sécurité et token CSRF
+        $securityObj = new Security();
 
         // Définir un code HTTP 400 (Bad Request) par défaut
         http_response_code(400);
@@ -140,9 +159,12 @@ class PasswordController
         // Vérifier si la requête est en POST
         if ($_SERVER["REQUEST_METHOD"] === "POST") 
         {
+            // On renvoie du JSON par défaut (AJAX)
+            header("Content-Type: application/json");
 
             // Vérification du token CSRF
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? ''))
+            {
                 http_response_code(403);
                 echo json_encode([
                     'status' => 'error',
@@ -150,9 +172,6 @@ class PasswordController
                 ]);
                 return false;
             }
-
-            // On renvoie du JSON par défaut (AJAX)
-            header("Content-Type: application/json");
 
             // On vérifie qu'on a bien le nouveau mot de passe
             $newPassword = $_POST['new_password'] ?? null;
@@ -203,7 +222,7 @@ class PasswordController
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Votre mot de passe a été changé avec succès.',
-                    'redirect' => 'index.php?action=connexion'
+                    'redirect' => BASE_URL . '/connexion'
                 ]);
                 return true;
             } else {
@@ -226,13 +245,17 @@ class PasswordController
             $userId = $token->isTokenValid();
             if ($userId === false)
             {
-                echo "Token invalide ou expiré. Impossible de charger la page";
+                // On setup le message d'erreur pour la vue
+                $errorMsg = new MessageErreur("Chargement de la page impossible", "Token invalide ou expiré");
+                require 'Vue/PageErreur.php';
                 return false;
             }
 
             // Définir un code HTTP 200 (succès)
             http_response_code(200);
 
+            // Génération du token csrf 
+            $csrf_token = $securityObj->genererCSRFToken();
             require 'Vue/ChangerPassword.php';
             return true;
         }

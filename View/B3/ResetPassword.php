@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/StylesB3.css">
     <title>Mot de passe oublié</title>
 </head>
 
 <body>
-
     <div class="block">
 
         <!-- Overlay pour l'effet arriere flou-->
@@ -17,49 +16,48 @@
 
         <!-- Section de gauche de la page -->
         <div class="left">
-            
-            
+
             <!-- Boutons pour la navigation entre Connexion et Inscription -->
             <div class="button">
-                <a href="index.php?action=connexion" class="btnConnexion">SE CONNECTER</a>
-                <a href="index.php?action=inscription" class="btnInscription">S'INSCRIRE</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btnConnexion">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/inscription" class="btnInscription">S'INSCRIRE</a>
             </div>
-            
+
             <!-- Logo de l'application -->
-            <img src="./Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
+            <img src="<?= BASE_URL ?>/Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
 
         </div>
-        
+
         <!-- Section de droite de la page -->
         <div class="right">
-            
+
             <!-- Boutons mobiles -->
             <div class="mobile-buttons">
-                <a href="index.php?action=inscription" class="btnInscription-mobile">S'INSCRIRE</a>
-                <a href="index.php?action=connexion" class="btnConnexion-mobile">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/inscription" class="btnInscription-mobile">S'INSCRIRE</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btnConnexion-mobile">SE CONNECTER</a>
             </div>
-            
+
             <!-- Titre de la section de connexion -->
             <h2>MOTS DE PASSE OUBLIÉ</h2>
-            
+
             <!-- Note pour indiquer que certains champs sont obligatoires -->
             <p class="required-note">Les champs marqués d'un <span class="required-asterisk">*</span> sont obligatoires</p>
-            
+
             <!-- Note pour indiquer que certains champs sont obligatoires -->
             <p class="paragraphe">
                 Entrez votre e-mail et cliquez sur 'Réinitialiser le mot de passe'.<br>
                 Vous recevrez un lien sécurisé pour modifier votre mot de passe.
             </p>
-            
-            <!-- Formulaire de connexion -->
-            <form class="formulaire" id="formulaire-reset-password" novalidate >
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
 
-                            <!-- Bouton pour revenir à la page précédente 
+            <!-- Formulaire de connexion -->
+            <form class="formulaire" id="formulaire-reset-password" novalidate>
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
+
+                <!-- Bouton pour revenir à la page précédente 
                  Il va falloir le styliser pour qu'il rentre
                  dans un coin et qu'il ne gene pas la navigation 
             -->
-            <div class="button-back">
+                <div class="button-back">
                     <button class="back-button-item" id="back-button">
                         <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1"
                             viewBox="0 0 1024 1024">
@@ -85,15 +83,13 @@
                     </div>
                 </div>
 
-
-
                 <!-- Zone contenant le bouton final -->
                 <div class="zone-bouton-final">
 
                     <!-- Bouton pour soumettre le formulaire de connexion -->
                     <button class="cssbuttons-io-button" role="button" type="submit">
 
-                        Envoyé le mail
+                        Envoyer le mail
 
                         <div class="icon">
 
@@ -106,28 +102,17 @@
                         </div>
 
                         <div id="popup-reset-mdp" class="popup"></div>
-
             </form>
-
-
-
         </div>
-
     </div>
 
-
-
-
-
-
-
-
-
-
-
+    <script>
+        // On définit la base URL depuis le PHP pour le JS
+        const BASE_URL = <?= json_encode(BASE_URL) ?>;
+    </script>
 
     <!-- Inclusion du script pour gérer les champs obligatoires -->
-    <script src="./JavaScript/General.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/General.js"></script>
 
 </body>
 

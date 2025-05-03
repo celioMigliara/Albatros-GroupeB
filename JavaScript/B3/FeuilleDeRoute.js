@@ -135,7 +135,7 @@ if (SelectTechnicien) {
 let listeImpression = document.getElementById("listeImpression");
 if (listeImpression) {
     listeImpression.addEventListener("click", function () {
-        window.location.href = "index.php?action=voirListeImpression";
+        window.location.href = BASE_URL + "/feuillederoute/liste/impression";
     });
 }
 
@@ -149,6 +149,7 @@ if (ajouterPrintList) {
 
         if (!selectedValue) {
             // On peut remplacer par une popup
+            alert("Veuillez sélectionner un technicien.");
             console.log("Veuillez sélectionner un technicien.");
             return;
         }
@@ -156,6 +157,7 @@ if (ajouterPrintList) {
         let presentTechs = getPresentTechnicians();
         if (presentTechs.some((t) => t.id === selectedValue)) {
             // On peut remplacer par une popup
+            alert("Ce technicien est déjà dans la liste.");
             console.log("Ce technicien est déjà dans la liste.");
             return;
         }
@@ -167,6 +169,7 @@ if (ajouterPrintList) {
 
         setPresentTechnicians(presentTechs);
         // On peut remplacer par une popup
+        alert("Technicien ajouté à la liste des présents.");
         console.log("Technicien ajouté à la liste des présents.");
     });
 }
@@ -202,7 +205,7 @@ if (saveOrder) {
         }
 
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "index.php?action=updateOrdre", true);
+        xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         xhr.onreadystatechange = function () {
@@ -215,6 +218,7 @@ if (saveOrder) {
                 }
 
                 // Remplacer par une popup
+                alert(JsonReponse.message);
                 console.log(JsonReponse.message);
             }
         };
@@ -296,8 +300,7 @@ function closeMediaPopup() {
 // Fonction pour charger les tâches pour un technicien donné
 function loadTachesForTechnicien(Technicien) {
     const start = (currentPage - 1) * tasksPerPage;
-    const mediaFilterChecked = document.getElementById("mediaFilter").value;
-    const url = `index.php?action=getTaches&technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}&withMedia=${mediaFilterChecked}`;
+    const url = BASE_URL + `/taches?technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -774,7 +777,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Ouvre la feuille de route du technicien sélectionné
             window.open(
-                `index.php?action=imprimerFeuilleDeRoute&tech_id=${encodeURIComponent(
+                `feuillederoute/imprimer?tech_id=${encodeURIComponent(
                     techId
                 )}`,
                 "_blank"

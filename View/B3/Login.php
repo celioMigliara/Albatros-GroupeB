@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Connexion</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/StylesB3.css">
 </head>
 
 <body>
@@ -17,32 +17,32 @@
 
         <!-- Section de gauche de la page -->
         <div class="left">
-            
+
             <!-- Boutons pour la navigation entre Connexion et Inscription -->
             <div class="button">
-                <a href="index.php?action=connexion" class="btnConnexion">SE CONNECTER</a>
-                <a href="index.php?action=inscription" class="btnInscription">S'INSCRIRE</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btnConnexion">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/inscription" class="btnInscription">S'INSCRIRE</a>
             </div>
-            
+
             <!-- Logo de l'application -->
-            <img src="<?= BASE_URL ?>/Assets/B3/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
-            
+            <img src="<?= BASE_URL ?>/Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
+
         </div>
-        
+
         <!-- Section de droite de la page -->
         <div class="right">
-            
+
             <!-- Boutons mobiles -->
             <div class="mobile-buttons">
-                <a href="index.php?action=inscription" class="btn-mobile">S'INSCRIRE</a>
+                <a href="<?= BASE_URL ?>/inscription" class="btn-mobile">S'INSCRIRE</a>
             </div>
-            
+
             <!-- Titre de la section de connexion -->
             <h2 class="title">CONNEXION À VOTRE COMPTE</h2>
-            
+
             <!-- Note pour indiquer que certains champs sont obligatoires -->
             <p class="required-note">Les champs marqués d'un <span class="required-asterisk">*</span> sont obligatoires</p>
-            
+
             <!-- Formulaire de connexion -->
             <form class="formulaire" id="formulaire-connexion" novalidate>
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
@@ -85,7 +85,7 @@
                     <!-- Lien vers la page ChangerPassword -->
                     <div class="forgot_mdp_utilisateur">
 
-                        <a class="forgot_mdp_utilisateur" href="index.php?action=resetmdp">Mot de passe oublié ?</a>
+                        <a class="forgot_mdp_utilisateur" href="motdepasse/reset">Mot de passe oublié ?</a>
 
                     </div>
 
@@ -118,11 +118,13 @@
         </div>
 
     </div>
+
     <script>
-    const BASE_URL = "<?= BASE_URL ?>";
-  </script>
+        // On définit la base URL depuis le PHP pour le JS
+        const BASE_URL = <?= json_encode(BASE_URL) ?>;
+    </script>
     <!-- Inclusion du script pour gérer les champs obligatoires -->
-    <script src="<?= BASE_URL ?>/JavaScript/B3/General.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/General.js"></script>
 
 </body>
 

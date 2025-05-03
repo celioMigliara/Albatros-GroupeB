@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 // On a besoin de Dompdf pour convertir le HTML souhaité en PDF
 use Dompdf\Dompdf;

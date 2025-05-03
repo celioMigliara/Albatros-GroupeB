@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../ModeleDBB2.php';
+require_once 'db_connect.php';
 
 class Tache
 {

@@ -1,36 +1,23 @@
 <?php
 
-require_once __DIR__ . '/../../Model/B3/UserCredentials.php';
-require_once __DIR__ . '/../../Model/B3/Role.php';
-require_once __DIR__ . '/../../Model/B3/Batiment.php';
+require_once 'Modeles/UserCredentials.php';
+require_once 'Modeles/Role.php';
+require_once 'Modeles/Batiment.php';
+require_once 'Modeles/Security.php';
 
 class AuthController
 {
     // Fonction pour gerer l'inscription
     public function register()
     {
-        // Démarrage de session ABSOLUMENT EN PREMIER
-        if (session_status() === PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
-
-        // Génération du token AVANT TOUTE CHOSE
-        $csrf_token = genererCSRFToken();
-
-        // Vérification de la méthode de la requête
+        $securityObj = new Security();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+            header('Content-Type: application/json');
+
             // Vérification du token CSRF
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                // Réponse JSON avec le message d'erreur
+            if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? '')) {
                 http_response_code(403);
                 echo json_encode([
                     'status' => 'error',
@@ -41,8 +28,7 @@ class AuthController
 
             // Définir un code HTTP 400 (Bad Request) par défaut
             http_response_code(400);
-            header('Content-Type: application/json');
-
+            
             // On recupere les valeur du formulaire a l'aide des variable POST
             $nom    = $_POST['nom_utilisateur'] ?? null;
             $prenom = $_POST['prenom_utilisateur'] ?? null;
@@ -144,10 +130,13 @@ class AuthController
             ]);
             return true;
         } else {
-            // Si la méthode n'est pas POST, on affiche le formulaire d'inscription
-            // et on re-recupère les bâtiments
+
+            // On génére les batiments pour la page Register
             $batiments = Batiment::getBatiments();
 
+            // Et le token CSRF aussi pour le formulaire
+            $csrf_token = $securityObj->genererCSRFToken();
+            
             // Si le formulaire n'est pas soumis, affiche le formulaire
             require 'Vue/Register.php';
             return true;
@@ -157,27 +146,15 @@ class AuthController
     // Fonction pour gerer la connexion
     public function login()
     {
-        // Démarrage de session ABSOLUMENT EN PREMIER
-        if (session_status() === PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
-
-        // Génération du token AVANT TOUTE CHOSE
-        $csrf_token = genererCSRFToken();
-
+        $securityObj = new Security();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
+            // On renvoie du JSON par défaut (AJAX)
+            header("Content-Type: application/json");
+
             // Vérification du token CSRF
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? '')) {
                 http_response_code(403);
                 echo json_encode([
                     'status' => 'error',
@@ -188,9 +165,6 @@ class AuthController
             
             // Définir un code HTTP 400 (Bad Request) par défaut
             http_response_code(400);
-
-            // On renvoie du JSON par défaut (AJAX)
-            header("Content-Type: application/json");
 
             // Recupere les valeur du formulaire a l'aide des variable POST
             $email = $_POST['mail_utilisateur'] ?? null;
@@ -206,22 +180,8 @@ class AuthController
                 return false;
             }
 
-            // On crée un objet UserCredentials pour gérer la connexion
-            $result = UserCredentials::verifyConnection($email, $mots_de_passe);
+            $result = UserCredentials::verifyPassword($email, $mots_de_passe);
             if ($result === true) {
-                
-                // Démarrage de session ABSOLUMENT EN PREMIER
-                if (session_status() === PHP_SESSION_NONE) {
-                    // Configurer les paramètres du cookie de session
-                    session_set_cookie_params([
-                        'httponly' => true,
-                        'secure' => false, // à activer uniquement en HTTPS
-                        'samesite' => 'Strict'
-                    ]);
-
-                    // Démarrer la session avec les paramètres de cookie pour une securite renforcee
-                    session_start();
-                }
 
                 // Vérifie si l'utilisateur est déjà connecté
                 if (isset($_SESSION['user'])) {
@@ -258,7 +218,7 @@ class AuthController
                     'status' => 'success',
                     'message' => 'Vous êtes connectés',
                     // Temporaire -- Dans le vrai projet ce sera différent
-                    'redirect' => 'index.php?action=AccueilConnexion'
+                    'redirect' => BASE_URL . '/AccueilConnexion'
                 ]);
                 return true;
             } else {
@@ -271,10 +231,11 @@ class AuthController
             }
         } else // En cas de requete non POST (par exemple via du GET avec l'URL)
         {
-            // Affichage du formulaire de connexion si la méthode n'est pas POST
+            // Génération du token CSRF pour le formulaire du login
+            $csrf_token = $securityObj->genererCSRFToken();
             
-            require "View/B3/Login.php";
-
+            // Affichage du formulaire de connexion si la méthode n'est pas POST
+            require 'Vue/Login.php';
             return true;
         }
     }
@@ -282,18 +243,7 @@ class AuthController
     // Fonction pour gerer la deconnexion
     public function logout()
     {
-        // Supprimer la condition sur la méthode HTTP
-        if (session_status() === PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
+        $securityObj = new Security();
 
         $_SESSION = [];
 
@@ -301,7 +251,7 @@ class AuthController
 
         // Redirection facultative pour les tests
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            header("Location: ./");
+            header('Location: ' . BASE_URL . '/');
             exit;
         }
     }

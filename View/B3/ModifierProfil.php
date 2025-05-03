@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>Modifier Profil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/StylesB3.css">
+
 </head>
 
 <body>
@@ -16,24 +17,20 @@
 
         <!-- Section de gauche de la page (vide, sans animations) -->
         <div class="left">
-            
-            <img src="./Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
+
+            <img src="<?= BASE_URL ?>/Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
         </div>
-        
+
         <!-- Section de droite de la page -->
         <div class="right">
-            
-            
+
             <!-- Titre de la </div>section de modification du profil -->
             <h2 class="title">Modifier son profil</h2>
-            
+
             <!-- Formulaire de modification -->
             <form class="formulaire" id="formulaire-modification-profil" novalidate style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
-                <!-- Bouton pour revenir à la page précédente 
-                 Il va falloir le styliser pour qu'il rentre
-                 dans un coin et qu'il ne gene pas la navigation 
-            -->
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
+
                 <div class="button-back">
                     <button class="back-button-item" id="back-button">
                         <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -102,8 +99,13 @@
         </div>
     </div>
 
+    <script>
+        // On définit la base URL depuis le PHP pour le JS
+        const BASE_URL = <?= json_encode(BASE_URL) ?>;
+    </script>
+    
     <!-- Inclusion du script pour gérer le formulaire -->
-    <script src="./JavaScript/General.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/General.js"></script>
 </body>
 
 </html>

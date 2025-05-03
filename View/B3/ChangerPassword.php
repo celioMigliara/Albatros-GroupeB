@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Changer de mot de passe</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/StylesB3.css">>
 </head>
 
 <body>
@@ -20,12 +20,11 @@
 
             <!-- Boutons pour la navigation entre Connexion et Inscription -->
             <div class="button">
-                <a href="index.php?action=connexion" class="btnConnexion">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btnConnexion">SE CONNECTER</a>
             </div>
 
             <!-- Logo de l'application -->
-            <img src="./Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
-
+            <img src="<?= BASE_URL ?>/Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
         </div>
 
         <!-- Section de droite de la page -->
@@ -33,7 +32,7 @@
 
             <!-- Boutons mobiles -->
             <div class="mobile-buttons">
-                <a href="index.php?action=connexion" class="btn-mobile">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btn-mobile">SE CONNECTER</a>
             </div>
 
             <!-- Titre de la section de connexion -->
@@ -105,9 +104,13 @@
 
     </div>
 
+    <script>
+        // On définit la base URL depuis le PHP pour le JS
+        const BASE_URL = <?= json_encode(BASE_URL) ?>;
+    </script>
 
     <!-- Inclusion du script pour gérer les champs obligatoires -->
-    <script src="./JavaScript/General.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/General.js"></script>
 
 </body>
 

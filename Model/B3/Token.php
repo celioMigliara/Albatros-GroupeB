@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../ModeleDBB2.php';
+require_once 'db_connect.php';
 
 class Token
 {
@@ -52,7 +52,7 @@ class Token
     // Fonction pour get l'id de l'utilisateur avec le token
     public function GetUserIdWithToken()
     {
-        $sql = "SELECT Id_utilisateur FROM utilisateur WHERE token_utilisateur = :token AND token_utilisateur IS NOT NULL AND NOW() < date_exp_token_utilisateur";
+        $sql = "SELECT Id_utilisateur FROM utilisateur WHERE token_utilisateur = :token AND token_utilisateur IS NOT NULL AND NOW() < date_exp_token_utilisateur AND valide_utilisateur = 1 AND actif_utilisateur = 1";
         
         // Préparation de la requête
         $pdo = Database::getInstance()->getConnection();

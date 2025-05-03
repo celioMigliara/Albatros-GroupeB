@@ -76,7 +76,7 @@ if (InscriptionForm) {
       });
     }
     // Et on l'envoie, si aucune requete n'est déjà en cours
-    SendRequestPOST(RequestParameter, "index.php?action=inscription", true);
+    SendRequestPOST(RequestParameter, BASE_URL + "/inscription", true);
   });
 }
 
@@ -96,11 +96,16 @@ document.querySelectorAll('input[name="role_utilisateur"]').forEach((radio) => {
 
 // Initialisation au chargement
 window.addEventListener("DOMContentLoaded", () => {
-  const role = document.querySelector(
-    'input[name="role_utilisateur"]:checked'
-  ).value;
-  document.getElementById("batiment-section").style.display =
-    role === "2" ? "none" : "block";
+  const checkedRoleInput = document.querySelector('input[name="role_utilisateur"]:checked');
+  const batimentSection = document.getElementById("batiment-section");
+
+  // On ne fait rien si les éléments n'existent pas
+  if (!checkedRoleInput || !batimentSection) {
+    return;
+  }
+
+  const role = checkedRoleInput.value;
+  batimentSection.style.display = role === "2" ? "none" : "block";
 });
 
 var ConnexionForm = document.getElementById("formulaire-connexion");
@@ -122,7 +127,7 @@ if (ConnexionForm) {
       // Ajout du token CSRF aux paramètres de requête
       RequestParameter += "&csrf_token=" + encodeURIComponent(csrfToken);
     // Et on l'envoie, si aucune requete n'est déjà en cours
-    SendRequestPOST(RequestParameter, "index.php?action=connexion", true);
+    SendRequestPOST(RequestParameter, BASE_URL + "/connexion", true);
   });
 }
 
@@ -145,7 +150,7 @@ if (FormResetMdp) {
       RequestParameter += "&csrf_token=" + encodeURIComponent(csrfToken);
 
       // Et on l'envoie, si aucune requête n'est déjà en cours
-      SendRequestPOST(RequestParameter, "index.php?action=resetmdp", true);
+      SendRequestPOST(RequestParameter, BASE_URL + "/motdepasse/reset", true);
     }
   });
 }
@@ -175,7 +180,7 @@ if (ChangerMdpForm) {
     RequestParameter += "&csrf_token=" + encodeURIComponent(csrfToken);
 
     // Et on l'envoie, si aucune requete n'est déjà en cours
-    SendRequestPOST(RequestParameter, "index.php?action=changemdp", true);
+    SendRequestPOST(RequestParameter, BASE_URL + "/motdepasse/changer", true);
   });
 }
 
@@ -222,7 +227,7 @@ if (ModifierProfilForm) {
       RequestParameter = RequestParameter.slice(1);
     }
     // Et on l'envoie, si aucune requete n'est déjà en cours
-    SendRequestPOST(RequestParameter, "index.php?action=modifierprofil", true);
+    SendRequestPOST(RequestParameter, BASE_URL + "/profil/modifier", true);
   });
 }
 
@@ -261,7 +266,7 @@ function HandleReadyStateChange() {
     // Normalement on ne renvoie que du JSON mais peut être que le PHP
     // a rajouté une erreur sous forme de texte.
     if (!Json) {
-      console.log("Json mal parsé...");
+      console.log("Json mal parsé. Voici le contenu brut :");
       console.log(xhr.responseText);
       return;
     }
@@ -361,8 +366,7 @@ function CreateSimplePopup(message, IsSuccess) {
     '<path fill="#fff" d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"></path>';
 
   popup.appendChild(icon);
-
-  if (!IsSuccess) {
+  
   // Ajouter le message à la popup
   const messageElement = document.createElement("strong");
   messageElement.classList.add("message");
@@ -371,7 +375,7 @@ function CreateSimplePopup(message, IsSuccess) {
   messageElement.style.display = "block"; // <-- Ajoute cette ligne pour que text-align fonctionne bien
   popup.appendChild(messageElement);
 
-  }
+  
 
   // Créer un bouton de fermeture pour la popup
   const closeButton = document.createElement("button");
@@ -484,123 +488,3 @@ function validatePasswords(event) {
     alert("Les mots de passe ne correspondent pas.");
   }
 }
-
-// Appel de la fonction au chargement de la page pour peupler la liste des techniciens
-window.onload = function () {
-  loadTechnicians();
-};
-
-// Fonction pour charger les techniciens via AJAX
-function loadTechnicians() {
-  // Appel de SendRequestGET pour récupérer les techniciens
-  SendRequestGET("index.php?action=getTechniciensUser", true);
-
-  // Gestion de la réponse dans la fonction HandleReadyStateChange
-  xhr.onload = function () {
-    if (xhr.status == 200) {
-      var response = safeJsonParse(xhr.responseText);
-      if (!response) {
-        console.log(xhr.responseText);
-        return;
-      }
-
-      if (response.status === "success") {
-        var techniciens = response.technicians;
-        var select = document.getElementById("technicienSelect");
-
-        // Réinitialiser le menu déroulant avant de le remplir
-        select.innerHTML =
-          '<option value="">Sélectionnez un technicien</option>';
-
-        // Ajouter les techniciens à la liste déroulante
-        techniciens.forEach(function (tech) {
-          var option = document.createElement("option");
-          option.value = tech.Id_utilisateur;
-          option.textContent =
-            tech.nom_utilisateur + " " + tech.prenom_utilisateur;
-          select.appendChild(option);
-        });
-      } else {
-        console.error(
-          "Erreur lors de la récupération des techniciens :",
-          response.message
-        );
-      }
-    } else {
-      console.error("Erreur réseau ou requête bloquée.");
-    }
-  };
-}
-
-function SendRequestGET(SendParameter, StopIfSending = true) {
-  // On peut autoriser seulement 1 requete à la fois grace à StopIfSending
-  // Si le readyState est différent de 0, cela voudrait dire qu'on est en pleine requete
-  if (StopIfSending && xhr.readyState != 0) {
-    // Si la requete n'est pas complétée (à 4), on envoie pas de nouvelles requetes
-    if (xhr.readyState != 4) {
-      return;
-    }
-
-    // Sinon on réinitiliase l'objet XHR pour la suite de la requête
-    InitXHR();
-  }
-
-  xhr.open("GET", SendParameter, true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.send();
-}
-
-/********************************************************************************
- * Gestion de la soumission du formulaire en cas d'erreur de validation et de
- * l'animation "shake" sur les champs invalides.
- * et ouvert la popup d'erreur
- */
-/*
-formSelect = document.querySelector("form");
-if (formSelect)
-{
-  formSelect.addEventListener("submit", function (e) {
-    e.preventDefault(); 
-  
-    // Réinitialise les erreurs (enlever la classe "invalid" de tous les champs)
-    inputGroup = document.querySelectorAll(".input-group-custom");
-    if (inputGroup)
-    {
-      inputGroup.forEach((group) => {
-        group.classList.remove("invalid");
-      });
-    }
-
-  
-    let isValid = true;
-  
-    // Vérifie tous les champs "input" requis
-    document.querySelectorAll('input[required]').forEach(input => {
-      const group = input.closest('.input-group-custom');
-      if (!input.value.trim()) {
-        group.classList.add('invalid'); // Si le champ est vide, ajoute "invalid"
-        isValid = false;
-      }
-    });
-  
-    // Si des champs sont invalides, on ajoute l'animation "shake"
-    if (!isValid) {
-      // Ouvre la popup quand il y a une erreur
-      openPopup("error-popup"); // "error-popup" est l'ID de la popup d'erreur
-      
-      // Applique l'animation "shake" pour chaque champ invalide
-      document.querySelectorAll('.invalid').forEach(el => {
-        el.style.animation = 'shake 0.5s'; // Animation de secousse pour attirer l'attention
-        el.addEventListener('animationend', () => el.style.animation = ''); // Enlève l'animation après son exécution
-      });
-  
-      // Ferme la popup après 10 secondes
-      setTimeout(() => {
-        closePopup();
-      }, 10000); // Ferme la popup après 10 secondes
-    } else {
-      // Si tout est valide, soumet le formulaire
-      this.submit();
-    }
-  });
-}*/

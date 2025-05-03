@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>Inscription</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/StylesB3.css">
 </head>
 
 <body>
@@ -18,32 +18,31 @@
     <div class="block">
         <!-- div pour le block de gauche -->
         <div class="left">
-            
-            
+
             <div class="button">
-                <a href="index.php?action=connexion" class="btnConnexion">SE CONNECTER</a>
-                <a href="index.php?action=inscription" class="btnInscription">S'INSCRIRE</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btnConnexion">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/inscription" class="btnInscription">S'INSCRIRE</a>
             </div>
-            
-            <img src="Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
+
+            <img src="<?= BASE_URL ?>/Assets/Images/Logo/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
         </div>
-        
-        
+
+
         <!-- div pour le block de droite -->
         <div class="right">
-            
-            
+
+
             <div class="mobile-buttons">
-                <a href="index.php?action=connexion" class="btn-mobile">SE CONNECTER</a>
+                <a href="<?= BASE_URL ?>/connexion" class="btn-mobile">SE CONNECTER</a>
             </div>
-            
+
             <h2 class="title">CREATION DE COMPTE</h2>
             <p class="required-note">Les champs marqués d'un <span class="required-asterisk">*</span> sont obligatoires</p>
-            
+
             <form class="formulaire" id="formulaire-inscription" novalidate>
-                
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
-                        
+
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES); ?>">
+
                 <div class="button-back">
                     <button class="back-button-item" id="back-button">
                         <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
@@ -158,7 +157,7 @@
                             ?>
                         </div>
                         <!-- Bouton pour valider la sélection des bâtiments -->
-                        <button type="button" class="btn" onclick="closePopup()">Valider</button>                        
+                        <button type="button" class="btn" onclick="closePopup()">Valider</button>
                     </div>
                 </div>
 
@@ -233,7 +232,12 @@
             </form>
         </div>
 
-        <script src="./JavaScript/General.js"></script>
+        <script>
+            // On définit la base URL depuis le PHP pour le JS
+            const BASE_URL = <?= json_encode(BASE_URL) ?>;
+        </script>
+        <script src="<?= BASE_URL ?>/JavaScript/General.js"></script>
+
 </body>
 
 </html>

@@ -1,14 +1,15 @@
 <?php
 
-require_once __DIR__ . '/../../Model/B3/UserCredentials.php';
-require_once __DIR__ . '/../../Model/B3/Technicien.php';
-require_once __DIR__ . '/../../Model/B3/Tache.php';
-require_once __DIR__ . '/UserControlleur.php';
+require_once 'Modeles/UserCredentials.php';
+require_once 'Modeles/Technicien.php';
+require_once 'Modeles/Tache.php';
+require_once 'Modeles/Security.php';
+require_once 'Modeles/MessageErreur.php';
+
 class TaskController
 {
     // On va définir une constante pour le nombre de tâches par page
     public const TaskBaseLimit = 10;
-
 
     public function index()
     {
@@ -17,12 +18,19 @@ class TaskController
             // On les set pour la vue qui va les utiliser
             $techniciens = Technicien::getTechniciens();
             $statuts = Tache::getAllStatuts();
-            $csrf_token = genererCSRFToken();
+
+            // Générer le token CSRF pour la liste des taches
+            $securityObj = new Security();
+            $csrf_token = $securityObj->genererCSRFToken();
             require 'Vue/ListeTachesParTechnicien.php';
         }
         else
         {
-            header("Location: ./");
+            http_response_code(403);
+            
+            $errorMsg = new MessageErreur("Chargement de la page impossible", "Il faut être connecté en tant qu'administrateur");
+            require 'Vue/PageErreur.php';
+            exit();
         }
     }
 
@@ -32,7 +40,9 @@ class TaskController
         // Définir un code HTTP 400 (Bad Request) par défaut
         http_response_code(400);
 
-        // Démarrage de session ABSOLUMENT EN PREMIER
+        // On renvoie du JSON par défaut (AJAX)
+        header("Content-Type: application/json");
+
         if ($_SERVER['REQUEST_METHOD'] == 'GET')
         {
             // Vérifier si l'utilisateur est connecté
@@ -46,16 +56,7 @@ class TaskController
             $technicienId = $_GET['technicien_id'] ?? null;
             $start = $_GET['start'] ?? 0; // Index de départ
             $limit = $_GET['limit'] ?? self::TaskBaseLimit; // Limiter à 10 tâches par page
-            $withMedia = $_GET['withMedia'] ?? 0; // Est-ce qu'on veut des médias ?
-            $withStatut = $_GET['withStatut'] ?? null; 
-            
-            // Le statut 0 correspond à un filtre vide. Donc on peut le mettre à null
-            if ($withStatut == 0)
-            {
-                $withStatut = null;
-            }
 
-            // Vérifier si le technicien_id est présent dans la requête
             if (empty($technicienId)) 
             {
                 echo json_encode(['status' => 'error', 'message' => 'ID technicien manquant']);
@@ -70,10 +71,8 @@ class TaskController
                 return false;
             }
             
-            // Vérifier si le technicien est actif
-            $technicien = new Technicien(intval($technicienId));
-            $tasks = $technicien->getTachesForTechnicien($start, $limit, $withMedia, $withStatut);
-            $totalTasks = $technicien->getTotalTaches($withMedia, $withStatut); // Nombre total de tâches
+            $tasks = $technicien->getTachesForTechnicien($start, $limit);
+            $totalTasks = $technicien->getTotalTaches(); // Nombre total de tâches
 
             // Vérifier si des tâches ont été trouvées
             foreach ($tasks as &$task) 
@@ -112,12 +111,11 @@ class TaskController
             // Code de succès (200)
             http_response_code(200);
 
-            //$totalTasks = count($tasks);
             echo json_encode(['status' => 'success', 'tasks' => $tasks, 'totalTasks' => $totalTasks]);
             return true;
         }
 
-        // Si la méthode n'est pas GET, on renvoie une erreur 405 (Method Not Allowed)
+        // Si la méthode n'est pas GET, on renvoie une erreur
         echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée']);
         return false;
     }
@@ -125,36 +123,21 @@ class TaskController
     // Fonction pour mettre à jour le l'ordre des tâches
     public function updateTasksOrder()
     {
-
-        // Démarrage de session ABSOLUMENT EN PREMIER
-        if (session_status() === PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-            // Démarrer la session
-            session_start();
-        }
+        // Générer le token CSRF pour la liste des taches
+        $securityObj = new Security();
         
-        // Génération du token AVANT TOUTE CHOSE
-        $csrf_token = genererCSRFToken();
-                
+        // On renvoie du JSON par défaut (AJAX)
+        header("Content-Type: application/json");
 
         // Vérification du token CSRF
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? '')) {
             
-            // Vérifier si l'utilisateur est connecté
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                http_response_code(403);
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => "Token CSRF invalide."
-                ]);
-                return false;
-            }
-
+            http_response_code(403);
+            echo json_encode([
+                'status' => 'error',
+                'message' => "Token CSRF invalide."
+            ]);
+            return false;
         }
     
         // Définir un code HTTP 400 (Bad Request) par défaut
@@ -171,7 +154,7 @@ class TaskController
             return false;
         }
     
-        // Vérifier si le tableau de changements n'est pas vide
+        $returnValue = true;
         foreach ($changes as $change) 
         {
             // Vérifier que chaque sous-tableau contient les clés 'id' et 'order'
@@ -181,19 +164,31 @@ class TaskController
                 $order = intval($change['order']);
     
                 $tache = new Tache($id);
-                $tache->updateOrder($order);
+                $returnValue &= $tache->updateOrder($order);
             }
         }
 
-        // repondre un code de succès (200)
-        http_response_code(200);
+        if ($returnValue)
+        {
+            http_response_code(200);
 
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Modifications effectuées avec succès'
-        ]);
-        
-        return true;
-    }
-    
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Modifications effectuées avec succès'
+            ]);
+            
+            return true;
+        }
+        else
+        {
+            http_response_code(500);
+
+            echo json_encode([
+                'status' => 'error',
+                'message' => "Erreur : la modification de l'ordre des tâches n'a pas pu être effectuée. Un problème est survenu lors de la mise à jour des données."
+            ]);
+            
+            return false;
+        }
+    }  
 }

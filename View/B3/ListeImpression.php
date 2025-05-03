@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title>Liste d'impression des techniciens présents</title>
-  <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/FeuilleRoute.css">
 </head>
 
 <body data-page="ListeImpression">
   <div class="block_taches">
     <div class="overlay"></div>
     <h1>Liste d'impression</h1>
-    <div>    <button id="openTechPopup" class="back-btn">Ajouter des techniciens</button>
-    <button onclick="window.location.href='index.php?action=voirTachesParTechnicien'" class="back-btn">Visualiser les taches de techniciens</button>
-  </div>
+    <div> <button id="openTechPopup" class="back-btn">Ajouter des techniciens</button>
+      <a href="<?= BASE_URL ?>/feuillederoute/liste/taches" class="back-btn">Visualiser les tâches de techniciens</a>
+    </div>
 
     <table id="printTable">
       <thead>
@@ -47,7 +47,12 @@
     <button id="closeTechPopup">Fermer</button>
   </div>
   </div>
-  <script src="./JavaScript/ListeImpression.js"></script>
+  <script>
+    // On définit la base URL depuis le PHP pour le JS
+    const BASE_URL = <?= json_encode(BASE_URL) ?>;
+  </script>
+  
+  <script src="<?= BASE_URL ?>/JavaScript/ListeImpression.js"></script>
 
 </body>
 

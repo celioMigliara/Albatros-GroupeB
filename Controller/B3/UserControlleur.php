@@ -9,29 +9,6 @@ require_once 'ProfileController.php';
 require_once 'TaskController.php';
 require_once 'TechnicienController.php';
 
-// Function pour generer un CSRF token
-function genererCSRFToken()
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        // Configurer les paramètres du cookie de session
-        session_set_cookie_params([
-            'httponly' => true,
-            'secure' => false, // à activer uniquement en HTTPS
-            'samesite' => 'Strict'
-        ]);
-
-        // Démarrer la session
-        session_start();
-    }
-
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf_token'];
-}
-
-
-// Class UserControlleur pour gérer les utilisateurs et toute les actions qui y sont liées
 class UserControlleur
 {
     // Pour le dev only : 

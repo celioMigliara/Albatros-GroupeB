@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestion des tâches - Page 1</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Contenu/FeuilleRoute.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 </head>
@@ -125,7 +125,12 @@
         <button onclick="closeMediaPopup()">Fermer</button>
     </div>
 
-    <script src="./JavaScript/FeuilleDeRoute.js"></script>
+    <script>
+        // On définit la base URL depuis le PHP pour le JS
+        const BASE_URL = <?= json_encode(BASE_URL) ?>;
+    </script>
+
+    <script src="<?= BASE_URL ?>/JavaScript/FeuilleDeRoute.js"></script>
 
 </body>
 

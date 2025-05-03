@@ -1,33 +1,36 @@
 <?php
 
-require_once __DIR__ . '/../../Model/B3/UserCredentials.php';
+require_once 'Modeles/UserCredentials.php';
+require_once 'Modeles/UserProfile.php';
+require_once 'Modeles/Security.php';
 
 class ProfileController
 {
     // Fonction pour modifier le profil de l'utilisateur
     public function updateProfile()
     {
-
-        // Démarrage de session ABSOLUMENT EN PREMIER
-        if (session_status() === PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-            // Démarrer la session
-            session_start();
-        }
-
-        // Génération du token AVANT TOUTE CHOSE
-        $csrf_token = genererCSRFToken();
+        // Instanciation de l'object Security pour les sessions protégées
+        $securityObj = new Security();
         
-        // Verification de la méthode de la requête
-        if ($_SERVER["REQUEST_METHOD"] === "POST" && UserCredentials::isUserConnected()) {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+            // Vérifier que le user est connecté
+            if (!UserCredentials::isUserConnected())
+            {
+                // Code 401 (utilisateur non authentifié)
+                http_response_code(401);
+
+                // On setup le message d'erreur pour la vue
+                $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
+                require 'Vue/PageErreur.php';
+                return false;
+            }
+
+            // On renvoie du JSON par défaut (AJAX)
+            header("Content-Type: application/json");
 
             // Vérification du token CSRF
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? '')) {
                 http_response_code(403);
                 echo json_encode([
                     'status' => 'error',
@@ -38,21 +41,6 @@ class ProfileController
 
             // Définir un code HTTP 400 (Bad Request) par défaut
             http_response_code(400);
-
-            // On renvoie du JSON par défaut (AJAX)
-            header("Content-Type: application/json");
-            // Start la session pour récupérer les données de session
-            if (session_status() == PHP_SESSION_NONE) {
-                // Configurer les paramètres du cookie de session
-                session_set_cookie_params([
-                    'httponly' => true,
-                    'secure' => false, // à activer uniquement en HTTPS
-                    'samesite' => 'Strict'
-                ]);
-
-                // Démarrer la session
-                session_start();
-            }
 
             // L'utilisateur doit être connecté pour pouvoir changer ses données
             $userId = UserCredentials::getConnectedUserId();
@@ -72,7 +60,6 @@ class ProfileController
             $email = $_POST['mail_utilisateur'] ?? null; // email de l'utilisateur
             $mot_de_passe = $_POST['mdp_utilisateur'] ?? null; // mot de passe
             $champsAChanger = [];
-            $params[':id'] = $userId;
 
             // On vérifie si les champs sont vides ou non
             if (!empty($nom)) {
@@ -80,7 +67,7 @@ class ProfileController
                     // Réponse JSON avec le message d'erreur
                     echo json_encode([
                         'status' => 'error',
-                        'message' => 'Une erreur est survenue, veuillez réessayer.'
+                        'message' => "Le format du nom est invalide."
                     ]);
                     return false;
                 }
@@ -94,7 +81,7 @@ class ProfileController
                     // Réponse JSON avec le message d'erreur
                     echo json_encode([
                         'status' => 'error',
-                        'message' => 'Une erreur est survenue, veuillez réessayer.'
+                        'message' => "Le format du prénom est invalide"
                     ]);
                     return false;
                 }
@@ -109,10 +96,21 @@ class ProfileController
                     // Réponse JSON avec le message d'erreur
                     echo json_encode([
                         'status' => 'error',
-                        'message' => 'Une erreur est survenue, veuillez réessayer.'
+                        'message' => "Le format de l'email est invalide"
                     ]);
                     return false;
                 }
+
+                if (UserCredentials::isEmailAlreadyTaken($email))
+                {
+                    // Réponse JSON avec le message d'erreur
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => "Erreur : L'email est déjà utilisée"
+                    ]);
+                    return false;
+                }
+                
                 $champsAChanger[] = "mail_utilisateur = :mail_utilisateur";
                 $params[':mail_utilisateur'] = $email;
             }
@@ -123,7 +121,7 @@ class ProfileController
                     // Réponse JSON avec le message d'erreur
                     echo json_encode([
                         'status' => 'error',
-                        'message' => 'Une erreur est survenue, veuillez réessayer.'
+                        'message' => "Erreur : Le nouveau mot de passe n'est pas valide. Il faut au moins 8 caractères avec une minuscule, une majuscule et un chiffre"
                     ]);
                     return false;
                 }
@@ -143,7 +141,8 @@ class ProfileController
                 return false;
             }
 
-            $result = UserCredentials::changeProfile($champsAChanger, $params);
+            $userProfile = new UserProfile($userId);
+            $result = $userProfile->changeProfile($champsAChanger, $params);
             if ($result) {
                 // Définir un code HTTP 200 (Succès)
                 http_response_code(200);
@@ -155,6 +154,10 @@ class ProfileController
                 ]);
             } 
             else {
+
+                // Code d'erreur avec une erreur serveur
+                http_response_code(500);
+
                 // Réponse JSON avec le message d'erreur
                 echo json_encode([
                     'status' => 'error',
@@ -165,20 +168,20 @@ class ProfileController
             return $result;
         } 
         else {
-
-            // Si la méthode n'est pas POST, on re-affiche la page de modification du profil
-            // On vérifie si l'utilisateur est connecté
             if (UserCredentials::isUserConnected()) {
+
+                // Génération du token CSRF pour le formulaire
+                $csrf_token = $securityObj->genererCSRFToken();
+                
                 // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
                 require 'Vue/ModifierProfil.php';
                 return true;
+
             } else {
-                // Réponse JSON avec le message d'erreur
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => "Erreur: L'utilisateur n'est pas connecté."
-                ]);
-                header("Location: index.php?action=connexion");
+                
+                // On setup le message d'erreur pour la vue
+                $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
+                require 'Vue/PageErreur.php';
                 return false;
             }
         }

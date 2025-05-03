@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../ModeleDBB2.php';
+require_once 'db_connect.php';
 
 class Technicien
 {
@@ -71,8 +71,7 @@ class Technicien
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    // fonction pour recuperer les taches du technicien
-    public function getTachesForTechnicien($page_debut = 0, $page_fin = 10, $withMedia = 0, $statutFilter = null)
+    public function getTachesForTechnicien($page_debut = 0, $page_fin = 10)
     {
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
@@ -87,26 +86,10 @@ class Technicien
             t.date_fin_tache, 
             t.commentaire_technicien_tache, 
             t.ordre_tache, 
-            t.Id_demande
-        FROM tache t
-        WHERE t.Id_utilisateur = :userId ";
-
-        // Rajouter les clauses SQL via les filtres 
-        $sql = $this->appendMediaFiltresSQL($sql, $withMedia);
-        
-        // Ajout du filtre sur le statut si précisé
-        if (!is_null($statutFilter)) 
-        {
-            $sql .= "AND (
-                SELECT h.Id_statut
-                FROM historique h
-                WHERE h.Id_tache = t.Id_tache
-                ORDER BY h.date_modif DESC
-                LIMIT 1
-            ) = :statutFilter";
-        }
-        // Ajout de l'ordre et de la pagination
-        $sql .= "ORDER BY t.ordre_tache ASC LIMIT :page_fin OFFSET :page_debut";
+            t.Id_demande 
+            FROM tache t 
+            WHERE t.Id_utilisateur = :userId 
+            ORDER BY t.ordre_tache ASC LIMIT :page_fin OFFSET :page_debut";
     
         // Préparation de la requête
         $stmt = $pdo->prepare($sql);
@@ -115,12 +98,6 @@ class Technicien
         $stmt->bindParam(':userId', $this->techId, PDO::PARAM_INT);
         $stmt->bindParam(':page_fin', $page_fin, PDO::PARAM_INT);
         $stmt->bindParam(':page_debut', $page_debut, PDO::PARAM_INT);
-    
-        if (!is_null($statutFilter))
-        {
-            // Le param est crée dans appendFiltresSQL, il faut donc le bind
-            $stmt->bindParam(':statutFilter', $statutFilter, PDO::PARAM_INT);
-        }
 
         // Exécution de la requête
         $stmt->execute();
@@ -129,8 +106,7 @@ class Technicien
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // fonction pour recuperer le nombre de taches du technicien
-    function getTotalTaches($withMedia, $statutFilter): int 
+    function getTotalTaches(): int 
     {
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
@@ -138,29 +114,9 @@ class Technicien
         // Requête de base pour compter les tâches de l'utilisateur
         $sql = "SELECT COUNT(*) as total_count FROM tache t WHERE t.Id_utilisateur = :userId ";
 
-        // Rajouter les clauses SQL via les filtres 
-        $sql = $this->appendMediaFiltresSQL($sql, $withMedia);
-
-        // Ajout du filtre sur le statut si précisé
-        if (!is_null($statutFilter)) 
-        {
-            $sql .= "AND (
-                SELECT h.Id_statut
-                FROM historique h
-                WHERE h.Id_tache = t.Id_tache
-                ORDER BY h.date_modif DESC
-                LIMIT 1
-            ) = :statutFilter";
-        }
-
         // Préparation et exécution de la requête
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':userId', $this->techId, PDO::PARAM_INT);
-        if (!is_null($statutFilter))
-        {
-            // Le param est crée dans appendFiltresSQL, il faut donc le bind
-            $stmt->bindParam(':statutFilter', $statutFilter, PDO::PARAM_INT);
-        }
 
         $stmt->execute();
 
@@ -174,6 +130,8 @@ class Technicien
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
 
+        // On récupère les infos de la tache avec le bon userId et le dernier statut en date
+        // qui est inférieur à 5. Cela permet de récupérer uniquement les taches "en cours"
         $sql = "SELECT t.Id_tache, t.sujet_tache, t.description_tache, t.date_creation_tache,
                 t.date_planif_tache, t.date_fin_tache, t.commentaire_technicien_tache, t.Id_demande
                 FROM tache t
@@ -188,7 +146,6 @@ class Technicien
                 ) < 5
                 ORDER BY t.ordre_tache ASC";
 
-                
         // Préparation de la requête
         $stmt = $pdo->prepare($sql);
 
@@ -200,21 +157,6 @@ class Technicien
 
         // Récupérer les résultats sous forme de tableau associatif
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
- 
-    // fonction pour ajouter les filtres de media
-    public function appendMediaFiltresSQL($sql, $withMedia)
-    {
-        if ($withMedia === 1) 
-        {
-            $sql .= "AND NOT EXISTS (SELECT 1 FROM media WHERE media.Id_tache = t.Id_tache) ";
-        } 
-        elseif ($withMedia === 2) 
-        {
-            $sql .= "AND EXISTS (SELECT 1 FROM media WHERE media.Id_tache = t.Id_tache) ";
-        }
-
-        return $sql;
     }
 }
 

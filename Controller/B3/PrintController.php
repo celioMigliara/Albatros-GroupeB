@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../Model/B3/FeuilleDeRoute.php';
-require_once __DIR__ . '/../../Model/B3/Technicien.php';
+require_once 'Modeles/FeuilleDeRoute.php';
+require_once 'Modeles/Technicien.php';
 
 class PrintController
 {
@@ -15,7 +15,9 @@ class PrintController
         else
         {
             http_response_code(403);
-            echo "Chargement de la page non autorisé. Veuillez vous identifier en tant qu'administrateur";
+            // On setup le message d'erreur pour la vue
+            $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous identifier en tant qu'administrateur");
+            require 'Vue/PageErreur.php';
         }
     }
 
@@ -26,7 +28,10 @@ class PrintController
         if (!UserCredentials::isAdminConnected())
         {
             http_response_code(403);
-            echo "Chargement de la page non autorisé. Veuillez vous identifier en tant qu'administrateur";
+            // On setup le message d'erreur pour la vue
+            $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous identifier en tant qu'administrateur");
+            require 'Vue/PageErreur.php';
+            return false;
         }
 
         // Définir un code HTTP 400 (Bad Request) par défaut
@@ -36,6 +41,9 @@ class PrintController
         $techId = $_GET['tech_id'] ?? null;
         if (empty($techId))
         {
+            // On setup le message d'erreur pour la vue
+            $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez ajouter le paramètre tech_id en spécifiant l'id du technicien pour lequel il faut imprimer la feuille de route");
+            require 'Vue/PageErreur.php';
             return false;
         }
 

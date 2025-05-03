@@ -1,14 +1,15 @@
 <?php
 
-require_once __DIR__ . '/../ModeleDBB2.php';
+require_once 'db_connect.php';
 require_once 'Role.php';
+require_once 'User.php';
+require_once 'Security.php';
 
-class UserCredentials
+class UserCredentials extends User 
 {
-    public static $LongueurMinimumPassword = 8;
-    public static $LongueurMaximumPassword = 64;
+    public const LongueurMinimumPassword = 8;
+    public const LongueurMaximumPassword = 64;
 
-    public $user_id = -1;
     private $nom;
     private $prenom;
     private $email;
@@ -83,7 +84,6 @@ class UserCredentials
         $this->role = $role;
     }
 
-
     /* ========================== getter et setter pour le champ inscription_valide ========================== */
     public function getInscriptionValide()
     {
@@ -105,31 +105,9 @@ class UserCredentials
         $this->actif = $actif;
     }
 
-
-    /* ========================== getter et setter pour le user_id ========================== */
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-    public function setUserId($user_id)
-    {
-        $this->user_id = $user_id;
-    }
-
-    // Vérifie si l'utilisateur est connecté
     public static function isAdminConnected()
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
+        $securityObj = new Security(true);
 
         $roleId = $_SESSION['user']['role_id'] ?? null;
         if (empty($roleId))
@@ -143,17 +121,7 @@ class UserCredentials
     // Vérifie si l'utilisateur est connecté
     public static function isUserConnected()
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
+        $securityObj = new Security(true);
 
         return isset($_SESSION['user']['id']);
     }
@@ -161,27 +129,10 @@ class UserCredentials
     // Vérifie si l'utilisateur est connecté
     public static function getConnectedUserId()
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            // Configurer les paramètres du cookie de session
-            session_set_cookie_params([
-                'httponly' => true,
-                'secure' => false, // à activer uniquement en HTTPS
-                'samesite' => 'Strict'
-            ]);
-
-            // Démarrer la session
-            session_start();
-        }
+        $securityObj = new Security(true);
 
         $ret = $_SESSION['user']['id'] ?? null;
         return $ret;
-    }
-
-    // Vérifie si l'utilisateur est validé
-    public function isUserIdValid()
-    {
-        // L'userId est considéré valide à partir de 0
-        return $this->user_id > -1;
     }
 
     // Vérifie  les informations de l'utilisateur
@@ -231,7 +182,24 @@ class UserCredentials
         return [true, []];
     }
 
-    // Verifie l'inscription de l'utilisateur
+    public static function isEmailAlreadyTaken($email)
+    {
+        // Connexion à la base de données
+        $pdo = self::getConnection();
+
+        // Vérifier si l'email existe dans la base de données
+        $stmt = $pdo->prepare("SELECT Id_utilisateur FROM utilisateur WHERE mail_utilisateur = :email");
+
+        // Liaison du paramètre
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+
+        // Exécution du statement
+        $stmt->execute();
+
+        // Retour du résultat
+        return $stmt->fetchColumn() !== false;
+    }
+
     public function verifyUserInscription()
     {
         [$returnValue, $jsonArray] = $this->verifyUserData();
@@ -240,8 +208,8 @@ class UserCredentials
         }
 
         // On vérifie que l'email n'est pas déjà utilisée
-        $userId = self::getUserIdWithEmail($this->email);
-        if ($userId !== false) {
+        $emailExist = self::isEmailAlreadyTaken($this->email);
+        if ($emailExist) {
             // Si l'email est déjà utilisé, renvoyer une erreur avec le message approprié
             return [
                 false,
@@ -310,29 +278,14 @@ class UserCredentials
         // Si l'exécution de la requête est réussie, on récupère l'ID du nouvel utilisateur inséré
         // Cela permet de savoir quel ID a été généré pour l'utilisateur et de le stocker dans $this->user_id
         if ($result) {
-            $this->user_id = $pdo->lastInsertId();
+            $this->setUserId($pdo->lastInsertId());
         }
 
         // Retourne le résultat de la requête
         return $result;
     }
 
-    // Méthode statique pour changer le profil de l'utilisateur
-    public static function changeProfile($champsAChanger, $params)
-    {
-        if (empty($champsAChanger) || empty($params)) {
-            return false;
-        }
-
-        $pdo = self::getConnection();
-        $sql = "UPDATE utilisateur SET " . implode(', ', $champsAChanger) . " WHERE Id_utilisateur = :id";
-
-        $stmt = $pdo->prepare($sql);
-        return $stmt->execute($params);
-    }
-
-    // Méthode statique pour vérifier la connexion de l'utilisateur
-    public static function verifyConnection($email, $password)
+    public static function verifyPassword($email, $password)
     {
         // Préparer la requête pour récupérer le mot de passe de l'utilisateur actif
         $pdo = self::getConnection();
@@ -379,8 +332,8 @@ class UserCredentials
         // Et que le mot de passe possède au moins 1 miniscule/majuscule/chiffre
         $length = strlen($password);
         return
-            $length >= self::$LongueurMinimumPassword &&
-            $length <= self::$LongueurMaximumPassword
+            $length >= self::LongueurMinimumPassword &&
+            $length <= self::LongueurMaximumPassword
             && preg_match('/[A-Z]/', $password)
             && preg_match('/[a-z]/', $password)
             && preg_match('/[0-9]/', $password);

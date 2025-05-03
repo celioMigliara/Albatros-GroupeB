@@ -46,7 +46,7 @@ function formatDate(dateStr) {
 
 function voirTaches(id) {
     localStorage.setItem("technicien_courant", id);
-    window.location.href = "index.php?action=voirTachesParTechnicien";
+    window.location.href = BASE_URL + "/feuillederoute/liste/taches";
 }
 
 // Le JS pour liste d'impression :
@@ -68,7 +68,7 @@ function displayPrintList() {
         tr.innerHTML = `
         <td>${tech.name}</td>
         <td>
-        <button class="action-btn" onclick="window.open('index.php?action=imprimerFeuilleDeRoute&tech_id=${tech.id}', '_blank')">Voir la feuille de route</button>
+        <button class="action-btn" onclick="window.open('${BASE_URL}/feuillederoute/imprimer?tech_id=${tech.id}', '_blank')">Voir la feuille de route</button>
         <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
         <button class="action-btn" onclick="removeTechnician('${tech.id}')">Supprimer</button>
         </td>
@@ -97,7 +97,7 @@ if (TechPopupClose) {
 // Fonction pour récupérer les techniciens
 function fetchTechnicians() {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "index.php?action=getTechnicienUser", true);
+    xhr.open("GET", BASE_URL + "/feuillederoute/liste/techniciens", true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);

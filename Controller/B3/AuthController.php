@@ -212,13 +212,14 @@ class AuthController
                         'role_id' => $infoUser['Id_role']
                     ];
 
+                $isAdminForPageAccueil = $infoUser['Id_role'] == 1 ? "/AccueilAdmin" : "/AccueilTechnicien";
+
                 // On définit un code HTTP 200 pour le succès
                 http_response_code(200);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Vous êtes connectés',
-                    // Temporaire -- Dans le vrai projet ce sera différent
-                    'redirect' => BASE_URL . '/AccueilConnexion'
+                    'redirect' => BASE_URL . $isAdminForPageAccueil
                 ]);
                 return true;
             } else {

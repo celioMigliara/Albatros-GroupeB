@@ -53,8 +53,8 @@ function validateCsrfToken($token) {
 }
 
 // ======= VÉRIF ROLE ADMIN =======
-if (isset($_SESSION['id_role'])) {
-    if ($_SESSION['id_role'] != 1) {
+if (isset($_SESSION['user_role'])) {
+    if ($_SESSION['user_role'] != 1) {
         echo json_encode(['success' => false, 'message' => 'Accès refusé !'], JSON_UNESCAPED_UNICODE);
         exit;
     }

@@ -130,24 +130,23 @@ $token = generateCsrfToken();
         <div id="popup" class="popup">
             <span id="popup-close" class="popup-close">&times;</span>
             <p id="popup-message"></p>
-            <button id="popup-ok-btn">OK</button>
+            <button class="popup-ok-btn" id="popup-ok-btn">OK</button>
         </div>
 
         <!-- Pop-up d’erreur -->
         <div id="error-popup" class="popup error">
             <span id="error-popup-close" class="popup-close">&times;</span>
             <p id="error-message"></p>
-            <button id="error-ok-btn">OK</button>
+            <button class="popup-ok-btn" id="error-ok-btn">OK</button>
         </div>
 
         <!-- Pop-up de confirmation de suppression -->
         <div id="popupDel" class="popupDel">
                 <span id="popup-close-sup" class="popup-close">&times;</span>
                 <p id="popup-message-sup"></p>
-                <button id="popup-ok-btn-sup">Supprimer la maintenance</button>
-                <button id="popup-no-btn-sup">Revenir en arrière</button>
-            </div>
-                    
+                <button class="popup-ok-btn-sup" id="popup-ok-btn-sup">Supprimer la maintenance</button>
+                <button class="popup-no-btn-sup" id="popup-no-btn-sup">Revenir en arrière</button>
+            </div>  
         </div>
     
         <script>

@@ -156,15 +156,13 @@ class RecurrenceModel {
                 }
             }
 
-            if($rappel == 0 || $rappel == "")
-            {
-                $rappel = null;
-                $idUnite1 = null;
+
+            if($rappel =="" && $idUnite1==""){
+                $rappel = 0;
+                $idUnite1 = 1;
             }
 
             if (empty($idUnite1) && $rappel) {
-                return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel et vice-versa."];
-            } else if (empty($rappel) && $idUnite1) {
                 return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel et vice-versa."];
             }
 

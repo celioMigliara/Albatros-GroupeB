@@ -27,9 +27,9 @@ require_once(__DIR__ . '/../../Model/ModeleDBB2.php'); // à adapter à ton arbo
         echo "Aucun utilisateurs trouvé";
         exit();
     }
-
-    $_SESSION['id_utilisateur'] = $user['id_utilisateur'];
-    $_SESSION['id_role'] = $user['id_role'];
+    
+    //$_SESSION['user_id'] = $user['id_utilisateur'];
+    //$_SESSION['user_role'] = $user['id_role'];
     $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
 
     /*if (!$user || !password_verify($password, $user['mdp_utilisateur'])) {

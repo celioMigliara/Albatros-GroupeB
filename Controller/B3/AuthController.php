@@ -184,7 +184,8 @@ class AuthController
             if ($result === true) {
 
                 // Vérifie si l'utilisateur est déjà connecté
-                if (isset($_SESSION['user'])) {
+                if (UserConnectionUtils::isUserConnected())
+                {
                     echo json_encode([
                         'status' => 'error',
                         'message' => "Vous êtes déjà connecté"
@@ -212,7 +213,8 @@ class AuthController
                         'role_id' => $infoUser['Id_role']
                     ];
 
-                $isAdminForPageAccueil = $infoUser['Id_role'] == 1 ? "/AccueilAdmin" : "/AccueilTechnicien";
+                $isRoleAdmin = Role::isSameRole($infoUser['Id_role'], Role::ADMINISTRATEUR);
+                $isAdminForPageAccueil = $isRoleAdmin ? "/AccueilAdmin" : "/AccueilTechnicien";
 
                 // On définit un code HTTP 200 pour le succès
                 http_response_code(200);

@@ -2,13 +2,14 @@
 
 require_once 'Model/B3/FeuilleDeRoute.php';
 require_once 'Model/B3/Technicien.php';
+require_once 'Model/UserConnectionUtils.php';
 
 class PrintController
 {
     public function index()
     {    
         // Vérifie si l'utilisateur est connecté en tant qu'administrateur
-        if (UserCredentials::isAdminConnected())
+        if (UserConnectionUtils::isAdminConnected())
         {
             require 'View/B3/ListeImpression.php';
         }
@@ -25,7 +26,7 @@ class PrintController
     public function print()
     {
         // Vérifie si l'utilisateur est connecté en tant qu'administrateur
-        if (!UserCredentials::isAdminConnected())
+        if (!UserConnectionUtils::isAdminConnected())
         {
             http_response_code(403);
             // On setup le message d'erreur pour la vue

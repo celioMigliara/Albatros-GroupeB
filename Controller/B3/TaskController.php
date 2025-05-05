@@ -5,6 +5,7 @@ require_once 'Model/B3/Technicien.php';
 require_once 'Model/B3/Tache.php';
 require_once 'Model/B3/Security.php';
 require_once 'Model/B3/MessageErreur.php';
+require_once 'Model/UserConnectionUtils.php';
 
 class TaskController
 {
@@ -13,7 +14,7 @@ class TaskController
 
     public function index()
     {
-        if (UserCredentials::isAdminConnected())
+        if (UserConnectionUtils::isAdminConnected())
         {
             // On les set pour la vue qui va les utiliser
             $techniciens = Technicien::getTechniciens();
@@ -46,7 +47,7 @@ class TaskController
         if ($_SERVER['REQUEST_METHOD'] == 'GET')
         {
             // Vérifier si l'utilisateur est connecté
-            if (!UserCredentials::isAdminConnected()) {
+            if (!UserConnectionUtils::isAdminConnected()) {
                 http_response_code(403);
                 echo json_encode(['status' => 'error', 'message' => "Veuillez vous connecter en tant qu'admin pour voir les tâches."]);
                 return false;

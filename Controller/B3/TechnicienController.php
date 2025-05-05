@@ -2,6 +2,7 @@
 
 require_once 'Model/B3/UserCredentials.php';
 require_once 'Model/B3/Technicien.php';
+require_once 'Model/UserConnectionUtils.php';
 
 class TechnicienController
 {
@@ -15,8 +16,10 @@ class TechnicienController
         header("Content-Type: application/json");
 
         if ($_SERVER['REQUEST_METHOD'] == "GET") {
-            // Vérifier si l'utilisateur est connecté
-            if (!UserCredentials::isAdminConnected()) {
+            // Vérifier si l'utilisateur est connecté en tant qu'admin
+            if (!UserConnectionUtils::isAdminConnected()) {
+                // Code de reponse HTTP 403 (forbidden)
+                http_response_code(403);
                 echo json_encode(['status' => 'error', 'message' => "Veuillez vous connecter en tant qu'admin pour voir les techniciens."]);
                 return false;
             }

@@ -3,6 +3,7 @@
 require_once 'Model/B3/UserCredentials.php';
 require_once 'Model/B3/UserProfile.php';
 require_once 'Model/B3/Security.php';
+require_once 'Model/UserConnectionUtils.php';
 
 class ProfileController
 {
@@ -15,7 +16,7 @@ class ProfileController
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // Vérifier que le user est connecté
-            if (!UserCredentials::isUserConnected())
+            if (!UserConnectionUtils::isUserConnected())
             {
                 // Code 401 (utilisateur non authentifié)
                 http_response_code(401);
@@ -43,7 +44,7 @@ class ProfileController
             http_response_code(400);
 
             // L'utilisateur doit être connecté pour pouvoir changer ses données
-            $userId = UserCredentials::getConnectedUserId();
+            $userId = UserConnectionUtils::getConnectedUserId();
             if ($userId == null) {
                 // Réponse JSON avec le message d'erreur
                 echo json_encode([
@@ -168,7 +169,7 @@ class ProfileController
             return $result;
         } 
         else {
-            if (UserCredentials::isUserConnected()) {
+            if (UserConnectionUtils::isUserConnected()) {
 
                 // Génération du token CSRF pour le formulaire
                 $csrf_token = $securityObj->genererCSRFToken();

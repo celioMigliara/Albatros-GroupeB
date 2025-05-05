@@ -105,36 +105,6 @@ class UserCredentials extends UserB3
         $this->actif = $actif;
     }
 
-    public static function isAdminConnected()
-    {
-        $securityObj = new Security(true);
-
-        $roleId = $_SESSION['user']['role_id'] ?? null;
-        if (empty($roleId))
-        {
-            return false;
-        }
-
-        return Role::isSameRole($roleId, Role::ADMINISTRATEUR);
-    }
-
-    // Vérifie si l'utilisateur est connecté
-    public static function isUserConnected()
-    {
-        $securityObj = new Security(true);
-
-        return isset($_SESSION['user']['id']);
-    }
-
-    // Vérifie si l'utilisateur est connecté
-    public static function getConnectedUserId()
-    {
-        $securityObj = new Security(true);
-
-        $ret = $_SESSION['user']['id'] ?? null;
-        return $ret;
-    }
-
     // Vérifie  les informations de l'utilisateur
     public function verifyUserData()
     {

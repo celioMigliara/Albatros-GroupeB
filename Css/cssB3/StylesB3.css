@@ -7,7 +7,7 @@
 
 /* Style général du body avec une image de fond et un effet centré */
 body {
-  background-image: url("/Assets/B3/fond.png");
+  background-image: url("../../Assets/B3/fond.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -902,7 +902,7 @@ input[type="password"]:valid ~ label {
   }
 
   .block {
-    background-image: url(/Assets/B3/fond.png);
+    background-image: url("../../Assets/B3/fond.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

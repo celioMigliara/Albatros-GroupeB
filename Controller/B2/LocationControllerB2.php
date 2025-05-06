@@ -16,7 +16,7 @@ function getLocationJson(): string {
     return json_encode($data, JSON_UNESCAPED_UNICODE);
 }
 
-// Toujours renvoyer du JSON
-header('Content-Type: application/json');
-echo getLocationJson();
-exit;
+if (PHP_SAPI !== 'cli' && basename(__FILE__) === basename($_SERVER["SCRIPT_FILENAME"])) {
+    header("Content-Type: application/json");
+    echo getLocationJson();
+}

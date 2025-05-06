@@ -119,6 +119,12 @@ final readonly class Merger
             $failOnPhpunitDeprecation = $xmlConfiguration->phpunit()->failOnPhpunitDeprecation();
         }
 
+        if ($cliConfiguration->hasFailOnPhpunitNotice()) {
+            $failOnPhpunitNotice = $cliConfiguration->failOnPhpunitNotice();
+        } else {
+            $failOnPhpunitNotice = $xmlConfiguration->phpunit()->failOnPhpunitNotice();
+        }
+
         if ($cliConfiguration->hasFailOnEmptyTestSuite()) {
             $failOnEmptyTestSuite = $cliConfiguration->failOnEmptyTestSuite();
         } else {
@@ -477,6 +483,12 @@ final readonly class Merger
             $displayDetailsOnPhpunitDeprecations = $xmlConfiguration->phpunit()->displayDetailsOnPhpunitDeprecations();
         }
 
+        if ($cliConfiguration->hasDisplayDetailsOnPhpunitNotices()) {
+            $displayDetailsOnPhpunitNotices = $cliConfiguration->displayDetailsOnPhpunitNotices();
+        } else {
+            $displayDetailsOnPhpunitNotices = $xmlConfiguration->phpunit()->displayDetailsOnPhpunitNotices();
+        }
+
         if ($cliConfiguration->hasDisplayDetailsOnTestsThatTriggerErrors()) {
             $displayDetailsOnTestsThatTriggerErrors = $cliConfiguration->displayDetailsOnTestsThatTriggerErrors();
         } else {
@@ -773,6 +785,10 @@ final readonly class Merger
             $displayDetailsOnPhpunitDeprecations = true;
         }
 
+        if ($failOnPhpunitNotice) {
+            $displayDetailsOnPhpunitNotices = true;
+        }
+
         if ($failOnNotice) {
             $displayDetailsOnTestsThatTriggerNotices = true;
         }
@@ -803,7 +819,6 @@ final readonly class Merger
                 $sourceIncludeFiles,
                 $sourceExcludeDirectories,
                 $sourceExcludeFiles,
-                $xmlConfiguration->source()->restrictDeprecations(),
                 $xmlConfiguration->source()->restrictNotices(),
                 $xmlConfiguration->source()->restrictWarnings(),
                 $xmlConfiguration->source()->ignoreSuppressionOfDeprecations(),
@@ -843,6 +858,7 @@ final readonly class Merger
             $failOnAllIssues,
             $failOnDeprecation,
             $failOnPhpunitDeprecation,
+            $failOnPhpunitNotice,
             $failOnEmptyTestSuite,
             $failOnIncomplete,
             $failOnNotice,
@@ -882,6 +898,7 @@ final readonly class Merger
             $displayDetailsOnSkippedTests,
             $displayDetailsOnTestsThatTriggerDeprecations,
             $displayDetailsOnPhpunitDeprecations,
+            $displayDetailsOnPhpunitNotices,
             $displayDetailsOnTestsThatTriggerErrors,
             $displayDetailsOnTestsThatTriggerNotices,
             $displayDetailsOnTestsThatTriggerWarnings,

@@ -12,12 +12,11 @@ class ProfileController
     {
         // Instanciation de l'object Security pour les sessions protégées
         $securityObj = new Security();
-        
+
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // Vérifier que le user est connecté
-            if (!UserConnectionUtils::isUserConnected())
-            {
+            if (!UserConnectionUtils::isUserConnected()) {
                 // Code 401 (utilisateur non authentifié)
                 http_response_code(401);
 
@@ -75,7 +74,7 @@ class ProfileController
                 $champsAChanger[] = "nom_utilisateur = :nom_utilisateur";
                 $params[':nom_utilisateur'] = $nom;
             }
- 
+
             // On vérifie si les champs sont vides ou non
             if (!empty($prenom)) {
                 if (!UserCredentials::verifyNameFormat($prenom)) {
@@ -102,8 +101,7 @@ class ProfileController
                     return false;
                 }
 
-                if (UserCredentials::isEmailAlreadyTaken($email))
-                {
+                if (UserCredentials::isEmailAlreadyTaken($email)) {
                     // Réponse JSON avec le message d'erreur
                     echo json_encode([
                         'status' => 'error',
@@ -111,7 +109,7 @@ class ProfileController
                     ]);
                     return false;
                 }
-                
+
                 $champsAChanger[] = "mail_utilisateur = :mail_utilisateur";
                 $params[':mail_utilisateur'] = $email;
             }
@@ -148,13 +146,18 @@ class ProfileController
                 // Définir un code HTTP 200 (Succès)
                 http_response_code(200);
 
+                // Recharger les nouvelles données utilisateur pour mettre à jour la session
+                $updatedUser = $userProfile->getUserData(); //nouvelle methode dans UserProfile
+
+                $_SESSION['user']['prenom'] = $updatedUser['prenom_utilisateur'];
+                $_SESSION['user']['nom'] = $updatedUser['nom_utilisateur'];
+                $_SESSION['user']['mail'] = $updatedUser['mail_utilisateur'];
                 // Réponse JSON avec le message d'erreur
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Votre profil a été changé avec succès.'
                 ]);
-            } 
-            else {
+            } else {
 
                 // Code d'erreur avec une erreur serveur
                 http_response_code(500);
@@ -167,19 +170,17 @@ class ProfileController
             }
 
             return $result;
-        } 
-        else {
+        } else {
             if (UserConnectionUtils::isUserConnected()) {
 
                 // Génération du token CSRF pour le formulaire
                 $csrf_token = $securityObj->genererCSRFToken();
-                
+
                 // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
                 require 'View/B3/ModifierProfil.php';
                 return true;
-
             } else {
-                
+
                 // On setup le message d'erreur pour la vue
                 $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
                 require 'View/B3/PageErreur.php';

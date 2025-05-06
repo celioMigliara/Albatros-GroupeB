@@ -24,4 +24,10 @@ class UserProfile extends UserB3
         $params[':id'] = $this->getUserId();
         return $stmt->execute($params);
     }
+    public function getUserData(): array {
+        $pdo = Database::getInstance()->getConnection();
+        $stmt = $pdo->prepare("SELECT * FROM utilisateur WHERE id_utilisateur = ?");
+        $stmt->execute([$this->userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

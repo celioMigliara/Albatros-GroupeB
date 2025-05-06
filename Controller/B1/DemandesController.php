@@ -60,12 +60,12 @@ class DemandesController
         // Récupérer les demandes en fonction du rôle
         if ($userRole == 1) {
             // Administrateur : afficher toutes les demandes filtrées et paginées
-            $demandes = Demande::getFilteredWithPagination($filters, $offset, $demandesParPage);
-            $totalDemandes = Demande::getTotalFiltered($filters);
+            $demandes = DemandeB1::getFilteredWithPagination($filters, $offset, $demandesParPage);
+            $totalDemandes = DemandeB1::getTotalFiltered($filters);
         } else {
             // Utilisateur simple : afficher uniquement ses demandes et celles de son bâtiment
-            $demandes = Demande::getByUserAndBuilding($userId, $filters, $offset, $demandesParPage);
-            $totalDemandes = Demande::getTotalByUserAndBuilding($userId, $filters);
+            $demandes = DemandeB1::getByUserAndBuilding($userId, $filters, $offset, $demandesParPage);
+            $totalDemandes = DemandeB1::getTotalByUserAndBuilding($userId, $filters);
         }
 
         // Calcul du nombre total de pages
@@ -89,7 +89,7 @@ class DemandesController
 
 
         if ($userRole != 1) { // Si l'utilisateur n'est pas admin
-            $demande = Demande::getById($id);
+            $demande = DemandeB1::getById($id);
             if (!$demande || $demande['id_utilisateur'] != $userId) {
                 die("Accès non autorisé.");
             }
@@ -101,9 +101,9 @@ class DemandesController
         $lieux = Lieu::getAll();
 
         // Récupérer la demande et les tâches associées
-        $demande = Demande::getById($id);
+        $demande = DemandeB1::getById($id);
         $taches = Taches::getTachesFromDemande($id);
-        $images = Demande::getImagesByDemandeId($id);
+        $images = DemandeB1::getImagesByDemandeId($id);
 
         if (!$demande) {
             die("Demande introuvable.");
@@ -120,7 +120,7 @@ class DemandesController
             $id = intval($_POST['id']);
             $commentaire = $_POST['commentaire_admin'];
 
-            Demande::updateCommentaireAdmin($id, $commentaire);
+            DemandeB1::updateCommentaireAdmin($id, $commentaire);
 
             // Rediriger vers la page de la demande
             header('Location: listedemande/' . $id);
@@ -144,13 +144,13 @@ class DemandesController
 
         // Mettre à jour le statut
         $nouveauStatut = 6; // ID du statut "Annulée"
-        $success = Demande::updateStatut($idDemande, $nouveauStatut);
+        $success = DemandeB1::updateStatut($idDemande, $nouveauStatut);
         error_log("Mise à jour statut : " . ($success ? "succès" : "échec"));
 
         if ($success) {
             try {
                 // Récupérer les informations de la demande
-                $demande = Demande::getByIdforMail($idDemande);
+                $demande = DemandeB1::getByIdforMail($idDemande);
                 if (!$demande) {
                     error_log("Demande non trouvée pour l'ID: " . $idDemande);
                     header('Location: ListeDemandes');
@@ -231,7 +231,7 @@ class DemandesController
     
             // Mettre à jour la demande seulement si ce n'est pas un simple upload de média
             if (!$isMediaUploadOnly) {
-                Demande::updateDemande($id, $data);
+                DemandeB1::updateDemande($id, $data);
             }
     
             // Gérer l'upload du média
@@ -296,7 +296,7 @@ class DemandesController
             }
 
             // Vérifier que l'utilisateur est le propriétaire de la demande
-            $demande = Demande::getById($idDemande);
+            $demande = DemandeB1::getById($idDemande);
             if (!$demande || $demande['id_utilisateur'] != $_SESSION['user_id']) {
                 die("Vous n'avez pas l'autorisation d'annuler cette demande.");
             }
@@ -307,7 +307,7 @@ class DemandesController
             }
 
             // Statut 6 = Annulée
-            $success = Demande::updateStatut($idDemande, 6);
+            $success = DemandeB1::updateStatut($idDemande, 6);
 
             if ($success) {
                 header('Location: index.php');

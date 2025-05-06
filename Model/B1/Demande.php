@@ -1,7 +1,7 @@
 <?php
 // Model/Demande.php
 require_once __DIR__ . '/../ModeleDBB2.php';
-class Demande {
+class DemandeB1 {
    
     public static function getTotalDemandes() {
         $pdo = Database::getInstance()->getConnection(); 

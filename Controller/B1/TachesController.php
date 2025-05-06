@@ -14,7 +14,7 @@ class TachesController {
     public function create() {
         // Récupérer les données nécessaires pour le formulaire
         $id_demande = $_GET['id'] ?? 0;
-        $demande = Demande::getById($id_demande);
+        $demande = DemandeB1::getById($id_demande);
         $statuts = Statut::getAll();
         $sites = Site::getAll();
         $batiments = Batiment::getAll();
@@ -25,7 +25,7 @@ class TachesController {
         $idDemande = isset($_GET['id']) ? intval($_GET['id']) : null;
 
         // Récupérer les informations de la demande liée
-        $demande = Demande::getById($idDemande);
+        $demande = DemandeB1::getById($idDemande);
         if (!$demande) {
             die("Demande introuvable.");
         }
@@ -101,7 +101,7 @@ class TachesController {
                 }
 
                  // Recalculer le statut de la demande
-                 Demande::recalcDemandStatus($data['id_demande']);
+                 DemandeB1::recalcDemandStatus($data['id_demande']);
 
                 // Rediriger vers la page show.php avec l'ID de la demande
                 header('Location: ' . BASE_URL . '/listedemande/' . $data['id_demande']);
@@ -125,7 +125,7 @@ class TachesController {
 
         // Récupérer les données nécessaires pour le formulaire
         $id_demande = $_GET['id'] ?? 0;
-        $demande = Demande::getById($id_demande);
+        $demande = DemandeB1::getById($id_demande);
         $statuts = Statut::getAll();
         $sites = Site::getAll();
         $batiments = Batiment::getAll();

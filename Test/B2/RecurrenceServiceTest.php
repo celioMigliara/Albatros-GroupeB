@@ -16,11 +16,28 @@ class RecurrenceServiceTest extends TestCase
         $this->pdo = Database::getInstance()->getConnection();
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-        // Supprimer dans le bon ordre à cause des clés étrangères
+        //Supprimer dans l'ordre inverse des dépendances pour respecter les clés étrangères
+        $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+    
+        $this->pdo->exec("DELETE FROM tache");
         $this->pdo->exec("DELETE FROM media");
         $this->pdo->exec("DELETE FROM est");
         $this->pdo->exec("DELETE FROM demande");
         $this->pdo->exec("DELETE FROM recurrence");
+    
+        // On peut aussi réinitialiser les ID si besoin
+        $this->pdo->exec("ALTER TABLE tache AUTO_INCREMENT = 1");
+        $this->pdo->exec("ALTER TABLE demande AUTO_INCREMENT = 1");
+        $this->pdo->exec("ALTER TABLE recurrence AUTO_INCREMENT = 1");
+    
+        $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
+    
+        // Vérifie qu'au moins le statut "Nouvelle" existe (utile pour tous les tests)
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM statut WHERE nom_statut = 'Nouvelle'");
+        $stmt->execute();
+        if ($stmt->fetchColumn() == 0) {
+            $this->pdo->exec("INSERT INTO statut (nom_statut) VALUES ('Nouvelle')");
+        }
     }
     
 

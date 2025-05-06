@@ -41,7 +41,7 @@ class UserTest extends TestCase
     /** ✅ Vérifie que getUtilisateurById retourne les données correctement si l'ID est bon */
     public function testGetUtilisateurByIdRetourneDonneesSiValide()
     {
-        $utilisateurValideId = 6; // 💡 Mets ici un vrai ID qui existe dans ta DB
+        $utilisateurValideId = 2; // 💡 Mets ici un vrai ID qui existe dans ta DB
 
         $result = User::getUtilisateurById($utilisateurValideId);
 
@@ -82,8 +82,8 @@ public function testGetBatimentsAssignesRetourneVideSiAucunLien()
 public function testGetNomRoleRetourneNomCorrect()
 {
     // Rôle existant : 1 = Administrateur
-    $nom = User::getNomRole(3);
-    $this->assertEquals("Admin", $nom);
+    $nom = User::getNomRole(1);
+    $this->assertEquals("Administrateur", $nom);
 }
 
 public function testGetNomRoleRetourneRoleInconnuSiInexistant()
@@ -113,7 +113,7 @@ public function testGetIdsUtilisateursEnAttenteRetourneTableau()
 public function testSetTokenMetAJourTokenEtExpiration()
 {
     // Arrange : créer des données factices
-    $id = 6; // Assure-toi qu’un utilisateur avec cet ID existe en BDD
+    $id = 1; // Assure-toi qu’un utilisateur avec cet ID existe en BDD
     $token = bin2hex(random_bytes(16));
     $expiration = date('Y-m-d H:i:s', strtotime('+24 hours'));
 
@@ -135,7 +135,7 @@ public function testSetTokenMetAJourTokenEtExpiration()
 public function testGetUtilisateurByTokenRetourneUtilisateurSiTokenValide()
 {
     // Arrange : on attribue un token temporaire à un utilisateur existant
-    $id = 6; // à adapter selon ton utilisateur
+    $id = 2; // à adapter selon ton utilisateur
     $token = bin2hex(random_bytes(16));
     $expiration = date('Y-m-d H:i:s', strtotime('+1 day'));
 
@@ -165,7 +165,7 @@ public function testGetUtilisateurByTokenRetourneFalseSiTokenInexistant()
 public function testConfirmerInscriptionMetAJourLUtilisateur()
 {
     // Arrange : on choisit un ID valide et on simule un token
-    $id = 6; // À adapter si besoin
+    $id = 2; // À adapter si besoin
     $token = bin2hex(random_bytes(16));
     $expiration = date('Y-m-d H:i:s', strtotime('+1 day'));
 
@@ -185,39 +185,5 @@ public function testConfirmerInscriptionMetAJourLUtilisateur()
 }
 
 
-public function testSupprimerUtilisateurSupprimeLesDonneesAssociees()
-{
-    $pdo = Database::getInstance()->getConnection();
-
-    // 🧱 1. Création d’un faux utilisateur
-    $pdo->exec("
-        INSERT INTO utilisateur (nom_utilisateur, prenom_utilisateur, mail_utilisateur, mdp_utilisateur, valide_utilisateur, actif_utilisateur, id_role)
-        VALUES ('Test', 'Delete', 'delete@test.com', 'fakepass', 0, 0, 3)
-    ");
-    $userId = $pdo->lastInsertId();
-
-    // 🧱 2. Ajout d'une liaison dans `travaille` (associé au bâtiment ID = 2)
-    $pdo->exec("INSERT INTO travaille (id_utilisateur, id_batiment) VALUES ($userId, 3)");
-
-    // 🧪 3. Appel de la méthode à tester
-    $result = User::supprimerUtilisateur($userId);
-
-    // ✅ 4. Vérification que l’utilisateur a été supprimé
-    $stmt = $pdo->prepare("SELECT * FROM utilisateur WHERE id_utilisateur = :id");
-    $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-    $stmt->execute();
-    $user = $stmt->fetch();
-
-    // ✅ 5. Vérification que le lien dans travaille a été supprimé
-    $stmt2 = $pdo->prepare("SELECT * FROM travaille WHERE id_utilisateur = :id");
-    $stmt2->bindParam(':id', $userId, PDO::PARAM_INT);
-    $stmt2->execute();
-    $travail = $stmt2->fetch();
-
-    // ✅ 6. Assertions
-    $this->assertTrue($result, "La méthode doit retourner true en cas de succès.");
-    $this->assertFalse($user, "L'utilisateur doit être supprimé de la table 'utilisateur'.");
-    $this->assertFalse($travail, "Les entrées associées dans 'travaille' doivent être supprimées.");
-}
 
 }

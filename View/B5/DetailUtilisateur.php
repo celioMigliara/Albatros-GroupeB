@@ -75,7 +75,7 @@ $nextId = $ids[$index + 1] ?? null;
     <!-- Boutons d'action -->
     <div class="actions">
         <!-- Valider : lien direct -->
-        <a href="<?= BASE_URL ?>/Controller/B5/validerInscription.php?id=<?= $utilisateur['id_utilisateur'] ?>" class="btn-action accept" title="Valider">&#10003;</a>
+        <a href="<?= BASE_URL ?>/validationInscription/<?= $utilisateur['id_utilisateur'] ?>" class="btn-action accept" title="Valider">&#10003;</a>
         <!-- Refuser : ouvre un popup intégré -->
         <button class="btn-action refuse" onclick="ouvrirPopupRefus()" title="Refuser">&#10005;</button>
     </div>

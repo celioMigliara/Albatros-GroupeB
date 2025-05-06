@@ -16,12 +16,11 @@ class DemandesController
             session_start();
         }
 
-        if (!isset($_SESSION['user_id'])) {
-            die("Accès non autorisé. Veuillez vous connecter.");
-        }
+        
 
-        $userId = $_SESSION['user_id'];
-        $userRole = $_SESSION['user_role'];
+        $userId = $_SESSION['user']['id'];
+        $userRole = $_SESSION['user']['role_id'];
+
 
         // Récupérer les données nécessaires pour les filtres
         $statuts = Statut::getAll();
@@ -85,8 +84,9 @@ class DemandesController
         $id = intval($id);
 
         // Vérifier si l'utilisateur a le droit d'accéder à cette demande
-        $userId = $_SESSION['user_id'];
-        $userRole = $_SESSION['user_role'];
+        $userId = $_SESSION['user']['id'];
+        $userRole = $_SESSION['user']['role_id'];
+
 
         if ($userRole != 1) { // Si l'utilisateur n'est pas admin
             $demande = Demande::getById($id);

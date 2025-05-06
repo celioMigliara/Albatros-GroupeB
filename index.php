@@ -1,19 +1,15 @@
 <?php
 session_start();
 
+
 // Sécurisation de session
 if (!isset($_SESSION['initiated'])) {
     session_regenerate_id();
     $_SESSION['initiated'] = true;
 }
 
-// Simulation locale d'utilisateur connecté
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_prenom'] = "Ilhan";
-    $_SESSION['nom'] = "Ilhan";
-    $_SESSION['user_id'] = 2;
-    $_SESSION['user_role'] = 2; // 1 = Admin, 2 = Technicien
-}
+
+
 
 // Définir BASE_URL
 define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
@@ -43,24 +39,9 @@ require_once 'Controller/B3/ProfileController.php';
 require_once 'Controller/B3/TaskController.php';
 require_once 'Controller/B3/TechnicienController.php';
 
-// Gestion de la page d'accueil
-if ($segments[0] === '' || $segments[0] === 'index.php') {
-    if (!empty($_SESSION['user_role'])) {
-        switch ($_SESSION['user_role']) {
-            case 1:
-                require 'View/B5/AccueilAdmin.php';
-                break;
-            case 2:
-                require 'View/B5/AccueilTechnicien.php';
-                break;
-            default:
-                error('Accès non autorisé.');
-        }
-    } else {
-        error('Session invalide.');
-    }
-    exit;
-}
+
+
+
 
 // Mise à true quand la page demandée n'est pas trouvée
 $pageNotFound = false;
@@ -68,13 +49,43 @@ $pageNotFound = false;
 // Gestion de routage manuel
 switch ($segments[0]) {
 
-    case 'AccueilAdmin':
-        require 'View/B5/AccueilAdmin.php';
-        break;
-
-    case 'AccueilTechnicien':
-        require 'View/B5/AccueilTechnicien.php';
-        break;
+    case '':
+        case 'index.php':
+            if (!empty($_SESSION['user']['role_id'])) {
+                switch ($_SESSION['user']['role_id']) {
+                    case 1:
+                        header('Location: ' . BASE_URL . '/AccueilAdmin');
+                        exit;
+                    case 2:
+                        header('Location: ' . BASE_URL . '/AccueilTechnicien');
+                        exit;
+                    default:
+                        error('Accès non autorisé.');
+                }
+            } else {
+                header('Location: ' . BASE_URL . '/connexion');
+                exit;
+            }
+            break;
+        
+            case 'AccueilAdmin':
+                if (!empty($_SESSION['user']['role_id']) && $_SESSION['user']['role_id'] == 1) {
+                    require 'View/B5/AccueilAdmin.php';
+                } else {
+                    header('Location: ' . BASE_URL . '/connexion');
+                    exit;
+                }
+                break;
+            
+            case 'AccueilTechnicien':
+                if (!empty($_SESSION['user']['role_id']) && in_array($_SESSION['user']['role_id'], [2, 3])) {
+                    require 'View/B5/AccueilTechnicien.php';
+                } else {
+                    header('Location: ' . BASE_URL . '/connexion');
+                    exit;
+                }
+                break;
+            
 
     case 'admin':
         require 'View/B5/menuAdmin.php';
@@ -263,13 +274,13 @@ switch ($segments[0]) {
 
     // Profil
     case 'profil':
-        if (!isset($segments[1])) 
-        {
+        if (!isset($segments[1])) {
+            // Appel à updateProfile en GET pour afficher ModifierProfil.php
+            (new ProfileController())->updateProfile(); 
+        } elseif ($segments[1] === 'modifier') {
+            (new ProfileController())->updateProfile(); // Même méthode gère POST
+        } else {
             $pageNotFound = true;
-            break;
-        }
-        if ($segments[1] === 'modifier') { 
-            (new ProfileController())->updateProfile();
         }
         break;
 
@@ -281,56 +292,49 @@ switch ($segments[0]) {
 
     // Feuille de route
     case 'feuillederoute':
-        if (isset($segments[1])) {
+        if (!isset($segments[1])) {
+            // Si aucun segment secondaire, afficher l'accueil de la feuille de route
+            (new PrintController())->index();
+        } else {
             switch ($segments[1]) {
-                case 'imprimer': // anciennement 'imprimerFeuilleDeRoute'
+                case 'imprimer':
                     (new PrintController())->print();
                     break;
                 case 'ordre':
-                    if (isset($segments[2]) && $segments[2] === 'update') { // anciennement 'updateOrdre'
+                    if (isset($segments[2]) && $segments[2] === 'update') {
                         (new TaskController())->updateTasksOrder();
-                    }
-                    else
-                    {
+                    } else {
                         $pageNotFound = true;
                     }
                     break;
-
                 case 'liste':
                     if (isset($segments[2])) {
                         switch ($segments[2]) {
-                            case 'taches': // anciennement 'voirTachesParTechnicien' + 'getTaches'
+                            case 'taches':
                                 (new TaskController())->index();
                                 break;
-                            case 'impression': // anciennement 'voirListeImpression'
+                            case 'impression':
                                 (new PrintController())->index();
                                 break;
-                            case 'techniciens': // anciennement 'getTechnicienUser'
+                            case 'techniciens':
                                 (new TechnicienController())->getTechniciens();
                                 break;
-
                             default:
                                 $pageNotFound = true;
                                 break;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $pageNotFound = true;
                     }
                     break;
+                default:
+                    $pageNotFound = true;
+                    break;
             }
         }
-        else
-        {
-            $pageNotFound = true;
-        }
         break;
-
-    default:
-        $pageNotFound = true;
-        break;
-}
+    
+    }
 
 if ($pageNotFound)
 {

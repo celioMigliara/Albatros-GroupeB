@@ -1,14 +1,22 @@
 <?php
 require_once __DIR__ . '/../../Model/B1/Demande.php';
+require_once __DIR__ . '/../../Model/UserConnectionUtils.php';
 
+if (!UserConnectionUtils::isUserConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
 //Pour la petite fenêtre de bienvenuevec les demandes ou pas 
-$userId = $_SESSION['user_id'];
-$demandes = Demande::getDemandesByUser($userId, 0, 5);?>
+$userId = $_SESSION['user']['id'];
+$demandes = Demande::getDemandesByUser($userId, 0, 5);
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Institut Albatros - Espace Technicien</title>
@@ -19,7 +27,8 @@ $demandes = Demande::getDemandesByUser($userId, 0, 5);?>
 </head>
 
 <body>
-    <?php require_once __DIR__ . '/navbarTechnicien.php'; ?>
+
+<?php require_once __DIR__ . '/navbarTechnicien.php'; ?>
 
     <!-- Espace visible pour forcer l'écart -->
     <div id="spacing-element" style="height:80px; background-color:transparent; width:100%;"></div>
@@ -34,13 +43,13 @@ $demandes = Demande::getDemandesByUser($userId, 0, 5);?>
                     </label>
                     <div class="dropdown-content">
                         <a href="parametres.php"><i class="fas fa-cog"></i> Paramètres</a>
-                        <a href="deconnexion.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        <a href="<?= BASE_URL ?>/deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                     </div>
                 </div>
 
                 <div class="technicien-text">
                     <h2>Bonjour, <span class="technicien-name">
-                            <?= htmlspecialchars(($_SESSION['user_prenom'] ?? '') . ' ' . ($_SESSION['user_nom'] ?? '')) ?>
+                            <?= htmlspecialchars(($_SESSION['user']['prenom'] ?? '')) ?>
                         </span> !</h2>
                     <p>Content de vous revoir.</p>
                 </div>

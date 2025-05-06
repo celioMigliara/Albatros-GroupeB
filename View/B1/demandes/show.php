@@ -1,4 +1,11 @@
-<?php if (!isset($demande)) die("Données de la demande manquantes."); ?>
+<?php 
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isUserConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
+if (!isset($demande)) die("Données de la demande manquantes."); ?>
 
 <?php
 // Vérifier si la demande est modifiable (ni annulée, ni terminée)
@@ -9,7 +16,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id']  == 1): ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
     <?php else: ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
@@ -17,7 +24,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
 </head>
 
 <header>
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
         <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
     <?php else: ?>
         <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
@@ -25,7 +32,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
 </header>
 
 
-<?php if ($_SESSION['user_role'] == 1): ?>
+<?php if ($_SESSION['user']['role_id'] == 1): ?>
     <h1 class="title">Gestion de la demande </h1>
 <?php else: ?>
     <h1 class="title">Gestion de ma demande </h1>
@@ -76,7 +83,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             <p><strong>Demandé le :</strong> <?= htmlspecialchars(date('d M Y', strtotime($demande['date_creation_dmd']))) ?></p>
 
             <p><strong>Site :</strong>
-                <?php if ($_SESSION['user_role'] == 1 || !$isDemandeModifiable): ?>
+                <?php if ($_SESSION['user']['role_id']  == 1 || !$isDemandeModifiable): ?>
                     <?= htmlspecialchars($demande['nom_site']) ?>
                 <?php else: ?>
                     <select name="nom_site" <?= !$isDemandeModifiable ? 'disabled' : '' ?>>
@@ -90,7 +97,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             </p>
 
             <p><strong>Bâtiment :</strong>
-                <?php if ($_SESSION['user_role'] == 1 || !$isDemandeModifiable): ?>
+                <?php if ($_SESSION['user']['role_id']  == 1 || !$isDemandeModifiable): ?>
                     <?= htmlspecialchars($demande['nom_batiment']) ?>
                 <?php else: ?>
                     <select name="nom_batiment" <?= !$isDemandeModifiable ? 'disabled' : '' ?>>
@@ -104,7 +111,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             </p>
 
             <p><strong>Lieu :</strong>
-                <?php if ($_SESSION['user_role'] == 1 || !$isDemandeModifiable): ?>
+                <?php if ($_SESSION['user']['role_id']  == 1 || !$isDemandeModifiable): ?>
                     <?= htmlspecialchars($demande['nom_lieu']) ?>
                 <?php else: ?>
                     <select name="nom_lieu" <?= !$isDemandeModifiable ? 'disabled' : '' ?>>
@@ -118,7 +125,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             </p>
 
             <p><strong>Description :</strong>
-                <?php if ($_SESSION['user_role'] == 1 || !$isDemandeModifiable): ?>
+                <?php if ($_SESSION['user']['role_id']  == 1 || !$isDemandeModifiable): ?>
                     <?= htmlspecialchars($demande['description_dmd']) ?>
                 <?php else: ?>
                     <textarea name="description_dmd" <?= !$isDemandeModifiable ? 'disabled' : '' ?>><?= htmlspecialchars($demande['description_dmd']) ?></textarea>
@@ -144,7 +151,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
         </form>
 
         <!-- Bouton d'annulation pour les utilisateurs -->
-        <?php if ($_SESSION['user_role'] == 3 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
+        <?php if ($_SESSION['user']['role_id']  == 3 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
             <div class="user-actions">
                 <form method="POST" action="index.php?action=annulerDemande&id=<?= htmlspecialchars($demande['id_demande']) ?>" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette demande ?');">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
@@ -178,7 +185,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
         <?php endif; ?>
 
         <!-- Section pour le commentaire admin -->
-        <?php if ($_SESSION['user_role'] == 1): ?>
+        <?php if ($_SESSION['user']['role_id'] == 1): ?>
             <div class="admin-comment">
             <form method="POST" action="<?= BASE_URL ?>/updateCommentaire">  
                               <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
@@ -189,7 +196,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             </div>
         <?php endif; ?>
 
-        <?php if (!$isDemandeModifiable && $_SESSION['user_role'] == 3): ?>
+        <?php if (!$isDemandeModifiable && $_SESSION['user']['role_id'] == 3): ?>
             <div class="info-message">
                 <p>Cette demande est <?= strtolower($demande['nom_statut']) ?> et ne peut plus être modifiée.</p>
             </div>
@@ -197,7 +204,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
 
 
         <!-- Bouton de soumission pour les utilisateurs -->
-        <?php if ($_SESSION['user_role'] == 3 || $_SESSION['user_role'] == 2 && $isDemandeModifiable): ?>
+        <?php if ($_SESSION['user']['role_id'] == 3 || $_SESSION['user']['role_id'] == 2 && $isDemandeModifiable): ?>
             <button type="submit" class="btn btn-primary btn-modif">Modifier</button>
         <?php endif; ?>
 
@@ -212,7 +219,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
         </di>
     </div>
 
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
         <div class="buttons">
             <?php if ($isDemandeModifiable): ?>
                 <form method="POST" action="<?= BASE_URL ?>/refuserDemande">

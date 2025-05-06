@@ -100,5 +100,27 @@ window.onload = function() {
     }
 };
 </script>
+<script>
+window.onload = function() {
+    const spacingElement = document.getElementById('spacing-element');
+    if (spacingElement) {
+        if (window.innerWidth <= 480) {
+            spacingElement.style.height = '140px';
+        } else if (window.innerWidth <= 768) {
+            spacingElement.style.height = '120px';
+        } else {
+            spacingElement.style.height = '120px';
+        }
+    }
+
+    <?php if (isset($_GET['status']) && $_GET['status'] === 'validation') : ?>
+        alert("✅ L'inscription a bien été validée !");
+    <?php elseif (isset($_GET['status']) && $_GET['status'] === 'refus') : ?>
+        alert("❌ L'inscription a été refusée avec succès.");
+    <?php endif; ?>
+};
+</script>
+
+
 </body>
 </html>

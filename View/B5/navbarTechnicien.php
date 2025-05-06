@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Navigation bar component pour technicien
  */
@@ -13,7 +14,7 @@
 
 <!-- Logo dans le coin supérieur gauche -->
 <div class="logo-container">
-    <a href="<?= BASE_URL ?>/View/AccueilTechnicien.php">
+    <a href="<?= BASE_URL ?>/AccueilTechnicien">
         <img src="<?= BASE_URL ?>/Assets/B5/logo.png" alt="logo institut albatros" class="site-logo">
         <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
     </a>
@@ -35,26 +36,29 @@
 <!-- Menu navigation -->
 <div class="navbar-wrapper">
     <nav id="main-nav">
-        <ul> 
-            <li >
-          <a href="<?= BASE_URL ?>/AccueilTechnicien" >Accueil</a>
-      </li>
+        <ul>
+            <li>
+                <a href="<?= BASE_URL ?>/AccueilTechnicien">Accueil</a>
+            </li>
             <li class="dropdown">
-          
                 <a href="#" class="dropdown-toggle">Demandes</a>
                 <div class="dropdown-menu demandes-menu">
                     <a href="<?= BASE_URL ?>/demande">Nouvelle demande</a>
                     <a href="<?= BASE_URL ?>/ListeDemandes">Voir mes demandes</a>
 
-                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Technicien'): ?>
-                        <a href="#">Voir mes tâches</a>
+                    <?php if (isset($_SESSION['user']['role_id']) && $_SESSION['user']['role_id']  == 2): ?>
+                        <a href="<?= BASE_URL ?>/tasksForTechnicien">Voir mes tâches</a>
                     <?php endif; ?>
                 </div>
             </li>
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle">Profil</a>
+            <div class="dropdown-menu demandes-menu">
+                <a href="<?= BASE_URL ?>/profil">Modifier mon profil</a>
+                <a href="<?= BASE_URL ?>/deconnexion">Déconnexion</a>
+            </div>
+            </li>
 
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Technicien'): ?>
-                <li><a href="#">Feuille de route</a></li>
-            <?php endif; ?>
         </ul>
     </nav>
 </div>
@@ -62,32 +66,32 @@
 
 <!-- Script JS pour le menu déroulant -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const dropdowns = document.querySelectorAll('.dropdown-toggle');
+    document.addEventListener('DOMContentLoaded', function() {
+        const dropdowns = document.querySelectorAll('.dropdown-toggle');
 
-    dropdowns.forEach(dropdown => {
-        dropdown.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-            // Fermer tous les autres
-            dropdowns.forEach(other => {
-                if (other !== dropdown) {
-                    other.parentElement.classList.remove('active');
-                }
+                // Fermer tous les autres
+                dropdowns.forEach(other => {
+                    if (other !== dropdown) {
+                        other.parentElement.classList.remove('active');
+                    }
+                });
+
+                // Toggle l'affichage de celui cliqué
+                this.parentElement.classList.toggle('active');
             });
+        });
 
-            // Toggle l'affichage de celui cliqué
-            this.parentElement.classList.toggle('active');
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                dropdowns.forEach(dropdown => {
+                    dropdown.parentElement.classList.remove('active');
+                });
+            }
         });
     });
-
-    document.addEventListener('click', function (e) {
-        if (!e.target.closest('.dropdown')) {
-            dropdowns.forEach(dropdown => {
-                dropdown.parentElement.classList.remove('active');
-            });
-        }
-    });
-});
 </script>

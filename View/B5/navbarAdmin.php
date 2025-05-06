@@ -67,7 +67,14 @@ if (!isset($nbComptesEnAttente)) {
                 </a>
             </li>
             <li><a href="#">Historique</a></li>
-            <li><a href="#">Feuille de route</a></li>
+            <li><a href="<?= BASE_URL ?>/feuillederoute">Feuille de route</a></li>
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle">Profil</a>
+            <div class="dropdown-menu demandes-menu">
+                <a href="<?= BASE_URL ?>/profil">Modifier mon profil</a>
+                <a href="<?= BASE_URL ?>/deconnexion">Déconnexion</a>
+            </div>
+            </li>
         </ul>
     </nav>
 </div>

@@ -13,6 +13,9 @@ class Security
     
     private function setCookieParams()
     {
+        if (php_sapi_name() === 'cli') {
+            return;
+        }
         // Démarrage de session ABSOLUMENT EN PREMIER
         if (session_status() === PHP_SESSION_NONE) {
             // Configurer les paramètres du cookie de session

@@ -10,7 +10,7 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demande d'intervention</title>
   <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB2/StyleB2.css">
-  <?php if ($_SESSION['user_role'] == 1): ?>
+  <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
 <?php else: ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
@@ -24,7 +24,7 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
 
 <header>
 
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
     <?php else: ?>
         <?php require_once __DIR__ . '/../B5/navbarTechnicien.php'; ?>

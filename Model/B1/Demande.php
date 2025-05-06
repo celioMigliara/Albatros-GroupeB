@@ -289,6 +289,7 @@ public static function getTotalByUserAndBuilding($userId, $filters) {
         JOIN utilisateur u ON d.id_utilisateur = u.id_utilisateur
         JOIN lieu l ON d.id_lieu = l.id_lieu
         JOIN batiment b ON l.id_batiment = b.id_batiment
+        JOIN site si ON b.id_site = si.id_site -- AJOUT ICI 
         WHERE (d.id_utilisateur = :userId OR b.id_batiment IN (
             SELECT id_batiment FROM travaille WHERE id_utilisateur = :userId
         ))
@@ -302,7 +303,7 @@ public static function getTotalByUserAndBuilding($userId, $filters) {
         $query .= " AND d.id_statut = :statut";
     }
     if (!empty($filters['site'])) {
-        $query .= " AND d.id_site = :site";
+        $query .= " AND si.id_site = :site";
     }
     if (!empty($filters['batiment'])) {
         $query .= " AND b.id_batiment = :batiment";

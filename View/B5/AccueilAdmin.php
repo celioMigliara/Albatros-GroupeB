@@ -1,9 +1,16 @@
 <?php
 require_once __DIR__ . '/../../Model/B5/User.php';
+require_once __DIR__ . '/../../Model/UserConnectionUtils.php';
 
+if (!UserConnectionUtils::isAdminConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
 // Inclusion du modèle User pour accéder à la fonction de comptage
 // Récupération du nombre de comptes utilisateurs en attente de validation
 $nbComptesEnAttente = User::countUtilisateursEnAttente();
+
+
 ?>
 
 <!DOCTYPE html>
@@ -33,15 +40,15 @@ $nbComptesEnAttente = User::countUtilisateursEnAttente();
                         <i class="fas fa-user"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="parametres.php"><i class="fas fa-cog"></i> Paramètres</a>
-                        <a href="deconnexion.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        <a href="<?= BASE_URL ?>/profil"><i class="fas fa-cog"></i> Paramètres</a>
+                        <a href="<?= BASE_URL ?>/deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                     </div>
                 </div>
 
             <div class="admin-text">
                     <h2>Bonjour, <span class="admin-name">
-                            <?= htmlspecialchars(($_SESSION['user_prenom'] ?? '') . ' ' . ($_SESSION['user_nom'] ?? '')) ?>
-                        </span> !</h2>
+                    <?= htmlspecialchars(($_SESSION['user']['prenom'] ?? '') ) ?>
+                    </span> !</h2>
                     <p>Content de vous revoir.</p>
                 </div>
             </div>

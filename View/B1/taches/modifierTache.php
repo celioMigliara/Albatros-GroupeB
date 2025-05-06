@@ -1,7 +1,13 @@
 <?php
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isUserConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
 // Au début du fichier, après les inclusions nécessaires
 $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
-$isTechnicien = $_SESSION['user_role'] == 2; // Vérifier si l'utilisateur est un technicien
+$isTechnicien = $_SESSION['user']['role_id'] == 2; // Vérifier si l'utilisateur est un technicien
 ?>
 
 <!DOCTYPE html>
@@ -13,11 +19,8 @@ $isTechnicien = $_SESSION['user_role'] == 2; // Vérifier si l'utilisateur est u
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css"> 
-    <?php if ($_SESSION['user_role'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-<?php else: ?>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-<?php endif; ?>
+
 
 </head>
 

@@ -173,7 +173,7 @@ class TachesController {
     
             $success = Taches::updateTask($data);
             if ($success) {
-                if ($_SESSION['user_role'] == 2) { // Technicien
+                if ($_SESSION['user']['role_id'] == 2) { // Technicien
                     header('Location: ' . BASE_URL . '/tasksForTechnicien'); 
                 } else { // Admin
                     header('Location: ' . BASE_URL . '/listedemande/' . $data['id_demande']);
@@ -187,10 +187,12 @@ class TachesController {
 
     public function tasksForTechnicien() {
         // Vérifier la connexion
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user']['id'])) {
             die("Utilisateur non connecté.");
         }
-        $technicienId = $_SESSION['user_id'];
+        $technicienId = $_SESSION['user']['id'];
+
+     
 
         // Récupérer toutes les tâches assignées à ce technicien
         $tasks = Taches::getTasksByTechnicien($technicienId);

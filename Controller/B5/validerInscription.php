@@ -2,6 +2,7 @@
 // Inclusion du modèle et du système d'envoi de mail
 require_once __DIR__ . '/../../Model/B5/User.php';
 require_once __DIR__ . '/../../Config/B5/mailer.php';
+define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
 
 // 1. Vérifie que l'ID est bien présent dans l'URL
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -34,6 +35,7 @@ $success = envoyerMailConfirmation(
 if (!$success) {
     die("Erreur : L'envoi du mail de confirmation a échoué.");
 }
-
+User::confirmerInscription($id);
 // 7. Redirection avec succès
-header("Location: /helha/Albatros-GroupeB/utilisateur/$id?status=validation");?>
+header('Location: ' . BASE_URL . '/ListeInscriptions?status=validation');
+exit;

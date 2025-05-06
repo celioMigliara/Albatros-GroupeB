@@ -11,14 +11,14 @@ class PrintController
         // Vérifie si l'utilisateur est connecté en tant qu'administrateur
         if (UserConnectionUtils::isAdminConnected())
         {
-            require 'View/B3/ListeImpression.php';
+            require './View/B3/ListeImpression.php';
         }
         else
         {
             http_response_code(403);
             // On setup le message d'erreur pour la vue
             $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous identifier en tant qu'administrateur");
-            require 'View/B3/PageErreur.php';
+            require './View/B3/PageErreur.php';
         }
     }
 
@@ -31,7 +31,7 @@ class PrintController
             http_response_code(403);
             // On setup le message d'erreur pour la vue
             $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous identifier en tant qu'administrateur");
-            require 'View/B3/PageErreur.php';
+            require '../View/B3/PageErreur.php';
             return false;
         }
 
@@ -44,7 +44,7 @@ class PrintController
         {
             // On setup le message d'erreur pour la vue
             $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez ajouter le paramètre tech_id en spécifiant l'id du technicien pour lequel il faut imprimer la feuille de route");
-            require 'View/B3/PageErreur.php';
+            require '../View/B3/PageErreur.php';
             return false;
         }
 

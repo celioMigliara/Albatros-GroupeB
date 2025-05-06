@@ -1,6 +1,13 @@
 <?php
 require_once(__DIR__ . '/../../Secure/B2/session.php'); // Pour que la session soit démarrée et que le token soit généré
 $token = generateCsrfToken();
+
+require_once __DIR__ . '/../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isAdminConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -10,17 +17,14 @@ $token = generateCsrfToken();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB2/style_maintenance.css?v=<?php echo time(); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
-    <?php if ($_SESSION['user_role'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-<?php else: ?>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-<?php endif; ?>
+
     <title>Ajout</title>
 
 </head>
 
 <body>
-<?php if ($_SESSION['user_role'] == 1): ?>
+<?php if ($_SESSION['user']['id'] == 1): ?>
     <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 <?php endif; ?>
     <h1 class="titre">Formulaire d'ajout de maintenance</h1>

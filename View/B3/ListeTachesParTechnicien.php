@@ -6,10 +6,12 @@
     <title>Gestion des tâches - Page 1</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
 
 </head>
 
 <body data-page="ListeTaches">
+<?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
     <div class="overlay"></div>
 

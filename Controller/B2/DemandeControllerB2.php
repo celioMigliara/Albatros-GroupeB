@@ -169,7 +169,8 @@ function nettoyerChaine(?string $valeur): string {
 // ===============================
 if (!defined('PHPUNIT_RUNNING') && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $model = new DemandeModel();
-    $reponse = traiter($_POST, $_FILES, $_SESSION['user_id'], $model);
+    $userId = $_SESSION['user']['id'] ?? null;
+    $reponse = traiter($_POST, $_FILES, $userId, $model);
     if ($reponse['success'] ?? false) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         $_SESSION['csrf_token_expire'] = time() + 360;

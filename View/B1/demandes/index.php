@@ -1,8 +1,20 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isUserConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
+
 $pageActuelle = isset($pageActuelle) ? (int)$pageActuelle : 1;
 $totalPages = isset($totalPages) ? (int)$totalPages : 1;
 $demandes = $demandes ?? [];
 $filters = $filters ?? [];
+
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +25,7 @@ $filters = $filters ?? [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
 <?php else: ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
@@ -22,7 +34,7 @@ $filters = $filters ?? [];
 
 <body>
     <header>
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
     <?php else: ?>
         <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
@@ -30,7 +42,7 @@ $filters = $filters ?? [];
     </header>
     
     
-    <?php if ($_SESSION['user_role'] == 1): ?>
+    <?php if ($_SESSION['user']['role_id']== 1): ?>
         <h1 class="title">Liste des demandes </h1>
     <?php else: ?>
         <h1 class="title">Liste de mes demandes </h1>
@@ -105,8 +117,8 @@ $filters = $filters ?? [];
     </div>
 
     <div class="technicien-button-container">
-            <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 2): ?>
-                <!-- Lien vers la liste de tâches du technicien -->
+    <?php if (isset($_SESSION['user']['role_id']) && $_SESSION['user']['role_id'] == 2): ?>
+        <!-- Lien vers la liste de tâches du technicien -->
                 <a href="<?= BASE_URL ?>/tasksForTechnicien" class="btn-green">Voir mes tâches</a>
             <?php endif; ?>
     </div>

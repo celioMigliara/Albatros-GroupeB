@@ -7,9 +7,13 @@
 
   <title>Liste d'impression des techniciens présents</title>
   <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+
 </head>
 
 <body data-page="ListeImpression">
+<?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
+
   <div class="block_taches">
     <div class="overlay"></div>
     <h1>Liste d'impression</h1>

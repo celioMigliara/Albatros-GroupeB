@@ -6,10 +6,24 @@
     <title>Modifier Profil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+<?php else: ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+<?php endif; ?>
 
 </head>
 
 <body>
+
+<header>
+
+    <?php if ($_SESSION['user']['role_id'] == 1): ?>
+    <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
+    <?php else: ?>
+        <?php require_once __DIR__ . '/../B5/navbarTechnicien.php'; ?>
+        <?php endif; ?>
+    </header>  
     <!-- Overlay pour l'effet arriere flou-->
     <div class="overlay"></div>
 

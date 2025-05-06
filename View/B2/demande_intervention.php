@@ -19,9 +19,6 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
 
 <body class="page-demande-B2">
 
-
-<!-- Div englobant-->
-
 <header>
 
     <?php if ($_SESSION['user']['role_id'] == 1): ?>
@@ -130,9 +127,9 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
       </form>
     </div>
   </div>
-  
-  <div id="popup-overlay-B2" class="popup-overlay"></div>
+ 
 
+  <div id="popup-overlay-B2" class="popup-overlay"></div>
   <div id="popup" class="popup-B2">
     <div class="popup-content-B2">
       <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2" data-effect="mfp-move-horizontal">

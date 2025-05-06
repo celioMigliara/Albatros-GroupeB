@@ -30,13 +30,9 @@ class RecurrenceModel {
             return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
         }
     
-        if (empty($uniteFrequence)) {
-            return ['success' => false, 'message' => "Entrez l'unité de fréquence"];
-        }
-    
         // Vérifications supplémentaires
         if($frequence > 100 && $uniteFrequence == "mois"){
-            return ['success' => false, 'message' => "Entrez une fréquence valide pour les années, pas plus de 100 mois"];
+            return ['success' => false, 'message' => "Entrez une fréquence valide pour les mois, pas plus de 100 mois"];
         }
     
         if($frequence > 5 && $uniteFrequence == "année"){
@@ -48,9 +44,7 @@ class RecurrenceModel {
         }
     
         if (empty($idUnite1) && $rappel) {
-            return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel et vice-versa."];
-        } else if (empty($rappel) && $idUnite1) {
-            return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel et vice-versa."];
+            return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel"];
         }
 
         if($rappel =="" && $idUnite1==""){
@@ -112,7 +106,7 @@ class RecurrenceModel {
             $stmt->execute(['id' => $idRecurrence]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch (Exception $e) {
-            echo "<p style='color:red;'>Erreur lors de la récupération : " . $e->getMessage() . "</p>";
+            return ["success" => false, "message" => "Erreur lors de la récupération"];
             return null;
         }
     }
@@ -128,7 +122,7 @@ class RecurrenceModel {
             }
 
             if($frequence >100 && $uniteFrequence =="mois"){
-                return ['success' => false, 'message' => "Entrez une frequence valide pour les années , pas plus de 100 mois"];
+                return ['success' => false, 'message' => "Entrez une frequence valide pour les mois , pas plus de 100 mois"];
             }
             
             if($frequence >5 && $uniteFrequence =="année"){
@@ -156,14 +150,13 @@ class RecurrenceModel {
                 }
             }
 
-
             if($rappel =="" && $idUnite1==""){
                 $rappel = 0;
                 $idUnite1 = 1;
             }
 
             if (empty($idUnite1) && $rappel) {
-                return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel et vice-versa."];
+                return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel"];
             }
 
 

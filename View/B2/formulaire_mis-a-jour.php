@@ -116,9 +116,10 @@ if (!UserConnectionUtils::isAdminConnected()) {
             <div class="demo-form-row">
                 <a href="<?= BASE_URL ?>/recurrence" class="retour_liste_recurr">Retour à la liste</a>
             </div>
-
-         
-            <button type="button" class="supp-btn_recurr" data-id="<?php echo $maintenance['id_recurrence']; ?>">Supprimer</button>
+           
+            <div class="demo-form-row">
+                <button type="button" class="supp-btn_recurr" data-id="<?php echo $maintenance['id_recurrence']; ?>">Supprimer</button>
+            </div>
 
             <div class="demo-form-row">
                 <input name="add_mainte" type="submit" value="Modifier" class="add2_recurr">

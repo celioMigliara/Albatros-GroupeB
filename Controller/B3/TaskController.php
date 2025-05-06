@@ -56,7 +56,9 @@ class TaskController
             // recueillir les paramètres de la requête
             $technicienId = $_GET['technicien_id'] ?? null;
             $start = $_GET['start'] ?? 0; // Index de départ
-            $limit = $_GET['limit'] ?? self::TaskBaseLimit; // Limiter à 10 tâches par page
+
+            // Limiter à 10 tâches par page si la variable d'env n'est pas SET
+            $limit = $_ENV['GET_TASK_LIMIT'] ?? self::TaskBaseLimit;
 
             if (empty($technicienId)) 
             {
@@ -67,7 +69,7 @@ class TaskController
             // Vérifier si le technicien existe réellement
             $technicien = new Technicien(intval($technicienId));
             if (!$technicien->exists()) {
-                http_response_code(404); // Technicien non trouvé
+                http_response_code(400); // Technicien non trouvé
                 echo json_encode(['status' => 'error', 'message' => 'Technicien invalide ou inexistant.']);
                 return false;
             }
@@ -140,7 +142,14 @@ class TaskController
             ]);
             return false;
         }
-    
+
+        // Vérifier si l'utilisateur est connecté
+        if (!UserConnectionUtils::isAdminConnected()) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => "Veuillez vous connecter en tant qu'admin pour voir les tâches."]);
+            return false;
+        }
+
         // Définir un code HTTP 400 (Bad Request) par défaut
         http_response_code(400);
 

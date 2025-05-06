@@ -8,7 +8,7 @@ if (!UserConnectionUtils::isUserConnected()) {
 }
 //Pour la petite fenêtre de bienvenuevec les demandes ou pas 
 $userId = $_SESSION['user']['id'];
-$demandes = Demande::getDemandesByUser($userId, 0, 5);
+$demandes = DemandeB1::getDemandesByUser($userId, 0, 5);
 ?>
 
 <!DOCTYPE html>

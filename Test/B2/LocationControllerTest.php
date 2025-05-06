@@ -65,7 +65,7 @@ class LocationControllerTest extends TestCase
     public function testNomsConnusSontPresentsEnBase()
 {
     // Sites
-    $nomsSitesAttendus = ['Petite Chaplle'];
+    $nomsSitesAttendus = ['PETITE CHAPELLE'];
     $nomsSitesTrouves = array_column($this->data['sites'], 'nom');
     foreach ($nomsSitesAttendus as $nom) {
         $this->assertContains($nom, $nomsSitesTrouves, "Le site '$nom' n’a pas été trouvé.");

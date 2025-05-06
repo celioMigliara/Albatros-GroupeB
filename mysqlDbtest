@@ -1,0 +1,535 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : mar. 06 mai 2025 à 13:43
+-- Version du serveur : 10.4.28-MariaDB
+-- Version de PHP : 8.2.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `albatros_test`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `batiment`
+--
+
+CREATE TABLE `batiment` (
+  `id_batiment` int(11) NOT NULL,
+  `nom_batiment` varchar(50) DEFAULT NULL,
+  `actif_batiment` tinyint(1) DEFAULT NULL,
+  `id_site` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `batiment`
+--
+
+INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `actif_batiment`, `id_site`) VALUES
+(1, 'REDOUTE', 1, 1),
+(2, 'SOURCE', 1, 1),
+(3, 'ESPIEGLERIE', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `demande`
+--
+
+CREATE TABLE `demande` (
+  `id_demande` int(11) NOT NULL,
+  `num_ticket_dmd` varchar(50) DEFAULT NULL,
+  `sujet_dmd` varchar(50) DEFAULT NULL,
+  `description_dmd` varchar(512) DEFAULT NULL,
+  `date_creation_dmd` datetime DEFAULT NULL,
+  `commentaire_admin_dmd` varchar(512) DEFAULT NULL,
+  `id_recurrence` int(11) DEFAULT NULL,
+  `id_utilisateur` int(11) NOT NULL,
+  `id_lieu` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `est`
+--
+
+CREATE TABLE `est` (
+  `id_demande` int(11) NOT NULL,
+  `id_statut` int(11) NOT NULL,
+  `date_modif_dmd` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `historique`
+--
+
+CREATE TABLE `historique` (
+  `id_tache` int(11) NOT NULL,
+  `id_statut` int(11) NOT NULL,
+  `date_modif` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `lieu`
+--
+
+CREATE TABLE `lieu` (
+  `id_lieu` int(11) NOT NULL,
+  `nom_lieu` varchar(50) NOT NULL,
+  `actif_lieu` tinyint(1) DEFAULT NULL,
+  `id_batiment` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `lieu`
+--
+
+INSERT INTO `lieu` (`id_lieu`, `nom_lieu`, `actif_lieu`, `id_batiment`) VALUES
+(1, 'sas d\' entrée', 1, 1),
+(2, 'wc pmr', 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `media`
+--
+
+CREATE TABLE `media` (
+  `id_media` int(11) NOT NULL,
+  `nom_media` varchar(50) DEFAULT NULL,
+  `url_media` varchar(1024) DEFAULT NULL,
+  `id_demande` int(11) DEFAULT NULL,
+  `id_tache` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `recurrence`
+--
+
+CREATE TABLE `recurrence` (
+  `id_recurrence` int(11) NOT NULL,
+  `sujet_reccurrence` varchar(50) DEFAULT NULL,
+  `desc_recurrence` varchar(512) DEFAULT NULL,
+  `date_anniv_recurrence` date DEFAULT NULL,
+  `valeur_freq_recurrence` int(11) DEFAULT NULL,
+  `valeur_rappel_recurrence` int(11) DEFAULT NULL,
+  `id_lieu` int(11) NOT NULL,
+  `id_unite` int(11) NOT NULL,
+  `id_unite_1` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `role`
+--
+
+CREATE TABLE `role` (
+  `id_role` int(11) NOT NULL,
+  `nom_role` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `role`
+--
+
+INSERT INTO `role` (`id_role`, `nom_role`) VALUES
+(1, 'Administrateur'),
+(2, 'Technicien'),
+(3, 'Utilisateur'),
+(4, 'Systeme');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `site`
+--
+
+CREATE TABLE `site` (
+  `id_site` int(11) NOT NULL,
+  `nom_site` varchar(50) NOT NULL,
+  `actif_site` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `site`
+--
+
+INSERT INTO `site` (`id_site`, `nom_site`, `actif_site`) VALUES
+(1, 'PETITE CHAPELLE', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `statut`
+--
+
+CREATE TABLE `statut` (
+  `id_statut` int(11) NOT NULL,
+  `nom_statut` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `statut`
+--
+
+INSERT INTO `statut` (`id_statut`, `nom_statut`) VALUES
+(2, 'Demande de prix'),
+(3, 'En commande'),
+(4, 'Planifiée'),
+(5, 'Terminée'),
+(6, 'Annulée'),
+(16, 'Nouvelle');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `tache`
+--
+
+CREATE TABLE `tache` (
+  `id_tache` int(11) NOT NULL,
+  `sujet_tache` varchar(50) DEFAULT NULL,
+  `description_tache` varchar(512) DEFAULT NULL,
+  `date_creation_tache` datetime DEFAULT NULL,
+  `date_planif_tache` datetime DEFAULT NULL,
+  `date_fin_tache` datetime DEFAULT NULL,
+  `commentaire_technicien_tache` varchar(512) DEFAULT NULL,
+  `ordre_tache` int(11) DEFAULT NULL,
+  `id_utilisateur` int(11) NOT NULL,
+  `id_demande` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `travaille`
+--
+
+CREATE TABLE `travaille` (
+  `id_utilisateur` int(11) NOT NULL,
+  `id_batiment` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `unite`
+--
+
+CREATE TABLE `unite` (
+  `id_unite` int(11) NOT NULL,
+  `nom_unite` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `unite`
+--
+
+INSERT INTO `unite` (`id_unite`, `nom_unite`) VALUES
+(1, 'jour'),
+(2, 'mois'),
+(3, 'annee');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `utilisateur`
+--
+
+CREATE TABLE `utilisateur` (
+  `id_utilisateur` int(11) NOT NULL,
+  `nom_utilisateur` varchar(50) NOT NULL,
+  `prenom_utilisateur` varchar(50) NOT NULL,
+  `mail_utilisateur` varchar(50) NOT NULL,
+  `mdp_utilisateur` varchar(70) NOT NULL,
+  `token_utilisateur` varchar(64) DEFAULT NULL,
+  `date_exp_token_utilisateur` datetime DEFAULT NULL,
+  `valide_utilisateur` tinyint(1) DEFAULT NULL,
+  `actif_utilisateur` tinyint(1) NOT NULL,
+  `id_role` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `utilisateur`
+--
+
+INSERT INTO `utilisateur` (`id_utilisateur`, `nom_utilisateur`, `prenom_utilisateur`, `mail_utilisateur`, `mdp_utilisateur`, `token_utilisateur`, `date_exp_token_utilisateur`, `valide_utilisateur`, `actif_utilisateur`, `id_role`) VALUES
+(1, 'Admin', 'User', 'admin@exemple.com', 'adminpass', '57251cd438b05d67e028615b0b00b661', '2025-05-07 11:43:11', 1, 1, 1),
+(2, 'Tech', 'User', 'tech@exemple.com', 'techpass', NULL, NULL, 1, 1, 2),
+(3, 'Normal', 'User', 'user@exemple.com', 'userpass', NULL, NULL, 1, 1, 3),
+(4, 'Systeme', 'Recurrence', 'system@exemple.com', 'syspass', NULL, NULL, 1, 1, 4);
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `batiment`
+--
+ALTER TABLE `batiment`
+  ADD PRIMARY KEY (`id_batiment`),
+  ADD KEY `id_site` (`id_site`);
+
+--
+-- Index pour la table `demande`
+--
+ALTER TABLE `demande`
+  ADD PRIMARY KEY (`id_demande`),
+  ADD UNIQUE KEY `num_ticket_dmd` (`num_ticket_dmd`),
+  ADD KEY `id_recurrence` (`id_recurrence`),
+  ADD KEY `id_utilisateur` (`id_utilisateur`),
+  ADD KEY `id_lieu` (`id_lieu`);
+
+--
+-- Index pour la table `est`
+--
+ALTER TABLE `est`
+  ADD PRIMARY KEY (`id_demande`,`id_statut`),
+  ADD KEY `id_statut` (`id_statut`);
+
+--
+-- Index pour la table `historique`
+--
+ALTER TABLE `historique`
+  ADD PRIMARY KEY (`id_tache`,`id_statut`),
+  ADD KEY `id_statut` (`id_statut`);
+
+--
+-- Index pour la table `lieu`
+--
+ALTER TABLE `lieu`
+  ADD PRIMARY KEY (`id_lieu`),
+  ADD KEY `id_batiment` (`id_batiment`);
+
+--
+-- Index pour la table `media`
+--
+ALTER TABLE `media`
+  ADD PRIMARY KEY (`id_media`),
+  ADD KEY `id_demande` (`id_demande`),
+  ADD KEY `id_tache` (`id_tache`);
+
+--
+-- Index pour la table `recurrence`
+--
+ALTER TABLE `recurrence`
+  ADD PRIMARY KEY (`id_recurrence`),
+  ADD KEY `id_lieu` (`id_lieu`),
+  ADD KEY `id_unite` (`id_unite`),
+  ADD KEY `id_unite_1` (`id_unite_1`);
+
+--
+-- Index pour la table `role`
+--
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`id_role`);
+
+--
+-- Index pour la table `site`
+--
+ALTER TABLE `site`
+  ADD PRIMARY KEY (`id_site`);
+
+--
+-- Index pour la table `statut`
+--
+ALTER TABLE `statut`
+  ADD PRIMARY KEY (`id_statut`);
+
+--
+-- Index pour la table `tache`
+--
+ALTER TABLE `tache`
+  ADD PRIMARY KEY (`id_tache`),
+  ADD KEY `id_utilisateur` (`id_utilisateur`),
+  ADD KEY `id_demande` (`id_demande`);
+
+--
+-- Index pour la table `travaille`
+--
+ALTER TABLE `travaille`
+  ADD PRIMARY KEY (`id_utilisateur`,`id_batiment`),
+  ADD KEY `id_batiment` (`id_batiment`);
+
+--
+-- Index pour la table `unite`
+--
+ALTER TABLE `unite`
+  ADD PRIMARY KEY (`id_unite`);
+
+--
+-- Index pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  ADD PRIMARY KEY (`id_utilisateur`),
+  ADD UNIQUE KEY `mail_utilisateur` (`mail_utilisateur`),
+  ADD KEY `id_role` (`id_role`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `batiment`
+--
+ALTER TABLE `batiment`
+  MODIFY `id_batiment` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `demande`
+--
+ALTER TABLE `demande`
+  MODIFY `id_demande` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `lieu`
+--
+ALTER TABLE `lieu`
+  MODIFY `id_lieu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `media`
+--
+ALTER TABLE `media`
+  MODIFY `id_media` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT pour la table `recurrence`
+--
+ALTER TABLE `recurrence`
+  MODIFY `id_recurrence` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `role`
+--
+ALTER TABLE `role`
+  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT pour la table `site`
+--
+ALTER TABLE `site`
+  MODIFY `id_site` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `statut`
+--
+ALTER TABLE `statut`
+  MODIFY `id_statut` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT pour la table `tache`
+--
+ALTER TABLE `tache`
+  MODIFY `id_tache` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `unite`
+--
+ALTER TABLE `unite`
+  MODIFY `id_unite` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  MODIFY `id_utilisateur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `batiment`
+--
+ALTER TABLE `batiment`
+  ADD CONSTRAINT `batiment_ibfk_1` FOREIGN KEY (`id_site`) REFERENCES `site` (`id_site`);
+
+--
+-- Contraintes pour la table `demande`
+--
+ALTER TABLE `demande`
+  ADD CONSTRAINT `demande_ibfk_1` FOREIGN KEY (`id_recurrence`) REFERENCES `recurrence` (`id_recurrence`),
+  ADD CONSTRAINT `demande_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
+  ADD CONSTRAINT `demande_ibfk_3` FOREIGN KEY (`id_lieu`) REFERENCES `lieu` (`id_lieu`);
+
+--
+-- Contraintes pour la table `est`
+--
+ALTER TABLE `est`
+  ADD CONSTRAINT `est_ibfk_1` FOREIGN KEY (`id_demande`) REFERENCES `demande` (`id_demande`),
+  ADD CONSTRAINT `est_ibfk_2` FOREIGN KEY (`id_statut`) REFERENCES `statut` (`id_statut`);
+
+--
+-- Contraintes pour la table `historique`
+--
+ALTER TABLE `historique`
+  ADD CONSTRAINT `historique_ibfk_1` FOREIGN KEY (`id_tache`) REFERENCES `tache` (`id_tache`),
+  ADD CONSTRAINT `historique_ibfk_2` FOREIGN KEY (`id_statut`) REFERENCES `statut` (`id_statut`);
+
+--
+-- Contraintes pour la table `lieu`
+--
+ALTER TABLE `lieu`
+  ADD CONSTRAINT `lieu_ibfk_1` FOREIGN KEY (`id_batiment`) REFERENCES `batiment` (`id_batiment`);
+
+--
+-- Contraintes pour la table `media`
+--
+ALTER TABLE `media`
+  ADD CONSTRAINT `media_ibfk_1` FOREIGN KEY (`id_demande`) REFERENCES `demande` (`id_demande`),
+  ADD CONSTRAINT `media_ibfk_2` FOREIGN KEY (`id_tache`) REFERENCES `tache` (`id_tache`);
+
+--
+-- Contraintes pour la table `recurrence`
+--
+ALTER TABLE `recurrence`
+  ADD CONSTRAINT `recurrence_ibfk_1` FOREIGN KEY (`id_lieu`) REFERENCES `lieu` (`id_lieu`),
+  ADD CONSTRAINT `recurrence_ibfk_2` FOREIGN KEY (`id_unite`) REFERENCES `unite` (`id_unite`),
+  ADD CONSTRAINT `recurrence_ibfk_3` FOREIGN KEY (`id_unite_1`) REFERENCES `unite` (`id_unite`);
+
+--
+-- Contraintes pour la table `tache`
+--
+ALTER TABLE `tache`
+  ADD CONSTRAINT `tache_ibfk_1` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
+  ADD CONSTRAINT `tache_ibfk_2` FOREIGN KEY (`id_demande`) REFERENCES `demande` (`id_demande`);
+
+--
+-- Contraintes pour la table `travaille`
+--
+ALTER TABLE `travaille`
+  ADD CONSTRAINT `travaille_ibfk_1` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateur` (`id_utilisateur`),
+  ADD CONSTRAINT `travaille_ibfk_2` FOREIGN KEY (`id_batiment`) REFERENCES `batiment` (`id_batiment`);
+
+--
+-- Contraintes pour la table `utilisateur`
+--
+ALTER TABLE `utilisateur`
+  ADD CONSTRAINT `utilisateur_ibfk_1` FOREIGN KEY (`id_role`) REFERENCES `role` (`id_role`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

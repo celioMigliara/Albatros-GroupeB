@@ -298,6 +298,9 @@ switch ($segments[0]) {
         } else {
             switch ($segments[1]) {
                 case 'imprimer':
+                    if (isset($segments[2])) {
+                        $_GET['tech_id'] = (int)$segments[2]; // injection manuelle de l'ID
+                    }
                     (new PrintController())->print();
                     break;
                 case 'ordre':

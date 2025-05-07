@@ -40,7 +40,7 @@ document.getElementById("mediaFilter").addEventListener("change", function () {
 
 // Restauration des filtres
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     // Search input restoration
     const searchInput = localStorage.getItem(SEARCH_INPUT_KEY);
     if (searchInput !== null) {
@@ -68,8 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
             opt.selected = values.includes(opt.value);
         });
     }
-    else
-    {
+    else {
         // Sélectionne par défaut l'option "0" s’il n’y a rien en localStorage
         Array.from(statusSelect.options).forEach(opt => {
             opt.selected = opt.value === "0";
@@ -131,7 +130,7 @@ if (SelectTechnicien) {
     });
 }
 
-    
+
 let listeImpression = document.getElementById("listeImpression");
 if (listeImpression) {
     listeImpression.addEventListener("click", function () {
@@ -308,8 +307,7 @@ function loadTachesForTechnicien(Technicien) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = safeJsonParse(xhr.responseText);
-            if (!response)
-            {
+            if (!response) {
                 console.error("Les taches reçues du serveur sont invalides.");
                 return;
             }
@@ -777,11 +775,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Ouvre la feuille de route du technicien sélectionné
             window.open(
-                `feuillederoute/imprimer?tech_id=${encodeURIComponent(
-                    techId
-                )}`,
+                `${BASE_URL}/feuillederoute/imprimer/${encodeURIComponent(techId)}`,
                 "_blank"
             );
+            
+
         });
     }
 });

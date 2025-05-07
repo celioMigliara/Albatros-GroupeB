@@ -9,16 +9,13 @@
  */
 namespace PHPUnit\Runner;
 
-use function assert;
 use function file_put_contents;
 use function sprintf;
-use function sys_get_temp_dir;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
 use PHPUnit\TextUI\Configuration\Configuration;
 use PHPUnit\TextUI\Output\Printer;
-use PHPUnit\Util\Filesystem;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
@@ -33,9 +30,6 @@ use SebastianBergmann\CodeCoverage\Report\PHP as PhpReport;
 use SebastianBergmann\CodeCoverage\Report\Text as TextReport;
 use SebastianBergmann\CodeCoverage\Report\Thresholds;
 use SebastianBergmann\CodeCoverage\Report\Xml\Facade as XmlReport;
-use SebastianBergmann\CodeCoverage\StaticAnalysis\CacheWarmer;
-use SebastianBergmann\CodeCoverage\Test\Target\TargetCollection;
-use SebastianBergmann\CodeCoverage\Test\Target\ValidationFailure;
 use SebastianBergmann\CodeCoverage\Test\TestSize\TestSize;
 use SebastianBergmann\CodeCoverage\Test\TestStatus\TestStatus;
 use SebastianBergmann\Comparator\Comparator;
@@ -86,17 +80,7 @@ final class CodeCoverage
         }
 
         if ($configuration->hasCoverageCacheDirectory()) {
-            $coverageCacheDirectory = $configuration->coverageCacheDirectory();
-        } else {
-            $candidate = sys_get_temp_dir() . '/phpunit-code-coverage-cache';
-
-            if (Filesystem::createDirectory($candidate)) {
-                $coverageCacheDirectory = $candidate;
-            }
-        }
-
-        if (isset($coverageCacheDirectory)) {
-            $this->codeCoverage()->cacheStaticAnalysis($coverageCacheDirectory);
+            $this->codeCoverage()->cacheStaticAnalysis($configuration->coverageCacheDirectory());
         }
 
         $this->codeCoverage()->excludeSubclassesOfThisClassFromUnintentionallyCoveredCodeCheck(Comparator::class);
@@ -135,22 +119,6 @@ final class CodeCoverage
             }
 
             $this->deactivate();
-        }
-
-        if (isset($coverageCacheDirectory) && $configuration->includeUncoveredFiles()) {
-            EventFacade::emitter()->testRunnerStartedStaticAnalysisForCodeCoverage();
-
-            $statistics = (new CacheWarmer)->warmCache(
-                $coverageCacheDirectory,
-                !$configuration->disableCodeCoverageIgnore(),
-                $configuration->ignoreDeprecatedCodeUnitsFromCodeCoverage(),
-                $codeCoverageFilterRegistry->get(),
-            );
-
-            EventFacade::emitter()->testRunnerFinishedStaticAnalysisForCodeCoverage(
-                $statistics['cacheHits'],
-                $statistics['cacheMisses'],
-            );
         }
     }
 
@@ -201,7 +169,11 @@ final class CodeCoverage
         $this->collecting = true;
     }
 
-    public function stop(bool $append, null|false|TargetCollection $covers = null, ?TargetCollection $uses = null): void
+    /**
+     * @param array<string,list<int>>|false $linesToBeCovered
+     * @param array<string,list<int>>       $linesToBeUsed
+     */
+    public function stop(bool $append, array|false $linesToBeCovered = [], array $linesToBeUsed = []): void
     {
         if (!$this->collecting) {
             return;
@@ -217,37 +189,8 @@ final class CodeCoverage
             }
         }
 
-        if ($covers instanceof TargetCollection) {
-            $result = $this->codeCoverage->validate($covers);
-
-            if ($result->isFailure()) {
-                assert($result instanceof ValidationFailure);
-
-                EventFacade::emitter()->testTriggeredPhpunitWarning(
-                    $this->test->valueObjectForEvents(),
-                    $result->message(),
-                );
-
-                $append = false;
-            }
-        }
-
-        if ($uses instanceof TargetCollection) {
-            $result = $this->codeCoverage->validate($uses);
-
-            if ($result->isFailure()) {
-                assert($result instanceof ValidationFailure);
-
-                EventFacade::emitter()->testTriggeredPhpunitWarning(
-                    $this->test->valueObjectForEvents(),
-                    $result->message(),
-                );
-
-                $append = false;
-            }
-        }
-
-        $this->codeCoverage->stop($append, $status, $covers, $uses);
+        /* @noinspection UnusedFunctionResultInspection */
+        $this->codeCoverage->stop($append, $status, $linesToBeCovered, $linesToBeUsed);
 
         $this->test       = null;
         $this->collecting = false;

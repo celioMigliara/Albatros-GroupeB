@@ -40,9 +40,9 @@ use Closure;
 final readonly class GlobalState
 {
     /**
-     * @var non-empty-list<non-empty-string>
+     * @var list<string>
      */
-    private const array SUPER_GLOBAL_ARRAYS = [
+    private const SUPER_GLOBAL_ARRAYS = [
         '_ENV',
         '_POST',
         '_GET',
@@ -53,9 +53,9 @@ final readonly class GlobalState
     ];
 
     /**
-     * @var non-empty-array<non-empty-string, non-empty-array<non-empty-string, true>>
+     * @var array<string, array<string, true>>
      */
-    private const array DEPRECATED_INI_SETTINGS = [
+    private const DEPRECATED_INI_SETTINGS = [
         '7.3' => [
             'iconv.input_encoding'       => true,
             'iconv.output_encoding'      => true,
@@ -161,9 +161,7 @@ final readonly class GlobalState
         }
 
         foreach (array_reverse($files) as $file) {
-            if (isset($GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST']) &&
-                is_array($GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST']) &&
-                $GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST'] !== [] &&
+            if (!empty($GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST']) &&
                 in_array($file, $GLOBALS['__PHPUNIT_ISOLATION_EXCLUDE_LIST'], true)) {
                 continue;
             }

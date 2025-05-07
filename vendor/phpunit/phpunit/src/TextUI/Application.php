@@ -285,7 +285,6 @@ final readonly class Application
             $shellExitCode = (new ShellExitCodeCalculator)->calculate(
                 $configuration->failOnDeprecation() || $configuration->failOnAllIssues(),
                 $configuration->failOnPhpunitDeprecation() || $configuration->failOnAllIssues(),
-                $configuration->failOnPhpunitNotice() || $configuration->failOnAllIssues(),
                 $configuration->failOnEmptyTestSuite() || $configuration->failOnAllIssues(),
                 $configuration->failOnIncomplete() || $configuration->failOnAllIssues(),
                 $configuration->failOnNotice() || $configuration->failOnAllIssues(),
@@ -746,7 +745,7 @@ final readonly class Application
     {
         $message = $t->getMessage();
 
-        if (trim($message) === '') {
+        if (empty(trim($message))) {
             $message = '(no message)';
         }
 
@@ -761,7 +760,7 @@ final readonly class Application
 
         $first = true;
 
-        if ($t->getPrevious() !== null) {
+        if ($t->getPrevious()) {
             $t = $t->getPrevious();
         }
 

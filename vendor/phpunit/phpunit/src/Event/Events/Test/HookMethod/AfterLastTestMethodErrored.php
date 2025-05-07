@@ -66,14 +66,11 @@ final readonly class AfterLastTestMethodErrored implements Event
         return $this->throwable;
     }
 
-    /**
-     * @return non-empty-string
-     */
     public function asString(): string
     {
         $message = $this->throwable->message();
 
-        if ($message !== '') {
+        if (!empty($message)) {
             $message = PHP_EOL . $message;
         }
 

@@ -22,7 +22,7 @@ class ProfileController
 
                 // On setup le message d'erreur pour la vue
                 $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
-                require 'View/B3/PageErreur.php';
+                require './View/B3/PageErreur.php';
                 return false;
             }
 
@@ -147,11 +147,19 @@ class ProfileController
                 http_response_code(200);
 
                 // Recharger les nouvelles données utilisateur pour mettre à jour la session
-                $updatedUser = $userProfile->getUserData(); //nouvelle methode dans UserProfile
+                if (!empty($prenom))
+                {
+                    $_SESSION['user']['prenom'] = $prenom;
+                }
+                if (!empty($nom))
+                {
+                    $_SESSION['user']['nom'] = $nom;
+                }
+                if (!empty($mail))
+                {
+                    $_SESSION['user']['mail'] = $mail;
+                }
 
-                $_SESSION['user']['prenom'] = $updatedUser['prenom_utilisateur'];
-                $_SESSION['user']['nom'] = $updatedUser['nom_utilisateur'];
-                $_SESSION['user']['mail'] = $updatedUser['mail_utilisateur'];
                 // Réponse JSON avec le message d'erreur
                 echo json_encode([
                     'status' => 'success',
@@ -177,13 +185,13 @@ class ProfileController
                 $csrf_token = $securityObj->genererCSRFToken();
 
                 // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
-                require 'View/B3/ModifierProfil.php';
+                require './View/B3/ModifierProfil.php';
                 return true;
             } else {
 
                 // On setup le message d'erreur pour la vue
                 $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
-                require 'View/B3/PageErreur.php';
+                require './View/B3/PageErreur.php';
                 return false;
             }
         }

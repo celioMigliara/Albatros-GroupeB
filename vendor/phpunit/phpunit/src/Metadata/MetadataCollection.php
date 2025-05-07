@@ -160,12 +160,12 @@ final readonly class MetadataCollection implements Countable, IteratorAggregate
         );
     }
 
-    public function isCoversNamespace(): self
+    public function isCovers(): self
     {
         return new self(
             ...array_filter(
                 $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isCoversNamespace(),
+                static fn (Metadata $metadata): bool => $metadata->isCovers(),
             ),
         );
     }
@@ -180,22 +180,12 @@ final readonly class MetadataCollection implements Countable, IteratorAggregate
         );
     }
 
-    public function isCoversClassesThatExtendClass(): self
+    public function isCoversDefaultClass(): self
     {
         return new self(
             ...array_filter(
                 $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isCoversClassesThatExtendClass(),
-            ),
-        );
-    }
-
-    public function isCoversClassesThatImplementInterface(): self
-    {
-        return new self(
-            ...array_filter(
-                $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isCoversClassesThatImplementInterface(),
+                static fn (Metadata $metadata): bool => $metadata->isCoversDefaultClass(),
             ),
         );
     }
@@ -503,26 +493,6 @@ final readonly class MetadataCollection implements Countable, IteratorAggregate
         );
     }
 
-    public function isRequiresEnvironmentVariable(): self
-    {
-        return new self(
-            ...array_filter(
-                $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isRequiresEnvironmentVariable(),
-            ),
-        );
-    }
-
-    public function isWithEnvironmentVariable(): self
-    {
-        return new self(
-            ...array_filter(
-                $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isWithEnvironmentVariable(),
-            ),
-        );
-    }
-
     public function isRequiresSetting(): self
     {
         return new self(
@@ -553,12 +523,12 @@ final readonly class MetadataCollection implements Countable, IteratorAggregate
         );
     }
 
-    public function isUsesNamespace(): self
+    public function isUses(): self
     {
         return new self(
             ...array_filter(
                 $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isUsesNamespace(),
+                static fn (Metadata $metadata): bool => $metadata->isUses(),
             ),
         );
     }
@@ -573,22 +543,12 @@ final readonly class MetadataCollection implements Countable, IteratorAggregate
         );
     }
 
-    public function isUsesClassesThatExtendClass(): self
+    public function isUsesDefaultClass(): self
     {
         return new self(
             ...array_filter(
                 $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isUsesClassesThatExtendClass(),
-            ),
-        );
-    }
-
-    public function isUsesClassesThatImplementInterface(): self
-    {
-        return new self(
-            ...array_filter(
-                $this->metadata,
-                static fn (Metadata $metadata): bool => $metadata->isUsesClassesThatImplementInterface(),
+                static fn (Metadata $metadata): bool => $metadata->isUsesDefaultClass(),
             ),
         );
     }

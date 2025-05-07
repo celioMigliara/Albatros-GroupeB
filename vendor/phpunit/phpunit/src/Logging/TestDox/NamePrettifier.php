@@ -89,11 +89,11 @@ final class NamePrettifier
             $className = substr($className, strlen('Test'));
         }
 
-        if ($className === '') {
+        if (empty($className)) {
             $className = 'UnnamedTests';
         }
 
-        if ($parts !== []) {
+        if (!empty($parts)) {
             $parts[]            = $className;
             $fullyQualifiedName = implode('\\', $parts);
         } else {
@@ -274,7 +274,7 @@ final class NamePrettifier
 
         if ($colorize) {
             $providedData = array_map(
-                static fn (mixed $value) => Color::colorize('fg-cyan', Color::visualizeWhitespace((string) $value, true)),
+                static fn ($value) => Color::colorize('fg-cyan', Color::visualizeWhitespace((string) $value, true)),
                 $providedData,
             );
         }

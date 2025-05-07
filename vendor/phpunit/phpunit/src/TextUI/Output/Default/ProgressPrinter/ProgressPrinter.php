@@ -154,6 +154,11 @@ final class ProgressPrinter
             return;
         }
 
+        if ($this->source->restrictDeprecations() &&
+            !SourceFilter::instance()->includes($event->file())) {
+            return;
+        }
+
         if (!$this->source->ignoreSuppressionOfDeprecations() && $event->wasSuppressed()) {
             return;
         }
@@ -177,6 +182,11 @@ final class ProgressPrinter
         }
 
         if ($this->source->ignoreIndirectDeprecations() && $event->trigger()->isIndirect()) {
+            return;
+        }
+
+        if ($this->source->restrictDeprecations() &&
+            !SourceFilter::instance()->includes($event->file())) {
             return;
         }
 

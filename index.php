@@ -8,9 +8,6 @@ if (!isset($_SESSION['initiated'])) {
     $_SESSION['initiated'] = true;
 }
 
-
-
-
 // Définir BASE_URL
 define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
 
@@ -38,9 +35,8 @@ require_once 'Controller/B3/PrintController.php';
 require_once 'Controller/B3/ProfileController.php';
 require_once 'Controller/B3/TaskController.php';
 require_once 'Controller/B3/TechnicienController.php';
-
-
-
+require_once 'Model/B3/Role.php';
+require_once 'Model/UserConnectionUtils.php';
 
 
 // Mise à true quand la page demandée n'est pas trouvée
@@ -51,21 +47,26 @@ switch ($segments[0]) {
 
     case '':
         case 'index.php':
-            if (!empty($_SESSION['user']['role_id'])) {
-                switch ($_SESSION['user']['role_id']) {
-                    case 1:
+            $userRole = UserConnectionUtils::getConnectedUserRole();
+            if (empty($userRole))
+            {
+                header('Location: ' . BASE_URL . '/connexion');
+                exit;
+            }
+            else
+            {
+                switch ($userRole) {
+                    case Role::ADMINISTRATEUR:
                         header('Location: ' . BASE_URL . '/AccueilAdmin');
                         exit;
-                    case 2:
+                    case Role::TECHNICIEN:
                         header('Location: ' . BASE_URL . '/AccueilTechnicien');
                         exit;
                     default:
                         error('Accès non autorisé.');
                 }
-            } else {
-                header('Location: ' . BASE_URL . '/connexion');
-                exit;
             }
+
             break;
         
             case 'AccueilAdmin':

@@ -14,7 +14,6 @@ use const PHP_OS_FAMILY;
 use const PHP_VERSION;
 use function addcslashes;
 use function array_column;
-use function array_key_exists;
 use function assert;
 use function extension_loaded;
 use function function_exists;
@@ -25,7 +24,6 @@ use function phpversion;
 use function preg_match;
 use function sprintf;
 use PHPUnit\Metadata\Parser\Registry;
-use PHPUnit\Metadata\RequiresEnvironmentVariable;
 use PHPUnit\Metadata\RequiresFunction;
 use PHPUnit\Metadata\RequiresMethod;
 use PHPUnit\Metadata\RequiresOperatingSystem;
@@ -70,15 +68,9 @@ final readonly class Requirements
             if ($metadata->isRequiresPhpExtension()) {
                 assert($metadata instanceof RequiresPhpExtension);
 
-                $extensionVersion = phpversion($metadata->extension());
-
-                if ($extensionVersion === false) {
-                    $extensionVersion = '';
-                }
-
                 if (!extension_loaded($metadata->extension()) ||
                     ($metadata->hasVersionRequirement() &&
-                    !$metadata->versionRequirement()->isSatisfiedBy($extensionVersion))) {
+                        !$metadata->versionRequirement()->isSatisfiedBy(phpversion($metadata->extension())))) {
                     $notSatisfied[] = sprintf(
                         'PHP extension %s%s is required.',
                         $metadata->extension(),
@@ -109,25 +101,6 @@ final readonly class Requirements
                     $notSatisfied[] = sprintf(
                         'PHPUnit extension "%s" is required.',
                         $metadata->extensionClass(),
-                    );
-                }
-            }
-
-            if ($metadata->isRequiresEnvironmentVariable()) {
-                assert($metadata instanceof RequiresEnvironmentVariable);
-
-                if (!array_key_exists($metadata->environmentVariableName(), $_ENV) ||
-                    $metadata->value() === null && $_ENV[$metadata->environmentVariableName()] === '') {
-                    $notSatisfied[] = sprintf('Environment variable "%s" is required.', $metadata->environmentVariableName());
-
-                    continue;
-                }
-
-                if ($metadata->value() !== null && $_ENV[$metadata->environmentVariableName()] !== $metadata->value()) {
-                    $notSatisfied[] = sprintf(
-                        'Environment variable "%s" is required to be "%s".',
-                        $metadata->environmentVariableName(),
-                        $metadata->value(),
                     );
                 }
             }

@@ -217,14 +217,14 @@ final readonly class ResultPrinter
         $stackTrace = $this->formatStackTrace($throwable->stackTrace());
         $diff       = '';
 
-        if ($message !== '' && $this->colors) {
+        if (!empty($message) && $this->colors) {
             ['message' => $message, 'diff' => $diff] = $this->colorizeMessageAndDiff(
                 $message,
                 $this->messageColorFor($test->status()),
             );
         }
 
-        if ($message !== '') {
+        if (!empty($message)) {
             $this->printer->print(
                 $this->prefixLines(
                     $this->prefixFor('message', $test->status()),
@@ -235,7 +235,7 @@ final readonly class ResultPrinter
             $this->printer->print(PHP_EOL);
         }
 
-        if ($diff !== '') {
+        if (!empty($diff)) {
             $this->printer->print(
                 $this->prefixLines(
                     $this->prefixFor('diff', $test->status()),
@@ -246,8 +246,8 @@ final readonly class ResultPrinter
             $this->printer->print(PHP_EOL);
         }
 
-        if ($stackTrace !== '') {
-            if ($message !== '' || $diff !== '') {
+        if (!empty($stackTrace)) {
+            if (!empty($message) || !empty($diff)) {
                 $prefix = $this->prefixFor('default', $test->status());
             } else {
                 $prefix = $this->prefixFor('trace', $test->status());
@@ -264,12 +264,7 @@ final readonly class ResultPrinter
      */
     private function colorizeMessageAndDiff(string $buffer, string $style): array
     {
-        $lines = [];
-
-        if ($buffer !== '') {
-            $lines = array_map('\rtrim', explode(PHP_EOL, $buffer));
-        }
-
+        $lines      = $buffer ? array_map('\rtrim', explode(PHP_EOL, $buffer)) : [];
         $message    = [];
         $diff       = [];
         $insideDiff = false;
@@ -297,7 +292,7 @@ final readonly class ResultPrinter
         $message = implode(PHP_EOL, $message);
         $diff    = implode(PHP_EOL, $diff);
 
-        if ($message !== '') {
+        if (!empty($message)) {
             // Testdox output has a left-margin of 5; keep right-margin to prevent terminal scrolling
             $message = Color::colorizeTextBox($style, $message, $this->columns - 7);
         }
@@ -334,17 +329,11 @@ final readonly class ResultPrinter
 
     private function prefixLines(string $prefix, string $message): string
     {
-        $lines = preg_split('/\r\n|\r|\n/', $message);
-
-        if ($lines === false) {
-            $lines = [];
-        }
-
         return implode(
             PHP_EOL,
             array_map(
-                static fn (string $line) => '   ' . $prefix . ($line !== '' ? ' ' . $line : ''),
-                $lines,
+                static fn (string $line) => '   ' . $prefix . ($line ? ' ' . $line : ''),
+                preg_split('/\r\n|\r|\n/', $message),
             ),
         );
     }
@@ -452,7 +441,7 @@ final readonly class ResultPrinter
      */
     private function printBeforeClassOrAfterClassErrors(string $type, array $errors): void
     {
-        if ($errors === []) {
+        if (empty($errors)) {
             return;
         }
 

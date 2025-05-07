@@ -76,8 +76,6 @@ use Throwable;
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
- *
- * @see https://qa.php.net/phpt_details.php
  */
 final class PhptTestCase implements Reorderable, SelfDescribing, Test
 {
@@ -224,7 +222,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
             } elseif ($e instanceof ExpectationFailedException) {
                 $comparisonFailure = $e->getComparisonFailure();
 
-                if ($comparisonFailure !== null) {
+                if ($comparisonFailure) {
                     $diff = $comparisonFailure->getDiff();
                 } else {
                     $diff = $e->getMessage();
@@ -238,7 +236,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
                     (string) $trace[0]['file'],
                     (int) $trace[0]['line'],
                     $trace,
-                    $comparisonFailure !== null ? $diff : '',
+                    $comparisonFailure ? $diff : '',
                 );
             }
 
@@ -297,7 +295,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
 
     public function hasOutput(): bool
     {
-        return $this->output !== '';
+        return !empty($this->output);
     }
 
     public function sortId(): string
@@ -405,7 +403,6 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
                 $sectionContent = preg_replace('/\r\n/', "\n", trim($sections[$sectionName]));
                 $expected       = $sectionName === 'EXPECTREGEX' ? "/{$sectionContent}/" : $sectionContent;
 
-                /** @phpstan-ignore staticMethod.dynamicName */
                 Assert::$sectionAssertion($expected, $actual);
 
                 return;
@@ -441,7 +438,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
             $output = $this->runCodeInLocalSandbox($skipIfCode);
         }
 
-        if (strncasecmp('skip', ltrim($output), 4) === 0) {
+        if (!strncasecmp('skip', ltrim($output), 4)) {
             $message = '';
 
             if (preg_match('/^\s*skip\s*(.+)\s*/i', $output, $skipMatch)) {
@@ -570,7 +567,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
                 continue;
             }
 
-            if ($section === '') {
+            if (empty($section)) {
                 throw new InvalidPhptFileException;
             }
 
@@ -588,9 +585,9 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
             throw new InvalidPhptFileException;
         }
 
-        foreach ($unsupportedSections as $unsupportedSection) {
-            if (isset($sections[$unsupportedSection])) {
-                throw new UnsupportedPhptSectionException($unsupportedSection);
+        foreach ($unsupportedSections as $section) {
+            if (isset($sections[$section])) {
+                throw new UnsupportedPhptSectionException($section);
             }
         }
 
@@ -864,7 +861,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
                 }
             }
 
-            if ($line !== '') {
+            if (!empty($line)) {
                 $previousLine = $line;
             }
         }
@@ -890,7 +887,7 @@ final class PhptTestCase implements Reorderable, SelfDescribing, Test
     {
         $needle = trim($needle);
 
-        if ($needle === '') {
+        if (empty($needle)) {
             return [[
                 'file' => realpath($this->filename),
                 'line' => 1,

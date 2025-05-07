@@ -10,6 +10,7 @@
 namespace SebastianBergmann\Environment;
 
 use const PHP_BINARY;
+use const PHP_MAJOR_VERSION;
 use const PHP_SAPI;
 use const PHP_VERSION;
 use function array_map;
@@ -59,6 +60,10 @@ final class Runtime
      */
     public function performsJustInTimeCompilation(): bool
     {
+        if (PHP_MAJOR_VERSION < 8) {
+            return false;
+        }
+
         if (!$this->isOpcacheActive()) {
             return false;
         }

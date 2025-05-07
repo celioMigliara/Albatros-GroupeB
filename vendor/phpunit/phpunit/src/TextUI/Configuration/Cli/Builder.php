@@ -10,6 +10,8 @@
 namespace PHPUnit\TextUI\CliArguments;
 
 use const DIRECTORY_SEPARATOR;
+use function array_map;
+use function array_merge;
 use function assert;
 use function basename;
 use function explode;
@@ -17,6 +19,7 @@ use function getcwd;
 use function is_file;
 use function is_numeric;
 use function sprintf;
+use function str_contains;
 use function strtolower;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Runner\TestSuiteSorter;
@@ -31,10 +34,7 @@ use SebastianBergmann\CliParser\Parser as CliParser;
  */
 final class Builder
 {
-    /**
-     * @var non-empty-list<non-empty-string>
-     */
-    private const array LONG_OPTIONS = [
+    private const LONG_OPTIONS = [
         'atleast-version=',
         'bootstrap=',
         'cache-result',
@@ -62,7 +62,6 @@ final class Builder
         'display-skipped',
         'display-deprecations',
         'display-phpunit-deprecations',
-        'display-phpunit-notices',
         'display-errors',
         'display-notices',
         'display-warnings',
@@ -111,7 +110,6 @@ final class Builder
         'fail-on-all-issues',
         'fail-on-deprecation',
         'fail-on-phpunit-deprecation',
-        'fail-on-phpunit-notice',
         'fail-on-empty-test-suite',
         'fail-on-incomplete',
         'fail-on-notice',
@@ -144,8 +142,7 @@ final class Builder
         'debug',
         'extension=',
     ];
-
-    private const string SHORT_OPTIONS = 'd:c:h';
+    private const SHORT_OPTIONS = 'd:c:h';
 
     /**
      * @var array<string, non-negative-int>
@@ -204,7 +201,6 @@ final class Builder
         $displaySkipped                    = null;
         $displayDeprecations               = null;
         $displayPhpunitDeprecations        = null;
-        $displayPhpunitNotices             = null;
         $displayErrors                     = null;
         $displayNotices                    = null;
         $displayWarnings                   = null;
@@ -215,7 +211,6 @@ final class Builder
         $failOnAllIssues                   = null;
         $failOnDeprecation                 = null;
         $failOnPhpunitDeprecation          = null;
-        $failOnPhpunitNotice               = null;
         $failOnEmptyTestSuite              = null;
         $failOnIncomplete                  = null;
         $failOnNotice                      = null;
@@ -286,11 +281,7 @@ final class Builder
 
             switch ($option[0]) {
                 case '--colors':
-                    $colors = \PHPUnit\TextUI\Configuration\Configuration::COLOR_AUTO;
-
-                    if ($option[1] !== null) {
-                        $colors = $option[1];
-                    }
+                    $colors = $option[1] ?: \PHPUnit\TextUI\Configuration\Configuration::COLOR_AUTO;
 
                     break;
 
@@ -467,44 +458,68 @@ final class Builder
                     break;
 
                 case '--group':
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                            'Using comma-separated values with --group is deprecated and will no longer work in PHPUnit 12. You can use --group multiple times instead.',
+                        );
+                    }
+
                     if ($groups === null) {
                         $groups = [];
                     }
 
-                    $groups[] = $option[1];
+                    $groups = array_merge($groups, explode(',', $option[1]));
 
                     $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--exclude-group':
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                            'Using comma-separated values with --exclude-group is deprecated and will no longer work in PHPUnit 12. You can use --exclude-group multiple times instead.',
+                        );
+                    }
+
                     if ($excludeGroups === null) {
                         $excludeGroups = [];
                     }
 
-                    $excludeGroups[] = $option[1];
+                    $excludeGroups = array_merge($excludeGroups, explode(',', $option[1]));
 
                     $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--covers':
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                            'Using comma-separated values with --covers is deprecated and will no longer work in PHPUnit 12. You can use --covers multiple times instead.',
+                        );
+                    }
+
                     if ($testsCovering === null) {
                         $testsCovering = [];
                     }
 
-                    $testsCovering[] = strtolower($option[1]);
+                    $testsCovering = array_merge($testsCovering, array_map('strtolower', explode(',', $option[1])));
 
                     $optionAllowedMultipleTimes = true;
 
                     break;
 
                 case '--uses':
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                            'Using comma-separated values with --uses is deprecated and will no longer work in PHPUnit 12. You can use --uses multiple times instead.',
+                        );
+                    }
+
                     if ($testsUsing === null) {
                         $testsUsing = [];
                     }
 
-                    $testsUsing[] = strtolower($option[1]);
+                    $testsUsing = array_merge($testsUsing, array_map('strtolower', explode(',', $option[1])));
 
                     $optionAllowedMultipleTimes = true;
 
@@ -522,11 +537,17 @@ final class Builder
                     break;
 
                 case '--test-suffix':
+                    if (str_contains($option[1], ',')) {
+                        EventFacade::emitter()->testRunnerTriggeredPhpunitWarning(
+                            'Using comma-separated values with --test-suffix is deprecated and will no longer work in PHPUnit 12. You can use --test-suffix multiple times instead.',
+                        );
+                    }
+
                     if ($testSuffixes === null) {
                         $testSuffixes = [];
                     }
 
-                    $testSuffixes[] = $option[1];
+                    $testSuffixes = array_merge($testSuffixes, explode(',', $option[1]));
 
                     $optionAllowedMultipleTimes = true;
 
@@ -651,11 +672,6 @@ final class Builder
 
                 case '--fail-on-phpunit-deprecation':
                     $failOnPhpunitDeprecation = true;
-
-                    break;
-
-                case '--fail-on-phpunit-notice':
-                    $failOnPhpunitNotice = true;
 
                     break;
 
@@ -868,11 +884,6 @@ final class Builder
 
                     break;
 
-                case '--display-phpunit-notices':
-                    $displayPhpunitNotices = true;
-
-                    break;
-
                 case '--display-errors':
                     $displayErrors = true;
 
@@ -990,11 +1001,15 @@ final class Builder
             }
         }
 
-        if ($iniSettings === []) {
+        if (empty($iniSettings)) {
             $iniSettings = null;
         }
 
-        if ($extensions === []) {
+        if (empty($coverageFilter)) {
+            $coverageFilter = null;
+        }
+
+        if (empty($extensions)) {
             $extensions = null;
         }
 
@@ -1032,7 +1047,6 @@ final class Builder
             $failOnAllIssues,
             $failOnDeprecation,
             $failOnPhpunitDeprecation,
-            $failOnPhpunitNotice,
             $failOnEmptyTestSuite,
             $failOnIncomplete,
             $failOnNotice,
@@ -1094,7 +1108,6 @@ final class Builder
             $displaySkipped,
             $displayDeprecations,
             $displayPhpunitDeprecations,
-            $displayPhpunitNotices,
             $displayErrors,
             $displayNotices,
             $displayWarnings,

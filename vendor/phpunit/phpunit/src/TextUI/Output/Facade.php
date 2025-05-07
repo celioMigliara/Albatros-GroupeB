@@ -204,10 +204,9 @@ final class Facade
         if ($configuration->outputIsTestDox()) {
             self::$defaultResultPrinter = new DefaultResultPrinter(
                 self::$printer,
+                true,
+                true,
                 $configuration->displayDetailsOnPhpunitDeprecations() || $configuration->displayDetailsOnAllIssues(),
-                true,
-                $configuration->displayDetailsOnPhpunitNotices() || $configuration->displayDetailsOnAllIssues(),
-                true,
                 false,
                 false,
                 true,
@@ -240,10 +239,9 @@ final class Facade
 
         self::$defaultResultPrinter = new DefaultResultPrinter(
             self::$printer,
+            true,
+            true,
             $configuration->displayDetailsOnPhpunitDeprecations() || $configuration->displayDetailsOnAllIssues(),
-            true,
-            $configuration->displayDetailsOnPhpunitNotices() || $configuration->displayDetailsOnAllIssues(),
-            true,
             true,
             true,
             true,

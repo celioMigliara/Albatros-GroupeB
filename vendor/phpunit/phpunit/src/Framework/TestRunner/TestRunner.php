@@ -23,7 +23,7 @@ use PHPUnit\Runner\ErrorHandler;
 use PHPUnit\Runner\Exception;
 use PHPUnit\TextUI\Configuration\Configuration;
 use PHPUnit\TextUI\Configuration\Registry as ConfigurationRegistry;
-use SebastianBergmann\CodeCoverage\Exception as CodeCoverageException;
+use SebastianBergmann\CodeCoverage\Exception as OriginalCodeCoverageException;
 use SebastianBergmann\CodeCoverage\InvalidArgumentException;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
 use SebastianBergmann\Invoker\Invoker;
@@ -46,6 +46,7 @@ final class TestRunner
     }
 
     /**
+     * @throws CodeCoverageException
      * @throws Exception
      * @throws InvalidArgumentException
      * @throws UnintentionallyCoveredCodeException
@@ -134,31 +135,36 @@ final class TestRunner
         }
 
         if ($collectCodeCoverage) {
-            $append = !$risky && !$incomplete && !$skipped;
-            $covers = null;
-            $uses   = null;
-
-            if (!$append) {
-                $covers = false;
-            }
+            $append           = !$risky && !$incomplete && !$skipped;
+            $linesToBeCovered = [];
+            $linesToBeUsed    = [];
 
             if ($append) {
-                $covers = $codeCoverageMetadataApi->coversTargets(
-                    $test::class,
-                    $test->name(),
-                );
+                try {
+                    $linesToBeCovered = $codeCoverageMetadataApi->linesToBeCovered(
+                        $test::class,
+                        $test->name(),
+                    );
 
-                $uses = $codeCoverageMetadataApi->usesTargets(
-                    $test::class,
-                    $test->name(),
-                );
+                    $linesToBeUsed = $codeCoverageMetadataApi->linesToBeUsed(
+                        $test::class,
+                        $test->name(),
+                    );
+                } catch (InvalidCoversTargetException $cce) {
+                    Facade::emitter()->testTriggeredPhpunitWarning(
+                        $test->valueObjectForEvents(),
+                        $cce->getMessage(),
+                    );
+
+                    $append = false;
+                }
             }
 
             try {
                 CodeCoverage::instance()->stop(
                     $append,
-                    $covers,
-                    $uses,
+                    $linesToBeCovered,
+                    $linesToBeUsed,
                 );
             } catch (UnintentionallyCoveredCodeException $cce) {
                 Facade::emitter()->testConsideredRisky(
@@ -167,7 +173,7 @@ final class TestRunner
                     PHP_EOL .
                     $cce->getMessage(),
                 );
-            } catch (CodeCoverageException $cce) {
+            } catch (OriginalCodeCoverageException $cce) {
                 $error = true;
 
                 $e = $e ?? $cce;
@@ -229,11 +235,7 @@ final class TestRunner
     private function hasCoverageMetadata(string $className, string $methodName): bool
     {
         foreach (MetadataRegistry::parser()->forClassAndMethod($className, $methodName) as $metadata) {
-            if ($metadata->isCoversNamespace()) {
-                return true;
-            }
-
-            if ($metadata->isCoversTrait()) {
+            if ($metadata->isCovers()) {
                 return true;
             }
 
@@ -241,11 +243,7 @@ final class TestRunner
                 return true;
             }
 
-            if ($metadata->isCoversClassesThatExtendClass()) {
-                return true;
-            }
-
-            if ($metadata->isCoversClassesThatImplementInterface()) {
+            if ($metadata->isCoversTrait()) {
                 return true;
             }
 
@@ -282,7 +280,7 @@ final class TestRunner
             return false;
         }
 
-        if (!(($this->configuration->defaultTimeLimit() > 0 || $test->size()->isKnown()))) {
+        if (!(($this->configuration->defaultTimeLimit() || $test->size()->isKnown()))) {
             return false;
         }
 

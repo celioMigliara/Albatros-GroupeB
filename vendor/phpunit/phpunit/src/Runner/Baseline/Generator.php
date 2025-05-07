@@ -90,7 +90,7 @@ final readonly class Generator
             return $this->source->restrictNotices();
         }
 
-        return false;
+        return $this->source->restrictDeprecations();
     }
 
     private function isSuppressionIgnored(DeprecationTriggered|NoticeTriggered|PhpDeprecationTriggered|PhpNoticeTriggered|PhpWarningTriggered|WarningTriggered $event): bool

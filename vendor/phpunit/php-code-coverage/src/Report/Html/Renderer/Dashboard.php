@@ -12,7 +12,6 @@ namespace SebastianBergmann\CodeCoverage\Report\Html;
 use function array_values;
 use function arsort;
 use function asort;
-use function assert;
 use function count;
 use function explode;
 use function floor;
@@ -22,14 +21,10 @@ use function str_replace;
 use SebastianBergmann\CodeCoverage\FileCouldNotBeWrittenException;
 use SebastianBergmann\CodeCoverage\Node\AbstractNode;
 use SebastianBergmann\CodeCoverage\Node\Directory as DirectoryNode;
-use SebastianBergmann\CodeCoverage\Node\File as FileNode;
 use SebastianBergmann\Template\Exception;
 use SebastianBergmann\Template\Template;
 
 /**
- * @phpstan-import-type ProcessedClassType from FileNode
- * @phpstan-import-type ProcessedTraitType from FileNode
- *
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
  */
 final class Dashboard extends Renderer
@@ -86,9 +81,7 @@ final class Dashboard extends Renderer
     }
 
     /**
-     * @param array<string, ProcessedClassType|ProcessedTraitType> $classes
-     *
-     * @return array{class: non-empty-string, method: non-empty-string}
+     * Returns the data for the Class/Method Complexity charts.
      */
     private function complexity(array $classes, string $baseLink): array
     {
@@ -103,34 +96,33 @@ final class Dashboard extends Renderer
                 $result['method'][] = [
                     $method['coverage'],
                     $method['ccn'],
-                    str_replace($baseLink, '', $method['link']),
-                    $methodName,
+                    sprintf(
+                        '<a href="%s">%s</a>',
+                        str_replace($baseLink, '', $method['link']),
+                        $methodName,
+                    ),
                 ];
             }
 
             $result['class'][] = [
                 $class['coverage'],
                 $class['ccn'],
-                str_replace($baseLink, '', $class['link']),
-                $className,
+                sprintf(
+                    '<a href="%s">%s</a>',
+                    str_replace($baseLink, '', $class['link']),
+                    $className,
+                ),
             ];
         }
 
-        $class = json_encode($result['class']);
-
-        assert($class !== false);
-
-        $method = json_encode($result['method']);
-
-        assert($method !== false);
-
-        return ['class' => $class, 'method' => $method];
+        return [
+            'class'  => json_encode($result['class']),
+            'method' => json_encode($result['method']),
+        ];
     }
 
     /**
-     * @param array<string, ProcessedClassType|ProcessedTraitType> $classes
-     *
-     * @return array{class: non-empty-string, method: non-empty-string}
+     * Returns the data for the Class / Method Coverage Distribution chart.
      */
     private function coverageDistribution(array $classes): array
     {
@@ -189,21 +181,14 @@ final class Dashboard extends Renderer
             }
         }
 
-        $class = json_encode(array_values($result['class']));
-
-        assert($class !== false);
-
-        $method = json_encode(array_values($result['method']));
-
-        assert($method !== false);
-
-        return ['class' => $class, 'method' => $method];
+        return [
+            'class'  => json_encode(array_values($result['class'])),
+            'method' => json_encode(array_values($result['method'])),
+        ];
     }
 
     /**
-     * @param array<string, ProcessedClassType|ProcessedTraitType> $classes
-     *
-     * @return array{class: string, method: string}
+     * Returns the classes / methods with insufficient coverage.
      */
     private function insufficientCoverage(array $classes, string $baseLink): array
     {
@@ -257,9 +242,7 @@ final class Dashboard extends Renderer
     }
 
     /**
-     * @param array<string, ProcessedClassType|ProcessedTraitType> $classes
-     *
-     * @return array{class: string, method: string}
+     * Returns the project risks according to the CRAP index.
      */
     private function projectRisks(array $classes, string $baseLink): array
     {

@@ -1,0 +1,11 @@
+# Interdit l’exécution de scripts dans les uploads
+# Ce bloc bloque totalement l’accès aux fichiers potentiellement exécutables s’ils sont uploadés dans ce dossier 
+
+<FilesMatch "\.(php|php5|phtml|shtml|pl|py|jsp|asp|sh|cgi)$">
+    Require all denied
+</FilesMatch>
+
+ # attaque de type upload de fichier malveillant
+# Interdit la navigation dans le dossier
+
+Options -Indexes

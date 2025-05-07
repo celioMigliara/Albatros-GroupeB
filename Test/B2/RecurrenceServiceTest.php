@@ -84,7 +84,7 @@ class RecurrenceServiceTest extends TestCase
 
         $service = new RecurrenceService($this->pdo, $today);
         $logs = $service->genererDemandes();
-
+       
         $this->assertStringContainsString("Demande générée", implode("\n", $logs));
     }
     
@@ -458,6 +458,32 @@ public function testRetourNullSiFrequenceNegative()
     );
 
     $this->assertNull($resultat);
+}
+public function testDateAnnivMiseAJour()
+{
+    $today = new DateTime();
+    $anniv = $today->format('Y-m-d'); // aujourd’hui
+    $this->ajouterRecurrence([
+        'id_recurrence' => 1,
+        'sujet' => 'Sujet test MAJ',
+        'desc' => 'Test MAJ date',
+        'date_anniv' => $anniv,
+        'frequence' => 7, // tous les 7 jours
+        'rappel' => 0,
+        'lieu' => 1,
+        'unite' => 1,
+        'unite1' => 1
+    ]);
+
+    $service = new RecurrenceService($this->pdo, $today);
+    $service->genererDemandes();
+
+    $stmt = $this->pdo->prepare("SELECT date_anniv_recurrence FROM recurrence WHERE id_recurrence = ?");
+    $stmt->execute([1]);
+    $newDate = $stmt->fetchColumn();
+
+    $expected = (clone $today)->modify('+7 days')->format('Y-m-d');
+    $this->assertEquals($expected, $newDate);
 }
 
 }

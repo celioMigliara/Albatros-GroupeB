@@ -24,7 +24,7 @@ class RecurrenceService
     {
         $logs = [];
         //recup date du jour
-        $jourJStr = $this->date->format('Y-m-d'); 
+        $jourJStr = $this->date->format('Y-m-d');
 
         // Récupération de l'utilisateur "Systeme"
         $stmt = $this->pdo->prepare("SELECT id_utilisateur FROM utilisateur WHERE nom_utilisateur = ?");
@@ -115,6 +115,20 @@ class RecurrenceService
               VALUES (?, ?, NOW())
              ");
             $stmtStatut->execute([$idDemande, $idStatut]);
+
+            // Met à jour la date anniversaire pour préparer la prochaine génération
+            $prochaineDateAnniv = new DateTime($rec['date_anniv_recurrence']);
+            $prochaineDateAnniv->add(new DateInterval(match ($rec['id_unite']) {
+                1 => "P{$rec['valeur_freq_recurrence']}D",
+                2 => "P{$rec['valeur_freq_recurrence']}M",
+                3 => "P{$rec['valeur_freq_recurrence']}Y",
+                default => throw new InvalidArgumentException("Unité de fréquence invalide")
+            }));
+
+            $update = $this->pdo->prepare("UPDATE recurrence SET date_anniv_recurrence = ? WHERE id_recurrence = ?");
+            $update->execute([$prochaineDateAnniv->format('Y-m-d'), $rec['id_recurrence']]);
+
+            $logs[] = "Date anniversaire mise à jour : " . $prochaineDateAnniv->format('Y-m-d');
 
 
             $logs[] = "Demande générée : $ticket";

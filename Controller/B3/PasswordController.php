@@ -138,6 +138,17 @@ class PasswordController
             return $mailEnvoye;
         } else {
 
+            if (UserConnectionUtils::isUserConnected())
+            {
+                // Code 400 (Bad request)
+                http_response_code(400);
+
+                // On setup le message d'erreur pour la vue
+                $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous déconnecter pour réinitialiser votre mot de passe.");
+                require 'View/B3/PageErreur.php';
+                return false;
+            }
+
             // Génére le token CSRF
             $csrf_token = $securityObj->genererCSRFToken();
             

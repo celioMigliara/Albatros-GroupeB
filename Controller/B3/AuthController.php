@@ -146,6 +146,18 @@ class AuthController
             return true;
         } else {
 
+            // Cela ne fait pas sens d'accéder à la page d'inscription si on est déjà connecté
+            if (UserConnectionUtils::isUserConnected())
+            {
+                // Code 400 (Bad request)
+                http_response_code(400);
+
+                // On setup le message d'erreur pour la vue
+                $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous déconnecter pour accéder à la page d'inscription");
+                require 'View/B3/PageErreur.php';
+                return false;
+            }
+
             // On génére les batiments pour la page Register
             $batiments = BatimentB3::getBatiments();
 
@@ -249,6 +261,18 @@ class AuthController
             }
         } else // En cas de requete non POST (par exemple via du GET avec l'URL)
         {
+            // Cela ne fait pas sens d'accéder à la page de connexion si on est déjà connecté
+            if (UserConnectionUtils::isUserConnected())
+            {
+                // Code 400 (Bad request)
+                http_response_code(400);
+
+                // On setup le message d'erreur pour la vue
+                $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous déconnecter pour accéder à la page de connexion");
+                require 'View/B3/PageErreur.php';
+                return false;
+            }
+
             // Génération du token CSRF pour le formulaire du login
             $csrf_token = $securityObj->genererCSRFToken();
             

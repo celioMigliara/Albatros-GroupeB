@@ -27,6 +27,11 @@ $uri = trim($uri, '/');
 // Découper en segments
 $segments = explode('/', $uri);
 
+// ===> Normalisation index.php (B4 usr)
+if (!empty($segments[0]) && $segments[0] === basename($_SERVER['SCRIPT_NAME'])) {
+    array_shift($segments);
+}
+
 // Les require pour les B3
 require_once 'Controller/B3/UserControlleur.php';
 require_once 'Controller/B3/AuthController.php';
@@ -353,6 +358,85 @@ switch ($segments[0]) {
             }
         }
         break;
+
+        case 'sites':
+            require_once __DIR__ . '/Controller/B4/SitesController.php';
+            $sitesController = new SitesController();
+            if ( isset($segments[1]) && $segments[1] === 'import') {
+                $sitesController->import();
+            } else {
+                $sitesController->index();
+            }
+            break;
+    
+        case 'batiments':
+            require_once __DIR__ . '/Controller/B4/BatimentsController.php';
+            $batimentsController = new BatimentsController();
+            $batimentsController->index();
+            break;
+    
+        case 'lieux':
+            require_once __DIR__ . '/Controller/B4/LieuxController.php';
+            $lieuxController = new LieuxController();
+            if (isset ($segments[1]) && $segments[1] === 'detail') {
+                $lieuxController->detail();
+                break;
+            }
+            $lieuxController->index();
+            break;
+    
+        // Gestion des utilisateurs
+        case 'utilisateurs':
+            require_once __DIR__ . '/Controller/B4/UtilisateursController.php';
+            $ctrl = new UtilisateursController();
+        
+            // Si on a un sous-segment, on choisit l’action
+            if (isset($segments[1])) {
+                switch ($segments[1]) {
+                    case 'modifier':
+                        if (isset($segments[2])) {
+                            $_GET['id'] = (int)$segments[2];
+                            $ctrl->modifier();
+                        } else {
+                            error('ID manquant pour modification.');
+                        }
+                        break;
+        
+                    case 'desactiver':
+                        if (isset($segments[2])) {
+                            $_GET['id'] = (int)$segments[2];
+                            $ctrl->desactiver();
+                        } else {
+                            error('ID manquant pour désactivation.');
+                        }
+                        break;
+        
+                    case 'activer':
+                        if (isset($segments[2])) {
+                            $_GET['id'] = (int)$segments[2];
+                            $ctrl->activer();
+                        } else {
+                            error('ID manquant pour activation.');
+                        }
+                        break;
+        
+                    default:
+                        $ctrl->index();
+                }
+            } else {
+                // pas de sous‐URL => liste
+                $ctrl->index();
+            }
+            break;
+        
+            case 'historique':
+                require_once __DIR__ . '/Controller/B4/HistoriqueController.php';
+                (new HistoriqueController())->index();
+                break;
+
+            default:
+            $pageNotFound = true;
+            break;
     
     }
 

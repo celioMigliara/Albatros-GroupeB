@@ -1,0 +1,162 @@
+/* Conteneur général */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* En-tête */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.header form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Boutons */
+button,
+input[type="submit"] {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+button.add {
+    background-color: #007bff;
+    color: white;
+}
+
+button.add:hover {
+    background-color: #0056b3;
+}
+
+button.delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+button.delete:hover {
+    background-color: #b02a37;
+}
+
+button.save,
+input[type="submit"].save {
+    background-color: #28a745;
+    color: white;
+}
+
+button.save:hover,
+input[type="submit"].save:hover {
+    background-color: #218838;
+}
+
+/* Tableau */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+table thead {
+    background-color: #e9ecef;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+table a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+table a:hover {
+    text-decoration: underline;
+}
+
+/* Centrage */
+.center {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+/* Popups */
+.popup, .popup-delete {
+    border-radius: 10px;
+    z-index: 1001;
+    /*transition: transform 0.3s ease;*/
+    min-width: 300px;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/*.popup.active {
+    transform: translate(-50%, -50%) scale(1);
+}*/
+
+.popup, .popup-delete h3 {
+    margin-top: 0;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: none;
+}
+
+.overlay.active {
+    display: block;
+}
+
+/* Champs de formulaire */
+input[type="text"],
+input[type="file"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}

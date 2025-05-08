@@ -1,0 +1,671 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body{
+    color : black;
+    font-family: "Montserrat Alternates";
+    font-size: 16px;
+}
+
+a {
+    color : black;
+    font-family: "Montserrat Alternates";
+}
+
+main{
+    display: block;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    font-family: "Caveat Brush", cursive;
+    font-size: 80px;
+    font-weight: 400;
+    color: #F9BB30;
+    text-align: center;
+    margin-top: 80px;
+    margin-bottom: 10px;
+}
+
+.title::after{
+    content: '';
+    width: 90%;
+    margin: 1rem 1 2rem 0;
+    display: block;
+    opacity: 1;
+    background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+    background-size: 15px 15px !important;
+    height: 25px;
+    position: relative;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.ss-title{
+    font-family: "Caveat Brush", cursive;
+    font-size: 30px;
+    color: #000;
+    font-weight: 400;
+}
+
+
+.obligatoire::after{
+    content: "*";
+    color: #C2433F;
+}
+
+.btnStyle1{
+    padding-block: 15px;
+    padding-inline: 42px;
+    border: none;
+    border-radius: 50px;
+    background: #F9BB30;
+    font-size: 24px;
+    font-family: "Caveat Brush";
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 20px;;
+}
+
+.label{
+    display: block; 
+    margin-bottom: 5px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    margin-left: 15px;
+}
+
+.input{
+    font-family: "Montserrat Alternates";
+    display: block;
+    padding-inline: 15px;
+    padding-block: 0;
+    width: 350px;
+    height: 46px;
+    
+    border: none;
+    border-radius: 15px;
+
+    font-size: 18px;
+    background-color: #E4E4E4;
+    font-weight: 500;
+}
+
+.input-disabled{
+    background: #B0B0B0;
+}
+
+/*CSS pour afficher mot de passe*/
+.toggle-password {
+    cursor: pointer;
+    width: 24px; 
+    height: 24px;
+    position: relative;
+    bottom: 35px;
+    left: 90%;
+}
+
+.mdp-container{
+    display: grid;
+}
+
+/*CSS pour afficher une confirmation d'envoi*/
+.confirmation_envoi{
+    z-index: 1;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 50px;
+    position: absolute;
+    top: 250px;
+    left: 515px;
+    background: #fff;
+}
+
+/*CSS Inscription et Connexion*/
+.formulaire-champs{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+} 
+
+.formulaireConnexion{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: max-content;
+    margin-top: 2%;
+}
+
+.formulaire-bouton{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formulaire-bouton a:first-child{
+    margin-bottom: 20px;
+}
+
+.formulaire-bouton a:last-child{
+    margin-top: 5px;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row; 
+    gap: 120px; 
+    margin-top: 20px;
+}
+
+.formulaire-container{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.flex-container2{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.flex-container3{
+    margin-top: 20px;
+}
+
+.choix-poste-container{
+    display: flex;
+    margin-left: 20px;
+    gap: 30px; 
+    margin-top: -8px;
+}
+
+
+.close:hover,.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.message-erreur {
+    color: #C2433F;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-left: 5px;
+    max-width: 300px;
+}
+
+.message-erreur2{
+    color: #C2433F;
+    font-size: 14px;
+    margin-top: -15px;
+    margin-left: 5px;
+    max-width: 360px;
+    margin-bottom: 10px;;
+}
+
+.input.erreur {
+    border: 2px solid #C2433F;
+}
+
+.label.erreur{
+    color: #C2433F;
+}
+
+.batimentAlerte, .mdpAlerte, .emailAlerte{
+    display: none;
+    color: white;
+    background-color: #C2433F;
+    padding: 12px;
+    font-size: 20px;
+    width: fit-content;
+    margin: 20px auto 0 auto;
+}
+
+.emailAlerte.visible{
+    display:block;
+}
+
+.alerteIcon{
+    width: 25px;
+    height: 25px;
+}
+
+/*CSS Mot de passe oublié*/
+.reinitialisation_mdp{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content;
+    border-radius: 50px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+    margin-top: 60px;
+}
+
+.reinitialisation_mdp .btnStyle1{
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reinitialisation_mdp .ss-title{
+    text-align: center;
+}
+
+.formulaire-mdpoublie{
+    margin-top: 50px;
+}
+
+.formulaire-mdpoublie .label-input:first-child{
+    padding: 0;
+}
+
+/*CSS Modification profil*/
+.info-perso{
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.flex{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 55px; 
+}
+
+.label-input{
+    margin-left: auto;
+    display: block;
+    margin-right: auto;
+}
+
+.label-input:first-child{
+    padding-right: 145px;
+}
+
+.label-input-seul{
+    margin-left: 0;
+}
+
+.modif_valeur{
+    font-size: 24px;
+    font-family: "Caveat Brush";
+    font-weight: 500;
+    color: white;
+    padding-block: 15px;
+    padding-inline: 42px;
+    width: 100%;
+    border-radius: 50px;
+    background-color: #80955C;
+    border: none;
+    cursor: pointer;
+}
+
+.modif_valeur--motdepasse{
+    background-color: #83A8D4;
+}
+
+/*Style modifier email : monprofil_email.html*/
+.block{
+    margin-block: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 750px;
+
+}
+
+.label-input--modifier{
+    margin-left: auto;
+    display: block;
+    margin-right: auto;
+    width: fit-content;
+    margin-bottom: 20px;
+}
+
+.block .label-input--modifier:first-child{
+    padding-right: 0;
+}
+
+.valider{
+    width: 144px;
+    border-radius: 50px;
+    padding-block: 15px;
+    padding-inline: 42px;
+    margin-left: auto;
+    display: block;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.annuler{
+    font-size: 20px;
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;   
+}
+
+/*Style modfier mot de passe : monprofil_mdp.html*/
+
+
+.margin-bottom{
+    margin-bottom: -20px;
+}
+
+/*Style erreur*/
+.input-erreur{
+    border-color: #C2433F;
+    border-width: 3px;
+    outline: none;
+}
+
+.input-erreur:focus{
+    border-color: #C2433F;
+    outline: none;
+}
+
+.label-erreur{
+    color: #C2433F;
+}
+
+.message-erreur{
+    color: #C2433F;
+    display: block;
+}
+
+.message-erreur_none{
+    display: none;
+}
+
+.emailIdentique-erreur, .mdpIdentique-erreur{
+    display: flex;
+    background-color: #C2433F;
+    width: 360px;
+    padding: 5px;
+    justify-content: space-evenly;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.emailIdentique-erreur img, .mdpIdentique-erreur img{
+    width: 40px;
+    height: 40px;
+}
+
+.emailIdentique-erreur p, .mdpIdentique-erreur p{
+    color: #fff;
+}
+
+.emailIdentique-erreur-none, .mdpIdentique-erreur-none{
+    display: none;
+}
+
+/*CSS Feuille de route*/
+.choixMulti{
+    margin: 20px 0px;
+    border-radius: 20px;
+    padding: 5px;
+    border: 1px solid transparent;
+    background-color: #e4e4e4;
+}
+.technician-selection {
+    text-align: center;
+}
+
+.task {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column; /* Empile les éléments verticalement */
+    justify-content: flex-start;
+    align-items: flex-start; /* Aligne les éléments à gauche */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    margin: 10px 0;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.titre-task {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px; /* Espace entre le titre et les autres éléments */
+}
+
+.autre-task {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 3px; /* Ajoute un espace entre chaque ligne */
+}
+
+
+.form-tech{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.bouton-imprimer {
+    background-color: #8A975F;
+    color: white;
+    font-size: 22px;
+    font-weight: 500;
+    border-radius: 50px;
+    padding-block: 10px;
+    padding-inline: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Caveat Brush',cursive;
+}
+
+.lienImprimer{
+    text-decoration: none;
+    color: white;
+}
+
+.bouton-imprimer:hover {
+    background-color: #7A8750; /* Un peu plus foncé au survol */
+}
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.choixImprimer{
+    text-align: center;
+    font-weight: 300;
+}
+
+.tech-container{
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    margin: 10px 0;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.tech-item{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.bouton-PDF{
+    background-color: #8A975F;
+    color: white;
+    font-size: 22px;
+    font-weight: 500;
+    border-radius: 50px;
+    padding-block: 10px;
+    padding-inline: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Caveat Brush',cursive;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*Responsive pour l'écran d'inscription*/
+@media screen and (max-width: 900px){
+    .title {
+        font-size: 60px;
+    }
+    label {
+        font-size: 18px;
+    }
+
+    /*CSS Inscription et Connexion*/
+    .flex-container{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .flex-container2{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .choix-poste-container{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /*CSS Modifier mon profil*/
+    .flex{
+        display: block;
+        margin-bottom: 0;
+    }
+
+    .flex .label-input{
+        margin-bottom: 27px;
+    }
+
+    .label-input:first-child{
+        padding-right: 0;
+    }
+
+    .input{
+        width: 330px;
+    }
+
+    .block{
+        width: 350px;
+    }
+
+    .confirmation_envoi{
+        left: 65px;
+    }
+
+    /*CSS Feuille de route*/
+    .form-tech {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .bouton-imprimer {
+        font-size: 18px;
+        padding-block: 8px;
+        padding-inline: 18px;
+    }
+
+    .titre-task{
+        font-size: 13px;
+    }
+
+    .autre-task{
+        font-size: 10px;
+    }
+
+    .containerTech{
+        width: 80%;
+    }
+}
+
+.row-between {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.form-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:nowrap;
+}
+
+.form-row input[type="text"]{
+    flex:1 1 250px;
+    min-width:150px; 
+}
+
+.form-row label{
+    white-space:nowrap;
+}

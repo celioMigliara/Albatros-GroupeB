@@ -48,8 +48,8 @@ require_once 'Model/UserConnectionUtils.php';
 $pageNotFound = false;
 
 // Gestion de routage manuel
-switch ($segments[0]) {
-
+switch ($segments[0]) 
+{
     case '':
         case 'index.php':
             $userRole = UserConnectionUtils::getConnectedUserRole();

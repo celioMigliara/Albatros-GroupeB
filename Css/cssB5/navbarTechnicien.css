@@ -9,13 +9,15 @@
     margin: 0;
     padding: 0;
     border-radius: 0 0 50% 0;
-    
+    background-color: #94A77E;
 }
 
 .logo-container img {
-    height: auto; /* ajuste à ta convenance */
+    height: auto;
     width: 150px;
     padding: 0;
+    position: relative;
+    z-index: 2001;
 }
 
 .site-logo {
@@ -24,6 +26,8 @@
     display: block;
     margin: 0;
     padding: 0;
+    position: relative;
+    z-index: 2001;
 }
 
 /* Cercles décoratifs (images SVG) */
@@ -51,25 +55,27 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    right: 6%;
     z-index: 300;
     padding: 0;
- 
     display: flex;
+    justify-content: flex-end; /* Aligner à droite au lieu de centrer */
     background-color: transparent;
+    padding-left: 170px; /* Espace pour le logo */
+    padding-right: 20px; /* Espace à droite */
 }
 
 /* Navbar styles */
 nav {
     display: flex;
     background-color: #f9bb30;
-    padding: 10px 20px;
+    padding: 8px 15px;
     align-items: center;
     border-radius: 0 0 50px 50px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    width: 90%; 
-    max-width: 900px;
-    margin: 0 auto; /* Centre proprement */
+    width: 85%; 
+    max-width: 800px;
+    margin: 0;
     justify-content: center;
 }
 
@@ -86,21 +92,24 @@ nav ul {
     padding: 0;
     flex-grow: 1;
     justify-content: space-around;
+    gap: 5px; /* Réduire l'espace entre les éléments */
 }
 
 nav ul li {
     display: inline-block;
     position: relative;
+    margin: 0 2px; /* Réduire les marges */
 }
 
 nav ul li a {
     font-family: 'Caveat Brush', cursive; 
     font-weight: bold;
-    font-size: 20px; 
+    font-size: 23px;
     color: white;
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 6px 10px; /* Réduire le padding */
     display: block;
+    letter-spacing: -0.5px; /* Rapprocher les lettres */
 }
 
 nav ul li a:hover {
@@ -266,6 +275,7 @@ nav ul li a:hover {
     justify-content: space-between;
     width: 30px;
     height: 21px;
+    z-index: 2010; /* Même z-index élevé que le parent */
 }
 
 .hamburger-line {
@@ -275,164 +285,139 @@ nav ul li a:hover {
     border-radius: 3px;
 }
 
+/* Style du menu hamburger */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    z-index: 2010; /* Plus élevé que tout pour être sûr qu'il reste visible */
+}
+
+/* Media query pour les tablettes et petits écrans */
+@media (max-width: 992px) {
+    .navbar-wrapper {
+        padding-left: 160px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 900px) {
+    .navbar-wrapper {
+        padding-left: 150px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 820px) {
+    .navbar-wrapper {
+        padding-left: 140px;
+        padding-right: 10px;
+    }
+}
+
 /* Styles responsives */
 @media (max-width: 768px) {
-    /* Header fixe avec logo */
+    body {
+        padding-top: 60px; /* Pour la navbar fixe */
+    }
+    
+    /* Conteneur de logo */
     .logo-container {
+        width: 100%; /* Prend toute la largeur */
+        height: 60px;
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
+        border-radius: 0;
+        padding: 5px 10px;
         display: flex;
-        justify-content: flex-start;
         align-items: center;
         background-color: #78866B;
-        border-radius: 0;
-        padding: 10px;
-        z-index: 300;
-        height: auto;
-        max-height: 70px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        width: 100%;
     }
     
-    .logo-container img {
-        height: 50px;  /* un peu plus petit sur mobile */
-        padding: 5px;
-    }
-    
-    
-    .site-logo {
+    /* Pour réduire la taille du logo en mode mobile */
+    .logo-container img, .site-logo {
         width: 120px;
+        height: auto;
     }
-    
-    nav {
-        width: 100%;
-        border-radius: 0;
-        padding: 12px 20px;
-        background-color: #78866B;
-    }
-    
-    .navbar-wrapper {
-        display: none;
+
+    /* Menu hamburger */
+    .menu-toggle {
+        display: flex !important;
         position: fixed;
-        top: 0;
+        right: 15px;
+        top: 15px;
+        z-index: 3000;
+    }
+    
+    /* Wrapper de la navbar */
+    .navbar-wrapper {
+        padding-left: 0;
+        position: fixed;
+        top: 60px; /* Commence après le logo */
         left: 0;
         width: 100%;
-        height: 100%;
-        background-color: #78866B;
-        padding-top: 70px;
-        overflow-y: auto;
-        z-index: 150;
-    }
-    
-    .menu-toggle-checkbox:checked ~ .navbar-wrapper {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s ease;
         display: block;
     }
     
+    /* Quand le menu est activé */
+    .menu-toggle-checkbox:checked ~ .navbar-wrapper {
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+    
+    /* Style de la navigation */
     nav {
-        flex-direction: column;
-        height: auto;
-        min-height: 100px;
-    }
-    
-    #main-nav {
         width: 100%;
+        margin: 0;
+        border-radius: 0;
+        background-color: #78866B;
+        box-shadow: none;
+        padding: 10px;
     }
     
+    /* Structure du menu */
     nav ul {
         flex-direction: column;
+        padding: 10px 20px;
         width: 100%;
     }
     
     nav ul li {
         width: 100%;
-        margin-bottom: 10px;
+        margin: 5px 0;
     }
     
-    nav > ul > li > a {
-        padding: 12px 20px;
+    nav ul li a {
+        padding: 12px 15px;
         font-size: 18px;
-        text-align: left;
         color: white;
-        display: block;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    nav > ul > li > a.dropdown-toggle {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
+    /* Sous-menus */
     .dropdown-menu {
         position: static;
         width: 100%;
-        margin: 0;
-        padding: 0;
+        padding-left: 20px;
         box-shadow: none;
-        background-color: #78866B;
-        display: block !important;
+        margin: 0;
+        background-color: transparent;
+        display: block;
         opacity: 1;
         visibility: visible;
     }
     
-    .dropdown.active .dropdown-menu {
-        display: block;
-    }
-    
-    .dropdown-menu a {
-        padding: 12px 40px;
-        text-align: left;
-        color: white;
-        font-size: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-    
-    .dropdown-menu a:last-child {
-        border-bottom: none;
-    }
-    
-    .dropdown-toggle::after {
+    .dropdown-toggle::after,
+    .dropdown-menu::before,
+    .dropdown-menu::after {
         display: none;
     }
-
-    nav > ul > li > a.dropdown-toggle {
-        border-bottom: none;
-        margin-bottom: 0;
-    }
     
+    /* Masquer éléments décoratifs */
     .yellow-circle, .green-circle {
         display: none;
-    }
-
-    /* Style du menu hamburger */
-    .menu-toggle {
-        display: flex !important;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 5px;
-        position: fixed !important;
-        top: 15px !important;
-        right: 15px !important;
-        width: 30px !important;
-        height: 30px !important;
-        z-index: 9999 !important;
-        background-color: transparent !important;
-        border: none !important;
-        cursor: pointer !important;
-    }
-
-    /* Les barres du hamburger */
-    .hamburger-line {
-        display: block !important;
-        width: 25px !important;
-        height: 3px !important;
-        background-color: white !important;
-        margin: 3px 0 !important;
-        border-radius: 1px !important;
     }
 }
 

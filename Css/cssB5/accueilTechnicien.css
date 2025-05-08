@@ -27,7 +27,6 @@ body {
 
 .container {
     max-width: 600px;
-    margin: 0 auto;
     padding: 0 15px;
 }
 
@@ -45,7 +44,7 @@ margin: auto;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 70%;
+    width: 85%;
     margin: auto;
     padding: 20px;
     background-color: var(--kaki-color);
@@ -68,6 +67,7 @@ margin: auto;
     margin: 5px 0 0;
     color: var(--light-color);
     font-family: 'Caveat Brush', cursive; 
+    font-size: 20px;
 }
 
 /* Icône bonhomme en jaune */
@@ -187,12 +187,12 @@ margin: auto;
     }
     
     .technicien-welcome {
-        width: 60%;
+        width: 85%;
        margin-top: 5%;
     }
     
     .technicien-text {
-        margin-left: 15px;
+       margin: auto;
     }
 }
 
@@ -274,13 +274,13 @@ margin: auto;
     }
     
     .technicien-text h2 {
-        font-size: 20px;
+        font-size: 25px;
         margin-top: 0;
         margin-bottom: 5px;
     }
     
     .technicien-text p {
-        font-size: 12px;
+        font-size: 15px;
         margin: 0;
     }
     

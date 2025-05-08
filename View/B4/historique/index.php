@@ -1,3 +1,12 @@
+
+<?php
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isAdminConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,21 +16,14 @@
     <!-- Vos styles B4 -->
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
-    <!-- Style de la navbar selon le rôle -->
-    <?php if ($_SESSION['user_role'] == 1): ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-    <?php else: ?>
-        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-    <?php endif; ?>
+       
 </head>
 <body>
     <!-- Navbar -->
     <header>
-        <?php if ($_SESSION['user_role'] == 1): ?>
+
             <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
-        <?php else: ?>
-            <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
-        <?php endif; ?>
     </header>
 
     <h1 class="title">Historique des modifications</h1>

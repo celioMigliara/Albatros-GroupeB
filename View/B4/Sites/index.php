@@ -1,3 +1,12 @@
+
+<?php
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isAdminConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -6,27 +15,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
-        <?php if ($_SESSION['user_role'] == 1): ?>
+     
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-    <?php else: ?>
-        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-    <?php endif; ?>
+   
         <script src="<?= BASE_URL ?>/JavaScript/B4/popup.js"></script>
 </head>
 
 <body>
     <header>
-    <?php if ($_SESSION['user_role'] == 1): ?>
+   
     <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
-    <?php else: ?>
-        <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
-        <?php endif; ?>
-    </header>
     
+    </header>
 
     <h1 class="title">Gestion des sites </h1>
 
-    <div class="container">
+    <div class="container1-B4">
         <div class="header">
             <h2>Gérer les sites</h2>
             <!-- Formulaire de filtrage des sites -->

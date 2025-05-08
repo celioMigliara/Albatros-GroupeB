@@ -46,7 +46,7 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 70%;
+    width: 85%;
     margin: auto;
     padding: 20px;
     background-color: var(--kaki-color);
@@ -307,13 +307,20 @@ body {
 @media (max-width: 1024px) {
     .admin-welcome {
         
-        flex-direction: column;
-        align-items: flex-start;
-    }
+        display: flex;
+    
+            justify-content: flex-start;
+            align-items: center;
+            width: 85%;
+            margin: auto;
+            padding: 20px;
+            background-color: var(--kaki-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
     
     .admin-text {
-        margin-left: 0;
-        margin-top: 15px;
+        align-items: center;
     }
     
     .dashboard {
@@ -332,14 +339,22 @@ body {
     }
     
     .admin-welcome {
-        padding: 15px;
-        margin: 15px auto 20px;
-        width: 90%;
-        flex-direction: row;
+        display: flex
+        ;
+          
+            align-items: center;
+            width: 70%;
+            margin: auto;
+            padding: 20px;
+            background-color: var(--kaki-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-top: 5%;
+        
     }
-    
+   
     .admin-text {
-        margin-left: 15px;
+       align-items: center;
     }
     
     .admin-text h2 {

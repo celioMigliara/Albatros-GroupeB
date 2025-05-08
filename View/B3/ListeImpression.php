@@ -14,9 +14,12 @@
 <body data-page="ListeImpression">
 <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
+<h1>Liste d'impression</h1>
+      <div class="separateur-double-ligne-B2"></div>
+
   <div class="block_taches">
     <div class="overlay"></div>
-    <h1>Liste d'impression</h1>
+    
     <div> <button id="openTechPopup" class="back-btn">Ajouter des techniciens</button>
       <a href="<?= BASE_URL ?>/feuillederoute/liste/taches" class="back-btn">Visualiser les tâches de techniciens</a>
     </div>

@@ -58,11 +58,10 @@ body {
   height: 100%;
   max-height: 95%;
   /* Hauteur maximale du bloc */
-  border: 1px solid black;
   /* Bordure noire */
   border-radius: 10px;
   /* Coins arrondis */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
   /* Ombre légère */
   background-color: rgba(255, 255, 255, 0.8);
   /* Fond semi-transparent */

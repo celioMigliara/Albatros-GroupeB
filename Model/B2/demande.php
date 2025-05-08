@@ -1,5 +1,5 @@
 <?php
-
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Date;
 use PhpParser\Node\Stmt;
 
 require_once __DIR__ . '/../ModeleDBB2.php';
@@ -8,11 +8,15 @@ class RecurrenceModel {
     private PDO $db;
 
     public function __construct(PDO $connexion) {
-        $this->db = $pdo ?? Database::getInstance()->getConnection();
+        $this->db = $connexion;
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function ajouterRecurrence($sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel) {
+
+        $today = new DateTime(); // Date actuelle
+        $dateAnnivObj = new DateTime($dateAnniv); // Conversion de la date en objet DateTime
+
         // 🔹 Insérer la récurrence
         $idUnite = $this->obtenirIdUnite($uniteFrequence);
         $idUnite1 = $this->obtenirIdUnite($uniteRappel);
@@ -52,6 +56,10 @@ class RecurrenceModel {
             $idUnite1 = 1;
         }
 
+        if($dateAnnivObj < $today){
+            return ['success' => false, 'message' => "La date n'est pas valide"];
+        }
+
         // Si rappel est renseigné, on poursuit les autres vérifications
         if (!empty($rappel)) {
 
@@ -61,9 +69,6 @@ class RecurrenceModel {
 
             // Cas où les unités sont les mêmes
             if ($idUnite1 == $idUnite && $rappel > $frequence) {
-                return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
-            }
-            if($idUnite1 > $idUnite){
                 return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
             }
         }
@@ -105,14 +110,17 @@ class RecurrenceModel {
             $stmt = $this->db->prepare($query);
             $stmt->execute(['id' => $idRecurrence]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        }catch (Exception $e) {
+        }catch (Exception) {
             return ["success" => false, "message" => "Erreur lors de la récupération"];
-            return null;
         }
     }
     
     public function update($idRecurrence, $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel) {
         try {
+
+            $today = new DateTime(); // Date actuelle
+            $dateAnnivObj = new DateTime($dateAnniv); // Conversion de la date en objet DateTime
+
            
             $idUnite = $this->obtenirIdUnite($uniteFrequence);
             $idUnite1 = $this->obtenirIdUnite($uniteRappel);
@@ -144,10 +152,6 @@ class RecurrenceModel {
                 if ($idUnite1 == $idUnite && $rappel > $frequence) {
                     return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
                 }
-
-                if($idUnite1 > $idUnite){
-                    return ['success' => false, 'message' => "L'unité de rappel ne peut être supérieur à l'unité de fréquence"];
-                }
             }
 
             if($rappel =="" && $idUnite1==""){
@@ -157,6 +161,10 @@ class RecurrenceModel {
 
             if (empty($idUnite1) && $rappel) {
                 return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel"];
+            }
+
+            if($dateAnnivObj < $today){
+                return ['success' => false, 'message' => "La date n'est pas valide"];
             }
 
 

@@ -17,6 +17,8 @@ class RecurrenceTest  extends TestCase{
         $this->modele = new RecurrenceModel($this->pdo);
 
         // 🔸 Nettoyer les tables utilisées pour le test
+        $this->pdo->exec("DELETE FROM est");
+        $this->pdo->exec("DELETE FROM demande");
         $this->pdo->exec("DELETE FROM recurrence");
         
     }
@@ -89,26 +91,29 @@ class RecurrenceTest  extends TestCase{
     }
 
     public function testAjouterRecurrence(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
-        $result = $this->modele->ajouterRecurrence(
-            "Test Sujet", "Description de test", date("Y/m/d",$timestamp),8,null,2,"mois",null
-        );
 
+        // 🔹 Date actuelle + 1 jour
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
+        $result = $this->modele->ajouterRecurrence(
+            "Test Sujet", "Description de test", $dateStr, 8, null, 2, "mois", null
+        );
+    
         $this->assertTrue($result['success']);
         $this->assertEquals("Récurrence ajoutée avec succès !", $result['message']);
-
-        // Vérifie que les données sont bien insérées
-        $stmt = $this->pdo->query("SELECT * FROM recurrence WHERE sujet_reccurrence = 'Test Sujet'");
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $this->assertNotEmpty($data);
-        $this->assertEquals("Description de test", $data['desc_recurrence']);
+        
     }
 
     public function testAjouterRecurrenceEtRecuperer(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+         // 🔹 Date actuelle + 1 jour
+         $date = new DateTime();
+         $date->modify('+1 day');
+         $dateStr = $date->format('Y-m-d');
+
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet 2", "Description de test puis repris", date("Y/m/d",$timestamp),8,null,2,"mois",null
+            "Test Sujet 2", "Description de test puis repris", $dateStr,8,null,2,"mois",null
         );
 
         $this->assertTrue($result['success']);
@@ -124,100 +129,189 @@ class RecurrenceTest  extends TestCase{
     }
 
     public function testAjouterRecurrenceFreqNull(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet Freq Invalide", "Description de test", date("Y/m/d",$timestamp),null,null,2,"mois",null
+            "Test Sujet Freq Invalide", "Description de test", $dateStr, null, null, 2, "mois", null
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Entrez un nombre pour la fréquence", $result['message']);
-        
     }
-
+    
     public function testAjouterRecurrenceFreqNegative(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet Freq Invalide", "Description de test", date("Y/m/d",$timestamp),-5,null,2,"mois",null
+            "Test Sujet Freq Invalide", "Description de test", $dateStr, -5, null, 2, "mois", null
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("La fréquence doit être un nombre positif", $result['message']);
     }
-
-    public function testAjouterRecurrenceFreqSupérieurA100Mois(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+    
+    public function testAjouterRecurrenceFreqSuperieurA100Mois(): void {
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet Freq Invalide", "Description de test", date("Y/m/d",$timestamp),150,null,2,"mois",null
+            "Test Sujet Freq Invalide", "Description de test", $dateStr, 150, null, 2, "mois", null
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Entrez une fréquence valide pour les mois, pas plus de 100 mois", $result['message']);
-    }  
-
-    public function testAjouterRecurrenceFreqSupérieurA5Ans(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+    }
+    
+    public function testAjouterRecurrenceFreqSuperieurA5Ans(): void {
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet Freq Invalide", "Description de test", date("Y/m/d",$timestamp),6,null,2,"année",null
+            "Test Sujet Freq Invalide", "Description de test", $dateStr, 6, null, 2, "année", null
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Entrez une fréquence valide pour les années, pas plus de 5 ans", $result['message']);
-    }  
-
+    }
+    
     public function testAjouterRecurrenceSansUnitefrequence(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "TestSujet", "Description de test", date("Y/m/d",$timestamp),8,null,2,null,"jour"
+            "TestSujet", "Description de test", $dateStr, 8, null, 2, null, "jour"
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Unité de temps invalide.", $result['message']);
     }
-
+    
     public function testAjouterRecurrenceSansTitre(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "", "Description de test", date("Y/m/d",$timestamp),8,null,2,"mois",null
+            "", "Description de test", $dateStr, 8, null, 2, "mois", null
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Entrez un titre pour la maintenance", $result['message']);
     }
-
+    
     public function testAjouterRecurrenceSansfrequenceRappel(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "TestSujet", "Description de test", date("Y/m/d",$timestamp),8,null,2,"mois","jour"
+            "TestSujet", "Description de test", $dateStr, 8, null, 2, "mois", "jour"
         );
-
+    
         $this->assertTrue($result['success']);
     }
-
+    
     public function testAjouterRecurrenceFrequenceEndessousfrequenceRappel(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "TestSujet", "Description de test", date("Y/m/d",$timestamp),2,5,7,"jour","jour"
+            "TestSujet", "Description de test", $dateStr, 2, 5, 7, "jour", "jour"
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Le délai de rappel ne peut être supérieur à la fréquence de la maintenance.", $result['message']);
     }
-
+    
     public function testAjouterRecurrenceSansUniteRappelMaisAvecFrequence(): void {
-        $timestamp = mktime(0,0,0,04,10,2025);
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+    
         $result = $this->modele->ajouterRecurrence(
-            "TestSujet", "Description de test", date("Y/m/d",$timestamp),2,8,2,"mois",null
+            "TestSujet", "Description de test", $dateStr, 2, 8, 2, "mois", null
         );
-
+    
         $this->assertFalse($result['success']);
         $this->assertEquals("Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel", $result['message']);
     }
+    
+    public function testAjouterRecurrenceDateInvalide(): void {
+        $date = new DateTime();
+        $date->modify('-1 month');
+        $dateStr = $date->format('Y-m-d');
+    
+        $result = $this->modele->ajouterRecurrence(
+            "TestSujet", "Description de test", $dateStr, 2, null, 2, "mois", null
+        );
+    
+        $this->assertFalse($result['success']);
+        $this->assertEquals("La date n'est pas valide", $result['message']);
+    }
 
-
+    public function testAjouterRecurrenceRappelNegatif(): void {
+        $date = new DateTime();
+        $date->modify('+1 month');
+        $dateStr = $date->format('Y-m-d');
+    
+        $result = $this->modele->ajouterRecurrence(
+            "TestSujet", "Description de test", $dateStr, 5, -2, 2, "mois", "jour"
+        );
+    
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Le délai de rappel doit être un nombre positif.", $result['message']);
+    }
 
     public function testModifierRecurrence(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = null;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = null;
+
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet_modif", "Description de test", "2025-04-04",8,null,2,"mois",null
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+5 day'))->format('Y-m-d');
+        $frequence = 9; // Valeur invalide
+        $rappel = null;
+        $idLieu = 1;
+        $uniteFrequence = 'mois';
+        $uniteRappel = null;
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertTrue($result['success']);
+
+        $this->assertEquals("Récurrence mise à jour avec succès !", $result['message']);
+    }
+
+    public function testModifierRecurrenceEtRecuperer(): void {
+
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+
+        $result = $this->modele->ajouterRecurrence(
+            "Test Sujet_modif", "Description de test", $dateStr,8,null,2,"mois",null
         );
 
         $this->assertTrue($result['success']);
@@ -225,13 +319,307 @@ class RecurrenceTest  extends TestCase{
         $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
         $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
 
-        $result = $this->modele->update($idRecurrence,"Test_sujet_modifie","Description de test modifié","2025-05-27",5,2,4,"année","mois");
+        $result = $this->modele->update($idRecurrence,"Test_sujet_modifie","Description de test modifié",$dateStr,5,2,4,"année","mois");
         $this->assertTrue($result['success']);
+
+        $this->assertEquals("Récurrence mise à jour avec succès !", $result['message']);
+
+        // Vérifie que les données sont bien insérées
+        $stmt = $this->pdo->query("SELECT id_recurrence , desc_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test_sujet_modifie'");
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->modele->getById($data['id_recurrence']);
+
+        $this->assertNotEmpty($data);
+        $this->assertEquals("Description de test modifié", $data['desc_recurrence']);
+    }
+
+    public function testModifierRecurrenceDate(): void {
+
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+
+        $result = $this->modele->ajouterRecurrence(
+            "Test Sujet_modif", "Description de test", $dateStr,8,null,2,"mois",null
+        );
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        
+        $date2 = new DateTime();
+        $date2->modify('+5 day');
+        $dateStr2 = $date2->format('Y-m-d');
+
+        $result = $this->modele->update($idRecurrence,"Test_sujet_modifie_Date","Description de test modifié",$dateStr2,5,2,4,"année","mois");
+        $this->assertTrue($result['success']);
+
+          // Vérifie la date
+          $stmt = $this->pdo->query("SELECT id_recurrence , date_anniv_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test_sujet_modifie_Date'");
+          $data = $stmt->fetch(PDO::FETCH_ASSOC);
+          $result = $this->modele->getById($data['id_recurrence']);
+  
+          $this->assertNotEmpty($data);
+          $this->assertEquals($dateStr2, $data['date_anniv_recurrence']);
+    }
+
+    public function testModifierRecurrenceFrequenceNegative(): void {
+
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+
+        $result = $this->modele->ajouterRecurrence(
+            "Test Sujet_modif", "Description de test", $dateStr,8,null,2,"mois",null
+        );
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $result = $this->modele->update($idRecurrence,"Test_sujet_modifie","Description de test modifié",$dateStr,-5,null,4,"jour",null);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("La fréquence doit être un nombre positif", $result['message']);
+    }
+
+    public function testModifierRecurrencePlus100Mois(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 101; // Valeur invalide
+        $rappel = 3;
+        $idLieu = 1;
+        $uniteFrequence = 'mois';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Entrez une frequence valide pour les mois , pas plus de 100 mois", $result['message']);
+    }
+
+    public function testModifierRecurrencePlus5ans(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 8; // Valeur invalide
+        $rappel = 3;
+        $idLieu = 1;
+        $uniteFrequence = 'année';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Entrez une frequence valide pour les années , pas plus de 5 ans", $result['message']);
+    }
+
+    public function testModifierRecurrenceUniteFreqInexistent(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 8; // Valeur invalide
+        $rappel = 3;
+        $idLieu = 1;
+        $uniteFrequence = null;
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Unité de temps invalide.", $result['message']);
+    }
+
+    public function testModifierRecurrenceUniteDeInexistent(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 8; // Valeur invalide
+        $rappel = 3;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = null;
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel", $result['message']);
+    }
+    public function testModifierRecurrenceDateInvalide(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('-5 day'))->format('Y-m-d');
+        $frequence = 8; // Valeur invalide
+        $rappel = 3;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("La date n'est pas valide", $result['message']);
+    }
+    public function testModifierRecurrenceRappelPlusGrandFrequen(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 8; // Valeur invalide
+        $rappel = 9;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Le délai de rappel ne peut être supérieur à la fréquence de la maintenance.", $result['message']);
+    }
+    public function testModifierRecurrenceDelaiRappelNegatif(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; // Valeur invalide
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 8; // Valeur invalide
+        $rappel = -5;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = null;
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Le délai de rappel doit être un nombre positif ou alors 0 si vous ne voulez pas de rappel.", $result['message']);
     }
 
     public function testSupprimerRecurrence(): void {
+        $date = new DateTime();
+        $date->modify('+1 day');
+        $dateStr = $date->format('Y-m-d');
+
         $result = $this->modele->ajouterRecurrence(
-            "Test Sujet supp", "Description de test", "2025-04-04",8,null,2,"mois",null
+            "Test Sujet supp", "Description de test", $dateStr,8,null,2,"mois",null
         );
 
         $this->assertTrue($result['success']);
@@ -243,7 +631,19 @@ class RecurrenceTest  extends TestCase{
 
         $this->assertTrue($result['success']);
     }
+    
+    public function testSupprimerRecurrenceInexistente(): void {
 
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet supp'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID d'une maintenance qui n'existe pas
+
+        $result = $this->modele->delete($idRecurrence);
+
+        $this->assertfalse($result['success']);
+        $this->assertEquals("ID de la récurrence est vide.", $result['message']);
+    }
+
+    
     public function testDatabaseUsed(): void {
         $stmt = $this->pdo->query("SELECT DATABASE()");
         $dbName = $stmt->fetchColumn();
@@ -261,8 +661,6 @@ class RecurrenceTest  extends TestCase{
     
         new PDO("mysql:host=localhost;dbname=bd_invalide", "root", ""); // mauvaise base
     }
-
-
 
 }
 ?>

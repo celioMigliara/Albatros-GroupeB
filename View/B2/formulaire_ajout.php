@@ -24,9 +24,9 @@ if (!UserConnectionUtils::isAdminConnected()) {
 </head>
 
 <body>
-<?php if ($_SESSION['user']['id'] == 1): ?>
+
     <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
-<?php endif; ?>
+
     <h1 class="titre">Formulaire d'ajout de maintenance</h1>
     <div class="separateur-double-ligne-B2"></div>
     <div class="frm-add-recurr">

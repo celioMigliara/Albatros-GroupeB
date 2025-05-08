@@ -1,0 +1,43 @@
+body {
+    background: #f7f7f7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 60px 20px;
+    color: #333;
+}
+
+.confirmation-container {
+    background-color: #fff;
+    padding: 40px;
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.confirmation-container img {
+    max-width: 180px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.btnConnexion {
+    display: inline-block;
+    margin-top: 30px;
+    background-color: #FFC107;
+    color: #fff;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btnConnexion:hover {
+    background-color: #FFB300;
+}

@@ -43,10 +43,10 @@ if (!isset($nbComptesEnAttente)) {
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle">Demandes</a>
                 <div class="dropdown-menu demandes-menu">
-                <a href="<?= BASE_URL ?>/ListeDemandes"">Gérer les demandes</a>
-        
-                   <a href="<?= BASE_URL ?>/demande">Nouvelle Demande</a>
+                    <a href="<?= BASE_URL ?>/ListeDemandes"">Gérer les demandes</a>
+                   <a href=" <?= BASE_URL ?>/demande">Nouvelle Demande</a>
                     <a href="<?= BASE_URL ?>/recurrence">Gérer récurrence</a>
+                    <a href="<?= BASE_URL ?>/LisetDemandeExporter">Liste demandes</a>
                 </div>
             </li>
             <li class="dropdown">
@@ -69,11 +69,11 @@ if (!isset($nbComptesEnAttente)) {
             <li><a href="#">Historique</a></li>
             <li><a href="<?= BASE_URL ?>/feuillederoute">Feuille de route</a></li>
             <li class="dropdown">
-            <a href="#" class="dropdown-toggle">Profil</a>
-            <div class="dropdown-menu demandes-menu">
-                <a href="<?= BASE_URL ?>/profil">Modifier mon profil</a>
-                <a href="<?= BASE_URL ?>/deconnexion">Déconnexion</a>
-            </div>
+                <a href="#" class="dropdown-toggle">Profil</a>
+                <div class="dropdown-menu demandes-menu">
+                    <a href="<?= BASE_URL ?>/profil">Modifier mon profil</a>
+                    <a href="<?= BASE_URL ?>/deconnexion">Déconnexion</a>
+                </div>
             </li>
         </ul>
     </nav>

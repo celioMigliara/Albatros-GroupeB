@@ -91,9 +91,7 @@ switch ($segments[0]) {
         require 'View/B5/menuAdmin.php';
         break;
 
-    case 'confirmationToken':
-        require 'View/B5/confirmationInscription.php';
-        break;
+   
 
     case 'inscriptions':
     case 'ListeInscriptions':
@@ -105,7 +103,22 @@ switch ($segments[0]) {
         (new DemandesController())->index();
         break;
 
-    
+        case 'confirmationInscription':
+            if (isset($_GET['token'])) {
+                require 'Controller/B5/confirmationInscription.php';
+            } else {
+                error('Token manquant pour confirmation.');
+            }
+            break;
+            case 'validationInscription':
+                if (isset($segments[1])) {
+                    $_GET['id'] = (int)$segments[1];
+                    require 'Controller/B5/validerInscription.php';
+                } else {
+                    error('ID d\'inscription manquant.');
+                }
+                break;
+            
 
     case 'recurrence':
         require_once 'Controller/B2/controllerMaintenance.php';
@@ -140,14 +153,7 @@ switch ($segments[0]) {
         }
         break;
 
-    case 'validationInscription':
-        if (isset($segments[1])) {
-            $_GET['id'] = (int)$segments[1];
-            require 'Controller/B5/validerInscription.php';
-        } else {
-            error('ID d\'inscription manquant.');
-        }
-        break;
+   
 
     case 'listedemande':
     if (isset($segments[1])) {
@@ -228,6 +234,16 @@ switch ($segments[0]) {
                                 case 'demande':
                                     require 'View/B2/demande_intervention.php';
                                     break;
+
+                                    case 'LisetDemandeExporter':
+                                        require_once __DIR__ . '/Controller/B2/filtreControllerB2.php';
+                                       require 'View/B2/ListeDesDemandesB2.php';
+                                        break;
+                                        //Js
+                                        case 'exportDemandes':
+                                            require_once __DIR__ . '/Controller/B2/exportControllerB2.php';
+                                            break;
+                                
                         
     case 'action': // Cas spécial pour les anciennes actions ?action=...
         if (isset($_GET['action'])) {

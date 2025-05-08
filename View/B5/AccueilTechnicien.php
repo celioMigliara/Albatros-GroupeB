@@ -75,7 +75,11 @@ $demandes = DemandeB1::getDemandesByUser($userId, 0, 5);
                         <p><strong>Crée le :</strong> <?= date('d/m/Y', strtotime($demande['date_creation_dmd'])) ?></p>
                     </div>
                 <?php endforeach; ?>
+                
             </div>
+            <form method="POST" action="<?= BASE_URL ?>/demande">
+        <button type="submit" class="btnDemande">Creer demande</button>
+    </form>
         <?php else: ?>
             <p class="aucune-tache">Aucune demande en cours pour le moment.</p>
         <?php endif; ?>

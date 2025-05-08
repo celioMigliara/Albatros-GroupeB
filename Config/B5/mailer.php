@@ -35,14 +35,11 @@ function envoyerMailConfirmation($destinataire, $prenom, $token) {
         $mail->isHTML(true);
         $mail->Subject = 'Confirmation de votre inscription - Institut Albatros';
 
-        $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-        $baseUrl .= "://" . $_SERVER['HTTP_HOST'];
+        $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        $lien = "$scheme://$host$basePath/confirmationInscription?token=$token";
         
-        //(/Albatros-GroupeB) ne prend que ça 
-        $basePath = explode('/Controller', $_SERVER['SCRIPT_NAME'])[0];        
-        // Construit l’URL finale du lien
-        $lien = $baseUrl . $basePath . "/confirmationToken?token=$token";
-    
         $mail->Body = "
             <h3>Bonjour $prenom 👋</h3>
             <p>Votre inscription a ete validee par un administrateur.</p>

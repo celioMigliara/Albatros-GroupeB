@@ -2,7 +2,7 @@
 // Inclusion du modèle et du système d'envoi de mail
 require_once __DIR__ . '/../../Model/B5/User.php';
 require_once __DIR__ . '/../../Config/B5/mailer.php';
-define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+
 
 // 1. Vérifie que l'ID est bien présent dans l'URL
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -22,7 +22,7 @@ $token = bin2hex(random_bytes(32));
 $dateExpiration = date('Y-m-d H:i:s', strtotime('+1 day'));
 
 // 4. Sauvegarde le token dans la BDD
-User::setToken($id, $token, $dateExpiration);
+ User::setToken($id, $token, $dateExpiration);
 
 // 5. Envoie du mail via PHPMailer (fonction personnalisée)
 $success = envoyerMailConfirmation(
@@ -35,7 +35,6 @@ $success = envoyerMailConfirmation(
 if (!$success) {
     die("Erreur : L'envoi du mail de confirmation a échoué.");
 }
-User::confirmerInscription($id);
 // 7. Redirection avec succès
 header('Location: ' . BASE_URL . '/ListeInscriptions?status=validation');
 exit;

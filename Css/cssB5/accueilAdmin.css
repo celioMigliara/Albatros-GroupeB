@@ -306,7 +306,7 @@ body {
 /* Ajout des media queries */
 @media (max-width: 1024px) {
     .admin-welcome {
-        margin: 20px 15px;
+        
         flex-direction: column;
         align-items: flex-start;
     }

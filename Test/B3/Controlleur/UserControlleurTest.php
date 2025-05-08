@@ -1,0 +1,1825 @@
+<?php
+
+define('PHPUNIT_RUNNING', true);
+
+if (!defined("BASE_URL"))
+{
+    // Définir BASE_URL si pas encore set
+    define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+}
+    
+    require_once __DIR__ . '/../../../Model/B3/db_connect.php';
+    require_once __DIR__ . '/../../../Model/B3/Role.php';
+
+    require_once __DIR__ . '/../../../Controller/B3/UserControlleur.php';
+    require_once __DIR__ . '/../../../Controller/B3/TaskController.php';
+
+    require_once __DIR__ . '/../../../Test/B3/BaseTestClass.php';
+
+    // Test unitaire pour la classe UserControlleur
+    class UserControlleurTest extends BaseTestClass
+    {
+        /* ================================================ */
+        /* ========== TESTS FORMULAIRE INCOMPLET ========== */
+        /* ================================================ */
+        public function testFormulaireIncomplet()
+        {
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => '',  // Champ requis manquant
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::ADMINISTRATEUR,
+            ];
+
+            // Activer la temporisation de sortie pour éviter les erreurs headers
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Décoder le JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Vérifier que la méthode retourne false pour un formulaire incomplet
+            // Vérifications
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Le formulaire d\'inscription n\'est pas complet.', $responseData['message']);
+        }
+        
+        
+        /* ============================================== */
+        /* =========== TESTS RÔLE INVALIDE =============== */
+        /* ============================================== */
+        public function testRoleInvalide()
+        {
+            $userControlleur = new UserControlleur();
+            $this->insererRoles(); 
+            
+            // Simuler une requête POST
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => 999 // Utiliser un entier comme les rôles
+            ];
+
+            // Capturer la sortie JSON
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Décoder le JSON
+            $responseData = json_decode($jsonOutput, true);
+
+
+            // Vérifications
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Rôle invalide', $responseData['message']);
+        }
+        public function testRoleInvalideAvecEmailDejaUtilise()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles(); 
+            // Crée un utilisateur avec un email valide
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->insertUser();
+
+            $userControlleur = new UserControlleur();
+
+            // Simuler une requête POST avec un rôle invalide
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com', // Email déjà utilisé
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => 999,  // Rôle invalide
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // The method should return false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Rôle invalide', $responseData['message']);
+        }
+
+        /* ============================================== */
+        /* ============ TESTS RÔLE INVALIDE AVEC BATIMENTS ========== */
+        /* ============================================== */
+        public function testRoleAvecBatimentsIncoherents()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST pour un utilisateur qui a un rôle invalide avec des bâtiments sélectionnés
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::UTILISATEUR,
+                'batiments_utilisateur' => ['batiment1', 'batiment2'],  // Un utilisateur ne doit pas avoir de bâtiments
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Décoder la réponse JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Vérifications
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Bâtiment non existant ou invalide.', $responseData['message']);
+        }
+
+
+        /* ============================================== */
+        /* =================== TESTS EMAIL ============== */
+        /* ============================================== */
+        public function testEmailDejaUtilise()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles(); 
+
+            $user = new UserCredentials('Dupontf', 'Jeanf', 'jean@example.com', 'Pasds1234', Role::TECHNICIEN);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            $userControlleur = new UserControlleur();
+
+            // Simuler une requête POST
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            // Simulate a POST request with the same email
+
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // The method should return false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('L\'adresse email est déjà utilisée. Veuillez changer d\'adresse email pour votre inscription', $responseData['message']);
+        }
+
+        public function testEmailVide()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Test',  // Champ requis manquant
+                'mail_utilisateur' => '',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // The method should return false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Le formulaire d\'inscription n\'est pas complet.', $responseData['message']);
+        }
+
+        public function testEmailAvecEspaces()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Test',  // Champ requis manquant
+                'mail_utilisateur' => '  reaiuzr@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // The method should return false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('L\'adresse e-mail n\'est pas valide.', $responseData['message']);
+        }
+
+        public function testEmailFormatIncorrect()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST avec un email invalide
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@com', // Email avec un format incorrect
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("L'adresse e-mail n'est pas valide.", $responseData['message']);
+        }
+
+        public function testEmailAvecCaracteresSpeciaux()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST avec un email contenant des caractères spéciaux
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean_-è.doe@exa%ple.com', // Email avec caractère spécial '%'
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // The method should return false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("L'adresse e-mail n'est pas valide.", $responseData['message']);
+        }
+
+        /* ============================================== */
+        /* ============ TESTS MOT DE PASSE ============== */
+        /* ============================================== */
+        public function testMotDePasseTropCourt()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST avec un mot de passe trop court
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass',  // Mot de passe trop court
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Le mot de passe n'est pas valide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.", $responseData['message']);
+        }
+
+        public function testMotDePasseSansMajuscule()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST avec un mot de passe sans majuscule
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'pass1234',  // Mot de passe sans majuscule
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Le mot de passe n'est pas valide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.", $responseData['message']);
+        }
+
+
+        /* ========================================================== */
+        /* ============ TESTS INSCRIPTION TECHNICIEN VALIDE ========= */
+        /* ========================================================== */
+        public function testInscriptionTechnicienValide()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST pour un technicien valide
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jeanvalide@example.com',
+                'mdp_utilisateur' => 'Pass1234.',
+                'role_utilisateur' => Role::TECHNICIEN,
+                'valider_inscription' => 'true', // Simuler la validation de l'inscription
+                'actif' => 'true', // Simuler que l'utilisateur est actif
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertTrue($result); // La méthode doit retourner true
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertStringContainsString('Votre demande d\'inscription a bien été envoyée', $responseData['message']);
+        }
+
+        /* =================================================================== */
+        /* ============ TESTS TECHNICIEN SANS BATIMENTS DISPONIBLES ========== */
+        /* =================================================================== */
+        public function testTechnicienSansBatimentsDisponibles()
+        {
+            $this->viderToutesLesTables();            // Vider la table des bâtiments
+
+            $this->insererRoles();            
+            $pdo = Database::getInstance()->getConnection();
+
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST pour un technicien sans bâtiments disponibles
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+                'batiments_utilisateur' => [], // Aucun bâtiment disponible
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Réinitialiser l'auto-incrémentation de l'ID et réinsérer des bâtiments pour les tests
+            $pdo->exec(statement: "INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) VALUES (1, 'SITE1', '1')");
+                                                                                            
+            $pdo->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) VALUES (1, 'REDOUTE', '1', '1'), (2, 'SOURCE', '1', '1'), (3, 'ESPIEGLERIE', '1', '1'), (4, 'TEST', '0', '1')");    // Assertions
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Aucun bâtiment disponible', $responseData['message']);
+        }
+
+        /* ======================================================= */
+        /* ============ TESTS TECHNICIEN AVEC BATIMENTS ========== */
+        /* ======================================================= */
+        public function testTechnicienAvecBatiments()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST pour un technicien qui choisit des bâtiments
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+                'batiments_utilisateur' => ['1', '2'], // Bâtiments choisis alors que ce n'est pas permis pour un technicien
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Les techniciens ne doivent pas sélectionner de bâtiments', $responseData['message']);
+        }
+
+
+        /* ============================================== */
+        /* ============ TESTS UTILISATEUR SANS BATIMENTS ========== */
+        /* ============================================== */
+        public function testUtilisateurSansBatiments()
+        {
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST pour un utilisateur sans bâtiments sélectionnés
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::UTILISATEUR,
+                'batiments_utilisateur' => [], // Aucun bâtiment sélectionné
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Decode the JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Veuillez sélectionner au moins un bâtiment', $responseData['message']);
+        }
+
+
+        /* =============================================================================== */
+        /* ============ TESTS INSCRIPTION UTILISATEUR AVEC BATIMENT DONC VALIDE ========== */
+        /* =============================================================================== */
+        public function testInscriptionValide()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $userControlleur = new UserControlleur();
+
+            $db = Database::getInstance()->getConnection();
+
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+            VALUES 
+            (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+                       VALUES 
+                       (1, 'LAREDOUTE', '1', '1'), 
+                       (2, 'ESPIEGLERIE', '1', '1'), 
+                       (3, 'LASOURCES', '1', '1')");
+
+            // Simuler une soumission POST pour un technicien valide
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jeanvalide@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::UTILISATEUR,
+                'batiments_utilisateur' => ['1', '2'], // Sélection de bâtiments valide
+            ];
+
+            // Capture the JSON output
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+
+            // Décoder la réponse JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Vérifications
+            $this->assertTrue($result); // La méthode doit retourner true
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertStringContainsString('Votre demande d\'inscription a bien été envoyée', $responseData['message']);
+        }
+
+
+        /* =========================================================================================== */
+        /* ========================== PARTIE DES TESTS POUR LA CONNEXION ============================= */
+        /* =========================================================================================== */
+
+        /* ========================================================== */
+        /* ========== TESTS CONNEXION FORMULAIRE INCOMPLET ========== */
+        /* ========================================================== */
+        public function testConnexionFormulaireIncomplet()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST avec des champs vides
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => '', // Email manquant
+                'mdp_utilisateur' => '',  // Mot de passe manquant
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Formulaire incomplet", $responseData['message']);
+        }
+
+        /* =============================================================== */
+        /* =========== TESTS CONNEXION AVEC EMAIL INVALIDE =============== */
+        /* =============================================================== */
+        public function testConnexionEmailInvalide()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+
+            // Simuler une requête POST avec un email incorrect
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'email@invalide.com',
+                'mdp_utilisateur' => 'Pass1234',
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Veuillez vérifier vos informations de connexion", $responseData['message']);
+        }
+
+        /* ====================================================================== */
+        /* =========== TESTS CONNEXION AVEC MOT DE PASSE INVALIDE =============== */
+        /* ====================================================================== */
+        public function testConnexionMotDePasseInvalide()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+            // Simuler une requête POST avec un mot de passe incorrect
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'MotDePasseIncorrect',
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Veuillez vérifier vos informations de connexion", $responseData['message']);
+        }
+
+        /* ============================================================================== */
+        /* =========== TESTS CONNEXION AVEC EMAIL ET MOT DE PASSE VALIDES =============== */
+        /* ============================================================================== */
+        public function testConnexionValide()
+        {
+            // Crée un utilisateur avec un email et un mot de passe valides
+            $this->viderToutesLesTables();
+
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Supposons que 'jean@example.com' et 'Pass1234' sont valides dans la base de données
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertTrue($result);
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertStringContainsString('Vous êtes connectés', $responseData['message']);
+        }
+
+        /* ======================================================================= */
+        /* =========== TESTS CONNEXION AVEC UTILISATEUR NON TROUVÉ =============== */
+        /* ======================================================================= */
+        public function testConnexionUtilisateurNonTrouve()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+            // Simuler une requête POST avec des informations incorrectes
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'nonexistent@example.com',
+                'mdp_utilisateur' => 'MotDePasseIncorrect',
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Veuillez vérifier vos informations de connexion", $responseData['message']);
+        }
+
+        /* =============================================================== */
+        /* =========== TESTS CONNEXION AVEC SESSION ACTIVE =============== */
+        /* =============================================================== */
+        public function testConnexionSessionActive()
+        {
+            // Simuler une connexion avec une session déjà active
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            session_start();
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+            ];
+
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => 2
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Vous êtes déjà connecté", $responseData['message']);
+        }
+
+        /* ============================================================================= */
+        /* =========== TESTS CONNEXION AVEC DONNÉES UTILISATEUR ERRONÉES =============== */
+        /* ============================================================================== */
+        public function testConnexionUtilisateurErrone()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $user = new UserCredentials('Dupont', 'Jean', 'jean@example.com', 'Pass1234', Role::UTILISATEUR);
+            $user->setInscriptionValide(true);
+            $user->setActif(true);
+            $user->insertUser();
+            $userControlleur = new UserControlleur();
+            // Simuler une soumission POST avec des informations erronées
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'wrong@example.com',
+                'mdp_utilisateur' => 'wrongpassword',
+            ];
+
+            ob_start();
+            $result = $userControlleur->connexion();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Veuillez vérifier vos informations de connexion", $responseData['message']);
+        }
+
+        /* ========================================================================================= */
+        /* ========================== PARTIE DES TESTS POUR RESET MDP ============================== */
+        /* ========================================================================================= */
+
+        /* ========================================================== */
+        /* =============== TESTS FORMULAIRE INCOMPLET =============== */
+        /* ========================================================== */
+        public function testResetPasswordFormulaireIncomplet()
+        {
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST sans email
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => '', // Email manquant
+            ];
+
+            ob_start();
+            $result = $userControlleur->ResetPassword();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Adresse email invalide", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS FORMAT EMAIL INVALIDE =================== */
+        /* ========================================================== */
+        public function testResetPasswordEmailFormatInvalide()
+        {
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST avec un format d'email incorrect
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'invalid-email', // Email au format incorrect
+            ];
+
+            ob_start();
+            $result = $userControlleur->ResetPassword();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Le format de l'adresse email est invalide.", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS EMAIL NON TROUVE ======================== */
+        /* ========================================================== */
+        public function testResetPasswordEmailNonTrouve()
+        {
+            $userControlleur = new UserControlleur();
+
+            // Simuler une soumission POST avec un email non existant
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'nonexistent@example.com', // Email qui n'existe pas
+            ];
+
+            ob_start();
+            $result = $userControlleur->ResetPassword();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Aucun compte valide associé à cet email.", $responseData['message']);
+        }
+
+        /* ===================================================================================== */
+        /* ======================== PARTIE DES TESTS POUR MODIFIER PROFIL ====================== */
+        /* ===================================================================================== */
+
+        /* ========================================================== */
+        /* =========== TESTS UTILISATEUR NON CONNECTE =============== */
+        /* ========================================================== */
+        public function testModifierProfilUtilisateurNonConnecte()
+        {
+            // Réinitialiser la session
+            if (session_status() !== PHP_SESSION_NONE) {
+                session_unset();
+                session_destroy();
+            }
+            $_SESSION = [];
+
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $userControlleur = new UserControlleur();
+
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Essayer de modifier le profil sans être connecté
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire complet mais user non connecté
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'nonconnecter@example.com',
+                'mdp_utilisateur' => 'Pass1234'
+            ];
+
+            ob_start();
+            $result = $userControlleur->ModifierProfil();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+        }
+
+        /* ========================================================== */
+        /* =============== TESTS AUCUN CHAMP MODIFIE ================ */
+        /* ========================================================== */
+        public function testModifierProfilAucunChampModifie()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = ['id' => 1, 'nom' => 'Dupont', 'prenom' => 'Jean', 'email' => 'jean@example.com'];
+
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            // Essayer de modifier sans changer de champ
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+            ];
+
+            ob_start();
+            $result = $userControlleur->ModifierProfil();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('warning', $responseData['status']);
+            $this->assertStringContainsString("Aucun champ à modifier n'est fourni", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS FORMAT EMAIL INVALIDE =================== */
+        /* ========================================================== */
+        public function testModifierProfilEmailInvalide()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = ['id' => 1, 'nom' => 'Dupont', 'prenom' => 'Jean', 'email' => 'jean@example.com'];
+
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $userControlleur = new UserControlleur();
+
+            // Essayer de modifier l'email avec un format invalide
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (Email au format incorrect)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mail_utilisateur' => 'invalid-email' // Email au format incorrect
+            ];
+
+            ob_start();
+            $result = $userControlleur->ModifierProfil();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Le format de l'email est invalide", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS FORMAT NOM / PRENOM INVALIDE ============ */
+        /* ========================================================== */
+        public function testModifierProfilNomPrenomInvalide()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = ['id' => 1, 'nom' => 'Dupont', 'prenom' => 'Jean', 'email' => 'jean@example.com'];
+
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $userControlleur = new UserControlleur();
+
+            // Essayer de modifier le nom avec un format invalide
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (Nom invalide)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => '1234', // Nom invalide
+                'prenom_utilisateur' => 'Jean'
+            ];
+
+            ob_start();
+            $result = $userControlleur->ModifierProfil();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Le format du nom est invalide.", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS MOT DE PASSE INVALIDE =================== */
+        /* ========================================================== */
+        public function testModifierProfilMotDePasseInvalide()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = ['id' => 1, 'nom' => 'Dupont', 'prenom' => 'Jean', 'email' => 'jean@example.com'];
+
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $userControlleur = new UserControlleur();
+
+            // Essayer de modifier le mot de passe avec un mot de passe invalide
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (mot de passe trop court)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'mdp_utilisateur' => 'e123' // Mot de passe trop court
+            ];
+
+            ob_start();
+            $result = $userControlleur->ModifierProfil();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Erreur : Le nouveau mot de passe n'est pas valide. Il faut au moins 8 caractères avec une minuscule, une majuscule et un chiffre", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS MODIFICATION PROFIL REUSSIE ============= */
+        /* ========================================================== */
+        public function testModifierProfilReussi()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = ['id' => 1, 'nom' => 'Dupont', 'prenom' => 'Jean', 'email' => 'jean@example.com'];
+
+            $this->viderToutesLesTables();
+            $userControlleur = new UserControlleur();
+
+            // Modifier le nom et le prénom
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Durand',
+                'prenom_utilisateur' => 'Marc',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'NewPass1234'
+            ];
+
+            ob_start();
+            $result = $userControlleur->ModifierProfil();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertTrue($result);
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertStringContainsString("Votre profil a été changé avec succès.", $responseData['message']);
+        }
+
+        /* ======================================================================================*/
+        /* ===================== TESTS RECUPERATION DES TECHNICIEN ============================= */
+        /* ======================================================================================*/
+
+        /* ========================================================== */
+        /* ============ TESTS UTILISATEUR NON CONNECTE ============== */
+        /* ========================================================== */
+        public function testGetTechniciensUtilisateurNonConnecte()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur non connecté
+            $_SESSION = []; // Assurez-vous que l'utilisateur n'est pas connecté
+
+            $userControlleur = new UserControlleur();
+
+            // Essayer de récupérer les techniciens sans être connecté
+            ob_start();
+            $result = $userControlleur->getTechniciensUser();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+        }
+
+        /* ========================================================== */
+        /* ============ TESTS AUCUN TECHNICIEN TROUVE =============== */
+        /* ========================================================== */
+        public function testGetTechniciensAucunTrouve()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => Role::ADMINISTRATEUR,
+            ];
+            
+            // Vider la table des techniciens pour tester l'absence de techniciens
+            $this->viderToutesLesTables();
+
+            $userControlleur = new UserControlleur();
+
+            // Essayer de récupérer les techniciens alors qu'il n'y en a pas
+            ob_start();
+            $result = $userControlleur->getTechniciensUser();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('warning', $responseData['status']);
+            $this->assertStringContainsString("Aucun technicien trouvé.", $responseData['message']);
+        }
+
+        /* ================================================================= */
+        /* ========== TESTS RECUPERATION DE PLUSIEURS TECHNICIENS ========== */
+        /* ================================================================= */
+        public function testGetTechniciensPlusieursTrouves()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => Role::ADMINISTRATEUR
+            ];
+            
+            // Inscrire plusieurs techniciens pour tester la récupération
+            $this->viderToutesLesTables(); // S'assurer que la table est vide avant l'insertion
+            $this->insererRoles();
+
+            $user1 = new UserCredentials('Technicien', 'Alice', 'alice@example.com', 'Pass1234', Role::TECHNICIEN);
+            $user1->setInscriptionValide(true);
+            $user1->setActif(true);
+            $user1->insertUser();
+
+            $user2 = new UserCredentials('Technicien', 'Bob', 'bob@example.com', 'Pass1234', Role::TECHNICIEN);
+            $user2->setInscriptionValide(true);
+            $user2->setActif(true);
+            $user2->insertUser();
+
+            $userControlleur = new UserControlleur();
+
+            // Essayer de récupérer les techniciens
+            ob_start();
+            $result = $userControlleur->getTechniciensUser();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertTrue($result);
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertCount(2, $responseData['technicians']); // Vérifie que 2 techniciens sont renvoyés
+            $this->assertStringContainsString('Technicien', $responseData['technicians'][0]['nom_utilisateur']);
+            $this->assertStringContainsString('Technicien', $responseData['technicians'][1]['nom_utilisateur']);
+        }
+
+        /* ========================================================== */
+        /* =============== TESTS METHOD NON AUTORISEE =============== */
+        /* ========================================================== */
+        public function testGetTechniciensMethodNonAutorisee()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'POST'; // Utilisation de la méthode POST à la place de GET
+
+            $userControlleur = new UserControlleur();
+
+            // Essayer d'appeler la méthode avec une mauvaise méthode HTTP
+            ob_start();
+            $result = $userControlleur->getTechniciensUser();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Méthode non autorisée", $responseData['message']);
+        }
+
+        /* ===================================================================================================== */
+        /* ========================== PARTIE DES TESTS POUR RECUPERER LES TACHE DE UN TECHNICIEN =============== */
+        /* ===================================================================================================== */
+
+        /* ========================================================== */
+        /* ========== TESTS UTILISATEUR NON CONNECTE ========== */
+        /* ========================================================== */
+        public function testGetTasksByTechnicianUtilisateurNonConnecte()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur non connecté
+            $_SESSION = []; // Assurez-vous que l'utilisateur n'est pas connecté
+
+            $taskController = new TaskController();
+
+            // Essayer de récupérer les tâches pour un technicien sans être connecté
+            $_GET['technicien_id'] = 1; // ID du technicien (peu importe ici)
+
+            ob_start();
+            $result = $taskController->getTasksForTechnician();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Veuillez vous connecter en tant qu'admin pour voir les tâches.", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS AUCUN TECHNICIEN ID SPECIFIE ========== */
+        /* ========================================================== */
+        public function testGetTasksByTechnicianAucunTechnicienId()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => Role::ADMINISTRATEUR,
+            ];
+
+            $taskController = new TaskController();
+
+            // Essayer de récupérer les tâches sans spécifier d'ID de technicien
+            $_GET = []; // Aucun technicien_id dans la requête
+
+            ob_start();
+            $result = $taskController->getTasksForTechnician();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("ID technicien manquant", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS TECHNICIEN INVALIDE ========== */
+        /* ========================================================== */
+        public function testGetTasksByTechnicianTechnicienInvalide()
+        {
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $technicien = new UserCredentials('Technicien', 'Alice', 'alice@example.com', 'Pass1234', Role::TECHNICIEN);
+            $technicien->setInscriptionValide(false);
+            $technicien->setActif(false);
+            $technicien->insertUser();
+
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => Role::ADMINISTRATEUR,
+            ];
+            $taskController = new TaskController();
+
+            // Essaye de récupérer les tâches avec un ID de technicien invalide
+            $_GET['technicien_id'] = 999; // ID inexistant
+
+            ob_start();
+            $result = $taskController->getTasksForTechnician();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Technicien invalide ou inexistant.", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS TACHES EXISTANTES POUR UN TECHNICIEN ========== */
+        /* ========================================================== */
+        public function testGetTasksByTechnicianTachesExistantesAvecDemande()
+        {
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+
+            // Simuler un utilisateur connecté
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => Role::ADMINISTRATEUR,
+            ];
+            // Insére un technicien avec des tâches associées
+            $this->viderToutesLesTables();
+            $this->insererRoles();            
+            $technicien = new UserCredentials('Technicien', 'Alice', 'alice@example.com', 'Pass1234', Role::TECHNICIEN);
+            $technicien->setInscriptionValide(true);
+            $technicien->setActif(true);
+            $technicien->insertUser();
+
+            // Simuler l'ajout d'une demande pour ce technicien
+            $technicienId = UserCredentials::getUserIdWithEmail('alice@example.com');
+            $db = Database::getInstance()->getConnection();
+
+            $stmt = $db->prepare("INSERT INTO site (Id_site, nom_site, actif_site) VALUES (?, ?, ?)");
+            $stmt->execute([1, 'Site Principal', 1]);
+
+            // Ajouter un bâtiment lié au site
+            $stmt = $db->prepare("INSERT INTO batiment (Id_batiment, nom_batiment, actif_batiment, Id_site) VALUES (?, ?, ?, ?)");
+            $stmt->execute([1, 'Bâtiment A', 1, 1]);
+
+            // Ajouter un lieu lié au bâtiment
+            $stmt = $db->prepare("INSERT INTO lieu (Id_lieu, nom_lieu, actif_lieu, Id_batiment) VALUES (?, ?, ?, ?)");
+            $stmt->execute([1, 'Salle de réunion', 1, 1]);
+
+            // Créer une demande
+            $stmt = $db->prepare("INSERT INTO demande 
+            (num_ticket_dmd, sujet_dmd, description_dmd, date_creation_dmd, Id_utilisateur, Id_lieu) 
+            VALUES (:num_ticket_dmd, :sujet_dmd, :description_dmd, NOW(), :Id_utilisateur, :Id_lieu)");
+
+            $stmt->execute([
+                'num_ticket_dmd' => '12345',
+                'sujet_dmd' => 'Demande de maintenance',
+                'description_dmd' => 'Description de la demande de maintenance.',
+                'Id_utilisateur' => $technicienId,
+                'Id_lieu' => 1
+            ]);
+
+            // Récupérer l'ID de la demande nouvellement insérée
+            $idDemande = $db->lastInsertId();
+
+            // Insérer des tâches liées à la demande
+            $stmt = $db->prepare("INSERT INTO tache (sujet_tache, description_tache, date_creation_tache, date_planif_tache, date_fin_tache, Id_utilisateur, Id_demande)
+                                  VALUES (:sujet_tache, :description_tache, NOW(), NOW(), NOW(), :Id_utilisateur, :Id_demande)");
+
+            // Insérer deux tâches
+            $stmt->execute([
+                'sujet_tache' => 'Tâche 1',
+                'description_tache' => 'Effectuer une maintenance de serveur.',
+                'Id_utilisateur' => $technicienId,
+                'Id_demande' => $idDemande
+            ]);
+
+            $stmt->execute([
+                'sujet_tache' => 'Tâche 2',
+                'description_tache' => 'Vérifier les performances du serveur.',
+                'Id_utilisateur' => $technicienId,
+                'Id_demande' => $idDemande
+            ]);
+
+            // Récupérer les tâches du technicien
+            $_GET['technicien_id'] = $technicienId;
+
+            $taskController = new TaskController();
+
+            // Essayer de récupérer les tâches du technicien
+            ob_start();
+            $result = $taskController->getTasksForTechnician();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertTrue($result);
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertCount(2, $responseData['tasks']); // Vérifie qu'il y a 2 tâches
+            $this->assertStringContainsString('Tâche 1', $responseData['tasks'][0]['sujet_tache']);
+            $this->assertStringContainsString('Tâche 2', $responseData['tasks'][1]['sujet_tache']);
+        }
+
+
+        /* ========================================================== */
+        /* ========== TESTS METHOD NON AUTORISEE ========== */
+        /* ========================================================== */
+        public function testGetTasksByTechnicianNonSelectionne()
+        {
+            // Simuler la méthode HTTP GET
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+        
+            // Simuler l'absence de l'ID technicien dans la requête
+            $_GET['technicien_id'] = null; // Aucun technicien sélectionné
+        
+            // Simuler un utilisateur connecté avec un rôle admin
+            $_SESSION['user'] = [
+                'id' => 1,
+                'nom' => 'Dupont',
+                'prenom' => 'Jean',
+                'email' => 'jean@example.com',
+                'role_id' => Role::ADMINISTRATEUR,
+            ];
+        
+            // Créer le contrôleur
+            $taskController = new TaskController();
+
+            // Essayer d'appeler la méthode avec une mauvaise méthode HTTP
+            ob_start();
+            $result = $taskController->getTasksForTechnician();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("ID technicien manquant", $responseData['message']);
+        }
+
+        /* ========================================================== */
+        /* ========== TESTS TOKEN ========== */
+        /* ========================================================== */
+
+        public function testCsrfTokenManquant()
+        {
+            $userControlleur = new UserControlleur();
+
+            // Simuler une requête POST sans le token CSRF
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));  // CSRF token simulé
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire avec un token manquant
+            $_POST = [
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Token CSRF invalide", $responseData['message']);
+        }
+
+        public function testCsrfTokenInvalide()
+        {
+            $userControlleur = new UserControlleur();
+
+            // Simuler une requête POST avec un token CSRF invalide
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32)); // CSRF token simulé
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire avec un token CSRF incorrect
+            $_POST = [
+                'csrf_token' => 'invalid_token', // Token invalide
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            ob_start();
+            $result = $userControlleur->inscription();
+            $jsonOutput = ob_get_clean();
+            $responseData = json_decode($jsonOutput, true);
+
+            $this->assertFalse($result);
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString("Token CSRF invalide", $responseData['message']);
+        }
+
+        public function testCsrfTokenValide()
+        {
+            $this->viderToutesLesTables();  // Vider les tables avant de commencer
+
+            $this->insererRoles();
+
+            // Créer un utilisateur avec un email valide
+            $user = new UserCredentials('Dupontf', 'Jeanf', 'jean@example.com', 'Pasds1234', Role::TECHNICIEN);
+            // Insérer l'utilisateur dans la base de données
+
+            $db = Database::getInstance()->getConnection();  // Connexion à la base de données
+
+            // Insérer un site dans la table `site`
+            $db->exec("INSERT INTO `site` (`Id_site`, `nom_site`, `actif_site`) 
+    VALUES 
+    (1, 'SITE1', '1')");
+
+            // Insérer des bâtiments dans la table `batiment`
+            $db->exec("INSERT INTO `batiment` (`Id_batiment`, `nom_batiment`, `actif_batiment`, `Id_site`) 
+               VALUES 
+               (1, 'LAREDOUTE', '1', '1'), 
+               (2, 'ESPIEGLERIE', '1', '1'), 
+               (3, 'LASOURCES', '1', '1')");
+
+            $userControlleur = new UserControlleur();  // Créer une instance du contrôleur
+
+            // Simuler une requête POST avec un token CSRF valide
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));  // Générer un token CSRF
+            $_SESSION['csrf_token'] = $csrfToken;  // Placer le token CSRF dans la session
+
+            // Formulaire d'inscription avec un token CSRF valide
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => 'Jean',
+                'mail_utilisateur' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Capture la sortie JSON
+            ob_start();
+            $result = $userControlleur->inscription();  // Exécuter la méthode d'inscription
+            $jsonOutput = ob_get_clean();
+
+            // Décoder la réponse JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Assertions
+            $this->assertTrue($result);  // La méthode doit retourner true
+            $this->assertEquals('success', $responseData['status']);
+            $this->assertStringContainsString('Votre demande d\'inscription a bien été envoyée', $responseData['message']);
+        }
+    }

@@ -71,8 +71,8 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <?php endif; ?>
     </div>
 
-    <table style="margin: 20px;">
-    <thead>
+     <table class="table">
+            <thead class="table-header">
         <tr>
             <th>Lieu</th>
             <?php if (!isset($id_batiment)): ?>
@@ -82,7 +82,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         </tr>
     </thead>
 
-    <tbody>
+      <tbody class="tbody">
         <?php if (!empty($lieux)): ?>
             <?php foreach ($lieux as $lieu): ?>
                 <tr

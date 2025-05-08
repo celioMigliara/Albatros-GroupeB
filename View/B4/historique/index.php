@@ -32,8 +32,8 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <?php if (empty($historique)): ?>
             <p><em>Aucune modification à afficher pour l’instant.</em></p>
         <?php else: ?>
-            <table class="table">
-                <thead>
+          <table class="table">
+            <thead class="table-header">
                     <tr>
                         <th>Date</th>
                         <th>Ticket</th>
@@ -42,7 +42,8 @@ if (!UserConnectionUtils::isAdminConnected()) {
                         <th>Statut</th>
                     </tr>
                 </thead>
-                <tbody>
+                     <tbody class="tbody">
+
                     <?php foreach ($historique as $h): ?>
                         <tr>
                             <td><?= htmlentities($h['date_modif']) ?></td>

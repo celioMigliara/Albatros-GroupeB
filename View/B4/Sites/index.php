@@ -44,13 +44,13 @@ if (!UserConnectionUtils::isAdminConnected()) {
             <button class="add" onclick="openPopup()">Ajouter</button>
         </div>
         <!-- Affichage des sites -->
-        <table>
-            <thead>
+       <table class="table">
+            <thead class="table-header">
                 <tr>
                     <th>Nom</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="tbody">
                 <?php foreach ($sites as $site): ?>
                     <tr onclick="window.location.href='batiments?id=<?= $site['id_site'] ?>'" style="cursor: pointer;">
                         <td><?= htmlspecialchars($site['nom_site']) ?></td>

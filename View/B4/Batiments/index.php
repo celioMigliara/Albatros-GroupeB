@@ -83,8 +83,8 @@ if (!UserConnectionUtils::isAdminConnected()) {
             <br>
         <?php endif; ?>
     </div>
-    <table style="margin-top: 20px;">
-        <thead>
+     <table class="table">
+            <thead class="table-header">
             <tr>
                 <th>Bâtiment</th>
                 <?php if ($id_site === null): ?>
@@ -93,7 +93,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
             </tr>
         </thead>
 
-        <tbody>
+      <tbody class="tbody">
             <?php if (!empty($batiments)): ?>
                 <?php foreach ($batiments as $batiment): ?>
                     <tr

@@ -21,7 +21,7 @@ main{
 
 .title {
     font-family: "Caveat Brush", cursive;
-    font-size: 80px;
+    font-size: 3rem;
     font-weight: 400;
     color: #F9BB30;
     text-align: center;
@@ -31,7 +31,7 @@ main{
 
 .title::after{
     content: '';
-    width: 90%;
+    width: 60%;
     margin: 1rem 1 2rem 0;
     display: block;
     opacity: 1;
@@ -39,7 +39,7 @@ main{
     background-size: 15px 15px !important;
     height: 25px;
     position: relative;
-    margin-left: 5%;
+    margin-left: 20%;
     margin-right: 5%;
 }
 

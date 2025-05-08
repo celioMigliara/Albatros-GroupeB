@@ -1,13 +1,24 @@
 /* Conteneur général */
-.container {
-    max-width: 900px;
+.container-B4 {
+    max-width: 1100px;
     margin: 40px auto;
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.15);
 }
-
+.container1-B4 {
+    max-width: 60%;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+h2{
+    font-family: "Caveat Brush", cursive;
+     font-size: 26px;
+}
 /* En-tête */
 .header {
     display: flex;
@@ -46,6 +57,8 @@ input[type="submit"] {
 button.add {
     background-color: #007bff;
     color: white;
+    font-family: "Caveat Brush", cursive;
+    font-size: 17px;
 }
 
 button.add:hover {
@@ -55,6 +68,9 @@ button.add:hover {
 button.delete {
     background-color: #dc3545;
     color: white;
+    font-family: "Caveat Brush", cursive;
+    font-size: 20px;
+
 }
 
 button.delete:hover {
@@ -65,6 +81,8 @@ button.save,
 input[type="submit"].save {
     background-color: #28a745;
     color: white;
+    font-family: "Caveat Brush", cursive;
+    font-size: 17px;
 }
 
 button.save:hover,
@@ -80,6 +98,7 @@ table {
     background-color: white;
     border-radius: 6px;
     overflow: hidden;
+
 }
 
 table thead {
@@ -92,8 +111,9 @@ table th, table td {
     border-bottom: 1px solid #dee2e6;
 }
 
+
 table a {
-    color: #007bff;
+   
     text-decoration: none;
 }
 
@@ -159,4 +179,79 @@ select {
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
+}
+
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 2px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+    min-width: 100px; 
+    text-align: center; /*Centre*/
+   vertical-align: middle;
+     font-family: "Caveat Brush", cursive;
+}
+.btn-primary { background-color: #007bff; }
+.btn-warning { background-color: #F9BB30; color: black; }
+.btn-success { background-color: #28a745; }
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    
+}
+.page-item {
+    margin: 0 0.25rem;
+}
+
+.page-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease;
+    font-size: 17px;
+}
+
+.page-link:hover {
+    background-color: #e9e9e9;
+}
+
+.page-link.current {
+    font-weight: bold;
+    color: red;
+    cursor: default;
+    background-color: #F9BB30;
+    border-color: red;
+    font-size: 17px;
+ 
+}
+
+.table-header{
+    font-family: "Caveat Brush", cursive;
+    font-size: 22px;
+    margin: auto;
+}
+.table-header th {
+    text-align: center;
+}
+
+.tbody td{
+    text-align: center;
 }

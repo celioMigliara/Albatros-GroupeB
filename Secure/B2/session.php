@@ -16,7 +16,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 
-require_once("login.php");
+
 
 // =======  RENFORCEMENT PAR AGENT UTILISATEUR / IP =======
 //Exemple attaque XSS, Si essaye de se connecter depuis un autre appareil ou navigatuer ça bloque

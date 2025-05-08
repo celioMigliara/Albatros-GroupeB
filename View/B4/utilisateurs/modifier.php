@@ -1,3 +1,12 @@
+<?php
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isAdminConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,17 +17,13 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
     <!-- Style de la navbar selon le rôle -->
-    <?php if ($_SESSION['user_role'] == 1): ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-    <?php else: ?>
-        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-    <?php endif; ?>
+ 
 </head>
 <body>
     <header>
-        <?php if ($_SESSION['user_role'] == 1): ?>
             <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
-        <?php endif; ?>
+      
     </header>
 
     <h1 class="title">Modifier l'utilisateur #<?= htmlentities($utilisateur['user_id']) ?></h1>
@@ -32,13 +37,13 @@
         <form method="post" action="<?= BASE_URL ?>/utilisateurs/modifier/<?= $utilisateur['user_id'] ?>">
             <label for="prenom">Prénom</label>
             <div class="form-row">
-                <input type="text" id="prenom" name="prenom" required
+                <input type="text" maxlength="12" id="prenom" name="prenom" required
                        value="<?= htmlentities($utilisateur['prenom']) ?>">
             </div>
 
             <label for="nom">Nom</label>
             <div class="form-row">
-                <input type="text" id="nom" name="nom" required
+                <input type="text" maxlength="12" id="nom" name="nom" required
                        value="<?= htmlentities($utilisateur['nom']) ?>">
             </div>
 

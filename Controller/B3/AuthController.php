@@ -36,10 +36,25 @@ class AuthController
             $role   = $_POST['role_utilisateur'] ?? null;
             $pass   = $_POST['mdp_utilisateur'] ?? null;
             $batiments = $_POST['batiments_utilisateur'] ?? [];
+            $confirmEmail = $_POST['confirmer_mail'] ?? null;
+            $confirmPassword = $_POST['confirmer_mots_de_passe'] ?? null;
+
 
             // On verifie si le formulaire est complet
-            if (empty($nom) || empty($prenom) || empty($email) || empty($role) || empty($pass)) {
+            if (empty($nom) || empty($prenom) || empty($email) || empty($role) || empty($pass) || empty($confirmEmail) || empty($confirmPassword)) {
                 echo json_encode(['status' => 'error', 'message' => 'Le formulaire d\'inscription n\'est pas complet.']);
+                return false;
+            }
+
+
+            // On vérifie si l'email confirmation et le mot de passe confirmation correspondent
+            if ($email !== $confirmEmail) {
+                echo json_encode(['status' => 'error', 'message' => 'Les emails ne correspondent pas.']);
+                return false;
+            }
+            
+            if ($pass !== $confirmPassword) {
+                echo json_encode(['status' => 'error', 'message' => 'Les mots de passe ne correspondent pas.']);
                 return false;
             }
 

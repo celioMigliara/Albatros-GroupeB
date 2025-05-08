@@ -165,7 +165,8 @@ class User
         $pdo = Database::getInstance()->getConnection();
 
         $sql = "UPDATE utilisateur 
-                SET token_utilisateur = :token, date_exp_token_utilisateur = :expiration 
+                SET token_utilisateur = :token, date_exp_token_utilisateur = :expiration,
+                  valide_utilisateur = 1
                 WHERE id_utilisateur = :id";
 
         $stmt = $pdo->prepare($sql);

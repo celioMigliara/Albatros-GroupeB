@@ -43,19 +43,19 @@ if (!isset($nbComptesEnAttente)) {
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle">Demandes</a>
                 <div class="dropdown-menu demandes-menu">
-                <a href="<?= BASE_URL ?>/ListeDemandes"">Gérer les demandes</a>
-        
-                   <a href="<?= BASE_URL ?>/demande">Nouvelle Demande</a>
+                    <a href="<?= BASE_URL ?>/ListeDemandes"">Gérer les demandes</a>
+                   <a href=" <?= BASE_URL ?>/demande">Nouvelle Demande</a>
                     <a href="<?= BASE_URL ?>/recurrence">Gérer récurrence</a>
+                    <a href="<?= BASE_URL ?>/LisetDemandeExporter">Liste demandes</a>
                 </div>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle">Gestion</a>
                 <div class="dropdown-menu gestion-menu">
-                    <a href="#">Gérer les utilisateurs</a>
-                    <a href="#">Gérer les sites</a>
-                    <a href="#">Gérer les bâtiments</a>
-                    <a href="#">Gérer les endroits</a>
+                    <a href="<?= BASE_URL ?>/utilisateurs">Gérer les utilisateurs</a>
+                    <a href="<?= BASE_URL ?>/sites">Gérer les sites</a>
+                    <a href="<?= BASE_URL ?>/batiments">Gérer les bâtiments</a>
+                    <a href="<?= BASE_URL ?>/lieux">Gérer les lieux</a>
 
 
                 </div>
@@ -66,14 +66,14 @@ if (!isset($nbComptesEnAttente)) {
                     <span class="badge"><?= $nbComptesEnAttente ?></span>
                 </a>
             </li>
-            <li><a href="#">Historique</a></li>
+            <li><a href="<?= BASE_URL ?>/historique">Historique</a></li>
             <li><a href="<?= BASE_URL ?>/feuillederoute">Feuille de route</a></li>
             <li class="dropdown">
-            <a href="#" class="dropdown-toggle">Profil</a>
-            <div class="dropdown-menu demandes-menu">
-                <a href="<?= BASE_URL ?>/profil">Modifier mon profil</a>
-                <a href="<?= BASE_URL ?>/deconnexion">Déconnexion</a>
-            </div>
+                <a href="#" class="dropdown-toggle">Profil</a>
+                <div class="dropdown-menu demandes-menu">
+                    <a href="<?= BASE_URL ?>/profil">Modifier mon profil</a>
+                    <a href="<?= BASE_URL ?>/deconnexion">Déconnexion</a>
+                </div>
             </li>
         </ul>
     </nav>

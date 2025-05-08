@@ -41,10 +41,6 @@ $demandes = DemandeB1::getDemandesByUser($userId, 0, 5);
                     <label for="user-dropdown-toggle" class="dropdown-btn icon-only" tabindex="0">
                         <i class="fas fa-user"></i>
                     </label>
-                    <div class="dropdown-content">
-                        <a href="parametres.php"><i class="fas fa-cog"></i> Paramètres</a>
-                        <a href="<?= BASE_URL ?>/deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-                    </div>
                 </div>
 
                 <div class="technicien-text">
@@ -75,7 +71,11 @@ $demandes = DemandeB1::getDemandesByUser($userId, 0, 5);
                         <p><strong>Crée le :</strong> <?= date('d/m/Y', strtotime($demande['date_creation_dmd'])) ?></p>
                     </div>
                 <?php endforeach; ?>
+                
             </div>
+            <form method="POST" action="<?= BASE_URL ?>/demande">
+        <button type="submit" class="btnDemande">Creer demande</button>
+    </form>
         <?php else: ?>
             <p class="aucune-tache">Aucune demande en cours pour le moment.</p>
         <?php endif; ?>

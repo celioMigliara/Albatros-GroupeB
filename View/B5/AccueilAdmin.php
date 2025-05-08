@@ -39,10 +39,7 @@ $nbComptesEnAttente = User::countUtilisateursEnAttente();
                     <button class="dropdown-btn icon-only" tabindex="0">
                         <i class="fas fa-user"></i>
                     </button>
-                    <div class="dropdown-content">
-                        <a href="<?= BASE_URL ?>/profil"><i class="fas fa-cog"></i> Paramètres</a>
-                        <a href="<?= BASE_URL ?>/deconnexion"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-                    </div>
+                  
                 </div>
 
             <div class="admin-text">

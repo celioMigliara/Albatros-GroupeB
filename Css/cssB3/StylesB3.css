@@ -166,12 +166,14 @@ body {
 /* Css pour le titre du formulaire */
 h2 {
   font-family: "Caveat Brush", cursive;
-  font-size: 40px;
+  font-size: 35px;
   font-weight: bold;
   margin-block: 0;
   margin-inline: 0;
   text-align: center;
   letter-spacing: 1px;
+  color: #F9BB30;
+  margin-top: 5%;
 }
 
 /* ============== BOUTONS MOBILE DESACTIVER PAR DEFAUT ET ACTIVE PAR LE RESPONSIVE================= */
@@ -689,7 +691,7 @@ input[type="password"]:valid ~ label {
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding-top: 20px;
+ 
 }
 
 .cssbuttons-io-button {

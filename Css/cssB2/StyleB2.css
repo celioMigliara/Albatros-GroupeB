@@ -16,7 +16,7 @@
     align-items: flex-start;
     min-height: 100vh;
     overflow-x: hidden;
-    cursor: crosshair;
+    
 }
 
 .container-B2 {
@@ -36,7 +36,7 @@
 
 .title-B2 {
     font-family: "Caveat Brush", cursive;
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 400;
     color: #F9BB30;
     text-align: center;
@@ -391,6 +391,8 @@
     color: white;
     padding: 10px 20px;
     border-radius: 50px;
+    color: white;
+    cursor: pointer;
 }
 
 .fieldset-petite-section-B2 .NomFichier-B2 {
@@ -603,7 +605,7 @@ select:focus {
         white-space: nowrap;
         /* Ne permet PAS le retour à la ligne */
         max-width: 120px;
-        font-size: 13px;
+        font-size: 16px;
     }
     .popup-B2 {
         width: 270px;
@@ -695,12 +697,15 @@ select.input-B2 {
     background-position: right 10px center;
     background-size: 12px;
     cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
 }
 
 
 /* Pour éviter que le texte passe sous la flèche */
 
 select.input-B2:focus {
-    background-color: #fffbe6;
     outline: none;
+    background-color: #fffbe6;
+    box-shadow: 0 0 8px rgba(249, 187, 48, 0.7);
 }

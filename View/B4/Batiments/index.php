@@ -1,0 +1,185 @@
+
+<?php
+require_once __DIR__ . '/../../../Model/UserConnectionUtils.php';
+
+if (!UserConnectionUtils::isAdminConnected()) {
+    header('Location: ' . BASE_URL . "/connexion");
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Gestion des bâtiments</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+   
+</head>
+
+<body>
+    <header>
+    <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
+    
+      
+    </header>
+    
+
+    <h1 class="title">Gestion des bâtiments</h1>
+
+
+<div class="container1-B4">
+    
+    <?php if (isset($site)): ?>
+        <div class="header">
+            <h2>Modifier le site</h2>
+            
+        <!-- Formulaire de filtrage des bâtiments -->
+            <form method="get" action="">
+                <input type="hidden" name="id" value="<?= $id_site ?>">
+                <label for="filter">Afficher:</label>
+                <select name="filter" id="filter" onchange="this.form.submit()">
+                    <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les bâtiments</option>
+                    <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Bâtiments actifs</option>
+                </select>
+            </form>
+
+            <?php if ($site['actif_site']): ?>
+                <button type="button" class="delete" onclick="openDeletePopup()">Supprimer le site</button>
+            <?php else: ?>
+                <button type="button" class="add" onclick="openDeletePopup()">Activer le site</button>
+            <?php endif; ?>
+        </div>
+
+        <form method="post" style="margin-top: 20px;">
+            <div class="form-row">
+                <label for="siteName">Nom du site :</label>
+                <input type="text" id="siteName" name="site_name" 
+                    value="<?= htmlspecialchars($site['nom_site']) ?>" required>
+                <button type="submit" name="update_site" class="save">Enregistrer</button>
+            </div>
+        </form>
+    <?php endif; ?>
+
+    <!-- Bâtiments -->
+    <div class="header">
+        <h2>Bâtiments</h2>
+        
+        <?php if(isset($id_site)): ?>
+            <button class="add" onclick="openPopup()">Ajouter un bâtiment</button>
+        <?php else: ?>
+
+             <!-- Formulaire de filtrage des bâtiments -->
+             <form method="get" action="">
+                <input type="hidden" name="id" value="<?= $id_site ?>">
+                <label for="filter">Afficher:</label>
+                <select name="filter" id="filter" onchange="this.form.submit()">
+                    <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les bâtiments</option>
+                    <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Bâtiments actifs</option>
+                </select>
+            </form>
+            <br>
+        <?php endif; ?>
+    </div>
+     <table class="table">
+            <thead class="table-header">
+            <tr>
+                <th>Bâtiment</th>
+                <?php if ($id_site === null): ?>
+                    <th>Site</th>
+                <?php endif; ?>
+            </tr>
+        </thead>
+
+      <tbody class="tbody">
+            <?php if (!empty($batiments)): ?>
+                <?php foreach ($batiments as $batiment): ?>
+                    <tr
+                        onclick="window.location.href='lieux?id=<?= $batiment['id_batiment'] ?>'"
+                        style="cursor:pointer;"
+                    >
+                        <td><?= htmlspecialchars($batiment['nom_batiment']) ?></td>
+
+                        <?php if ($id_site === null): ?>
+                            <td><?= htmlspecialchars($batiment['nom_site']) ?></td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="<?= $id_site === null ? 2 : 1 ?>">
+                        Aucun bâtiment disponible.
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+    <?php if (isset($id_site)): ?>
+        <br><a href="sites">← Retour à la liste des sites</a>
+    <?php endif; ?>
+</div>
+
+<!-- Popup suppression -->
+<?php if (isset($id_site)): ?>
+    <?php if ($site['actif_site']): ?>
+        <div class="overlay" id="overlay-delete" onclick="closeDeletePopup()"></div>
+        <div class="popup-delete" id="popup-delete">
+            <h3>Confirmer la suppression</h3>
+            <p>Êtes-vous sûr de vouloir supprimer ce site ?</p>
+            <form method="post">
+                <div class="button-group">
+                    <button type="submit" name="delete_site" class="delete">Confirmer</button>
+                    <button type="button" onclick="closeDeletePopup()" class="stop">Annuler</button>
+                </div>
+            </form>
+        </div>
+    <?php else: ?>
+        <div class="overlay" id="overlay-delete" onclick="closeDeletePopup()"></div>
+        <div class="popup-delete" id="popup-delete">
+            <h3>Confirmer l'activation</h3>
+            <p>Êtes-vous sûr de vouloir réactiver ce site ?</p>
+            <form method="post">
+                <div class="button-group">
+                    <button type="submit" name="activate_site" class="save">Confirmer</button>
+                    <button type="button" onclick="closeDeletePopup()" class="delete">Annuler</button>
+                </div>
+            </form>
+        </div>
+    <?php endif; ?>
+
+    <!-- Popup ajout bâtiment -->
+    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <h3>Ajouter un bâtiment</h3>
+        <form method="post">
+            <input type="hidden" name="id_site" value="<?= $id_site ?>">
+            <label for="batimentName">Nom du bâtiment :</label>
+            <input type="text" id="batimentName" name="batiment_name" required>
+            <br><br>
+            <button type="submit" name="add_batiment" class="save">Ajouter</button>
+            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+        </form>
+    </div>
+<?php endif; ?>
+
+<script>
+    function openDeletePopup() {
+        document.getElementById("popup-delete").style.display = "block";
+        document.getElementById("overlay-delete").style.display = "block";
+    }
+    function closeDeletePopup() {
+        document.getElementById("popup-delete").style.display = "none";
+        document.getElementById("overlay-delete").style.display = "none";
+    }
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+    }
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+</script>

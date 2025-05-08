@@ -65,6 +65,7 @@ switch ($segments[0])
                         header('Location: ' . BASE_URL . '/AccueilAdmin');
                         exit;
                     case Role::TECHNICIEN:
+                    case Role::UTILISATEUR:
                         header('Location: ' . BASE_URL . '/AccueilTechnicien');
                         exit;
                     default:

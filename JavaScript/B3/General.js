@@ -35,6 +35,9 @@ if (InscriptionForm) {
     let newPrenom = document.getElementById("prenom_utilisateur").value;
     let newMail = document.getElementById("mail_utilisateur").value;
     let newPassword = document.getElementById("mdp_utilisateur").value;
+    let confirmMail = document.getElementById("confirmer_mail").value;
+    let confirmPassword = document.getElementById("confirmer_mots_de_passe").value;
+
     let newRole = document.querySelector(
       'input[name="role_utilisateur"]:checked'
     ).value;
@@ -66,7 +69,11 @@ if (InscriptionForm) {
       "&role_utilisateur=" +
       encodeURIComponent(newRole) +
       "&csrf_token=" +
-      encodeURIComponent(csrfToken);
+      encodeURIComponent(csrfToken) +
+      "&confirmer_mail=" +
+      encodeURIComponent(confirmMail) +
+      "&confirmer_mots_de_passe=" +
+      encodeURIComponent(confirmPassword);
       
     // Ajout des bâtiments comme paramètres multiples
     if (newRole === "3") {

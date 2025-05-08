@@ -14,7 +14,7 @@
 
 </head>
 
-<body>
+<body style="background: none !important;">
 
 <header>
 
@@ -27,10 +27,10 @@
     <!-- Overlay pour l'effet arriere flou-->
     <div class="overlay"></div>
 
-    <div class="block">
+    <div class="block" style="max-height: 65%; max-width: 65%;">
 
         <!-- Section de gauche de la page (vide, sans animations) -->
-        <div class="left">
+        <div class="left" style="display: none">
 
             <img src="<?= BASE_URL ?>/Assets/B3/Albatros1.png" alt="Logo Albatros" class="logo_Albatros">
         </div>

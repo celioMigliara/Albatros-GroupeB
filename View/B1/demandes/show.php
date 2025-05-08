@@ -196,11 +196,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
             </div>
         <?php endif; ?>
 
-        <?php if (!$isDemandeModifiable && $_SESSION['user']['role_id'] == 3): ?>
-            <div class="info-message">
-                <p>Cette demande est <?= strtolower($demande['nom_statut']) ?> et ne peut plus être modifiée.</p>
-            </div>
-        <?php endif; ?>
+       
 
 
         <!-- Bouton de soumission pour les utilisateurs -->

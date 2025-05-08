@@ -1,14 +1,10 @@
 {
     "require-dev": {
-<<<<<<< HEAD
-        "phpunit/phpunit": "^11.0"
-=======
-        "phpunit/phpunit": "^12.1"
+        "phpunit/phpunit": "^11.1"
     },
     "require": {
         "vlucas/phpdotenv": "^5.6",
         "phpmailer/phpmailer": "^6.10",
         "dompdf/dompdf": "^3.1"
->>>>>>> 518032dbb592358f12981ce62c942b9c78caf328
     }
 }

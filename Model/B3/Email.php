@@ -47,7 +47,7 @@ class Email
             catch (Exception $e) 
             {
                 // On n'affiche l'erreur qu'en dev, pas en prod
-                if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development')
+                if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'dev')
                 {
                     echo "Erreur mail : {$this->mail->ErrorInfo}";
                 }

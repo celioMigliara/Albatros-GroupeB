@@ -1,26 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700&display=swap');
-/* Logo dans le coin supérieur gauche */
+
+
+
 .logo-container {
-    position: fixed;
+    position: absolute ;
     top: 0;
     left: 0;
     z-index: 300;
-    margin: 0;
-    padding: 0;
-    border-radius: 0 0 50% 0;
-    background-color: #94A77E;
 }
 
-.logo-container img {
-    height: auto;
+.logo-wrapper {
+    position: absolute ;
     width: 150px;
-    padding: 0;
-    position: relative;
-    z-index: 2001;
+    height: 150px;
+}
+
+.logo {
+    width: 110%;
+      margin-left: 24%; 
+    cursor: pointer;
+}
+
+.cercle-vert,
+.cercle-blanc {
+   
+    z-index: 1;
+}
+
+.cercle-vert {
+      position: absolute ;
+    top: -20%;
+     right: 90%;
+    width: 300px;
+    height: auto;
+    transform: rotate(75deg);
+    z-index: -1;
+}
+
+.cercle-blanc {
+    position: absolute ;
+    top: -14%; 
+    right: 86.5%;
+    width: 220px;   
+    height: auto;
+    transform: rotate(145deg);
+    z-index: -1;
 }
 
 .site-logo {
+     
     width: 150px;
     height: auto;
     display: block;

@@ -297,7 +297,7 @@ class DemandesController
 
             // Vérifier que l'utilisateur est le propriétaire de la demande
             $demande = DemandeB1::getById($idDemande);
-            if (!$demande || $demande['id_utilisateur'] != $_SESSION['user_id']) {
+            if (!$demande || $demande['id_utilisateur'] != $_SESSION['user']['id']) {
                 die("Vous n'avez pas l'autorisation d'annuler cette demande.");
             }
 
@@ -310,7 +310,7 @@ class DemandesController
             $success = DemandeB1::updateStatut($idDemande, 6);
 
             if ($success) {
-                header('Location: index.php');
+header('Location: ' . BASE_URL . '/ListeDemandes');
                 exit;
             } else {
                 die("Erreur lors de l'annulation de la demande.");

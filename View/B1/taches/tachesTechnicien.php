@@ -5,7 +5,7 @@ if (!UserConnectionUtils::isUserConnected()) {
     header('Location: ' . BASE_URL . "/connexion");
     exit;
 }
-
+var_dump($_SESSION['user']);
 ?>
 
 <!DOCTYPE html>
@@ -16,19 +16,19 @@ if (!UserConnectionUtils::isUserConnected()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
-    <?php if ($_SESSION['user']['role_id'] == 1): ?>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-<?php else: ?>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-<?php endif; ?>
+     <?php if ($_SESSION['user']['role_id']  == 1): ?>
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+    <?php else: ?>
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+    <?php endif; ?>
 
 </head>
 <body>
 <header>
-    <?php if ($_SESSION['user']['role_id'] == 1): ?>
+   <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
     <?php else: ?>
-        <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
+    <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
         <?php endif; ?>
     </header>
     <div class="tasks-page-container">

@@ -112,9 +112,9 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
 
 
         <!-- Bouton d'annulation pour les utilisateurs -->
-        <?php if ($_SESSION['user']['role_id']  == 3 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
+        <?php if ($_SESSION['user']['role_id']  == 3 || $_SESSION['user']['role_id']  == 2 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
             <div class="user-actions">
-                <form method="POST" action="index.php?action=annulerDemande&id=<?= htmlspecialchars($demande['id_demande']) ?>" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette demande ?');">
+<form method="POST" action="<?= BASE_URL ?>/annulerDemande/<?= htmlspecialchars($demande['id_demande']) ?>">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
                     <button type="submit" class="btn-danger">Annuler ma demande</button>
                 </form>

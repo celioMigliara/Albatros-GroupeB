@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
-
 ?>
 
 <html lang="fr">

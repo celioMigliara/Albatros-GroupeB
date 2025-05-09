@@ -11,13 +11,24 @@
 ?>
 <!-- Checkbox pour contrôler l'affichage du menu -->
 <input type="checkbox" id="menu-toggle-checkbox" class="menu-toggle-checkbox">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
 
-<!-- Logo dans le coin supérieur gauche -->
+    <title>Document</title>
+</head>
+<body>
 <div class="logo-container">
-    <a href="<?= BASE_URL ?>/AccueilTechnicien">
-        <img src="<?= BASE_URL ?>/Assets/B5/logo.png" alt="logo institut albatros" class="site-logo">
-        <link href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap" rel="stylesheet">
-    </a>
+  <a href="<?= BASE_URL ?>/AccueilTechnicien">
+    <div class="logo-wrapper">
+      <img src="https://www.albatros-asbl.be/wp-content/uploads/assets/little-circle-green.svg" class="cercle-vert" alt="cercle vert">
+      <img src="https://www.albatros-asbl.be/wp-content/uploads/assets/little-circle-white.svg" class="cercle-blanc" alt="cercle blanc">
+      <img src="https://www.albatros-asbl.be/wp-content/uploads/2022/09/Logo.svg" class="logo" alt="Logo Albatros">
+    </div>
+  </a>
 </div>
 
 <!-- HAMBURGER MENU - Toujours visible en mobile -->
@@ -62,6 +73,10 @@
         </ul>
     </nav>
 </div>
+
+</body>
+</html>
+<!-- Logo dans le coin supérieur gauche -->
 
 
 <!-- Script JS pour le menu déroulant -->

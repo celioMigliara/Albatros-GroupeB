@@ -26,7 +26,11 @@ $isTechnicien = $_SESSION['user']['role_id'] == 2; // Vérifier si l'utilisateur
 
 <body>
 
+      <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <?php require_once __DIR__ . '/../../B5/navbarAdmin.php'; ?>
+    <?php else: ?>
+    <?php require_once __DIR__ . '/../../B5/navbarTechnicien.php'; ?>
+        <?php endif; ?>
 
     <h1 class="titleB1"><?= $isTechnicien ? "Ajout d'informations à la tâche" : "Modification d'une tâche" ?></h1>
 

@@ -75,6 +75,8 @@ switch ($segments[0])
 
             break;
         
+    
+
             case 'AccueilAdmin':
                 if (!empty($_SESSION['user']['role_id']) && $_SESSION['user']['role_id'] == 1) {
                     require 'View/B5/AccueilAdmin.php';
@@ -160,7 +162,17 @@ switch ($segments[0])
         }
         break;
 
-   
+            case 'annulerDemande':
+    require_once __DIR__ . '/Controller/B1/DemandesController.php';
+    $DemandesController = new DemandesController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($segments[1]) && is_numeric($segments[1])) {
+        $_GET['id'] = (int)$segments[1]; // injection de l'ID dans $_GET
+        $DemandesController->annulerDemande();
+    } else {
+        error('Méthode non autorisée ou ID manquant ou invalide pour annulerDemande.');
+    }
+    break;
 
     case 'listedemande':
     if (isset($segments[1])) {
@@ -438,8 +450,10 @@ switch ($segments[0])
             default:
             $pageNotFound = true;
             break;
-    
+  
+
     }
+    
 
 if ($pageNotFound)
 {

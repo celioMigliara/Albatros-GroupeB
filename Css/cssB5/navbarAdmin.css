@@ -95,7 +95,7 @@ nav ul li a {
     font-size: 23px;
     color: white;
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 8px 14px;
     display: block;
 }
 
@@ -127,7 +127,8 @@ nav ul li a:hover {
     content: "↓";
     font-size: 0.8em;
     margin-left: 5px;
-    display: inline-block;
+     vertical-align: middle; /* Ajouté */
+    line-height: 1;   
 }
 
 /* Style des menus déroulants */
@@ -457,15 +458,17 @@ nav ul li a:hover {
     font-size: 12px;
     font-weight: bold;
     border-radius: 50%;
-    margin-left: 5px;
+    margin-left: 0;
     position: relative;
     top: -1px;
+   
 }
 
 /* Style pour les éléments de menu avec badge */
 .with-badge {
     display: flex;
     align-items: center;
+     gap: 3px;
 }
 
 /* Cacher la checkbox */

@@ -9,7 +9,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
     exit;
 }
 
-if (isset($_SESSION['popup_message'])) { 
+if (isset($_SESSION['popup_message'])) {
     $message = $_SESSION['popup_message']; //Stock  le message de la session
     $success = $_SESSION['popup_success'];
 
@@ -30,12 +30,12 @@ if (isset($_SESSION['popup_message'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB2/style_maintenance.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap" rel="stylesheet">
-   
+
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
 
     <title>Liste de maintenance</title>
 </head>
-    <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
+<?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
 <script>
     const BASE_URL = "<?= BASE_URL ?>";
@@ -43,18 +43,21 @@ if (isset($_SESSION['popup_message'])) {
 <script src="<?= BASE_URL ?>/Javascript/B2/script.js" defer></script>
 
 <body>
-<div id="popup" class="popup" style="display: none;">
-    <span id="popup-close" class="popup-close">&times;</span>
-    <p id="popup-message"></p>
-    <button id="popup-ok-btn">OK</button>
-</div>
+    <div id="popup" class="popup" style="display: none;">
+        <div class="modal-content">
+            <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2"
+                data-effect="mfp-move-horizontal">
+            <p id="popup-message"></p>
+            <button id="popup-ok-btn" class="">OK</button>
+        </div>
+    </div>
 
-<!-- Pop-up d’erreur -->
-<div id="error-popup" class="popup error" style="display: none;">
-    <span id="error-popup-close" class="popup-close">&times;</span>
-    <p id="error-message"></p>
-    <button id="error-ok-btn">OK</button>
-</div>
+    <!-- Pop-up d’erreur -->
+    <div id="error-popup" class="popup error" style="display: none;">
+        <span id="error-popup-close" class="popup-close">&times;</span>
+        <p id="error-message"></p>
+        <button id="error-ok-btn">OK</button>
+    </div>
     <h1 class="titre">Liste des maintenances</h1>
     <div class="separateur-double-ligne-B2"></div>
 
@@ -74,7 +77,8 @@ if (isset($_SESSION['popup_message'])) {
                                 <div class="dropdown-content" id="siteFilterMenu">
                                     <label>
                                         Tous
-                                        <input type="checkbox" id="select_all_sites" class="site-filter" value="Tous" checked>
+                                        <input type="checkbox" id="select_all_sites" class="site-filter" value="Tous"
+                                            checked>
                                     </label>
                                     <?php
                                     $uniqueSites = [];
@@ -84,12 +88,10 @@ if (isset($_SESSION['popup_message'])) {
                                         }
                                     }
                                     foreach ($uniqueSites as $id => $nom):
-                                    ?>
+                                        ?>
                                         <label>
                                             <?= htmlspecialchars($nom) ?>
-                                            <input type="checkbox"
-                                                class="site-filter"
-                                                value="<?= htmlspecialchars($id) ?>"
+                                            <input type="checkbox" class="site-filter" value="<?= htmlspecialchars($id) ?>"
                                                 checked>
                                         </label>
                                     <?php endforeach; ?>
@@ -111,10 +113,11 @@ if (isset($_SESSION['popup_message'])) {
                                 <td><?= htmlspecialchars($row["nom_site"]) ?></td>
                                 <td><?= htmlspecialchars($row["nom_batiment"]) ?></td>
                                 <td>
-                                    <a class="modif_recurr" href="<?= BASE_URL ?>/maintenance/modifier/<?= $row['id_recurrence'] ?>">Modifier</a>
+                                    <a class="modif_recurr"
+                                        href="<?= BASE_URL ?>/maintenance/modifier/<?= $row['id_recurrence'] ?>">Modifier</a>
                                 </td>
                             </tr>
-                    <?php
+                            <?php
                         endforeach;
                     }
                     ?>

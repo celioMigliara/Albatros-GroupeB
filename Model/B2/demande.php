@@ -77,6 +77,9 @@ class RecurrenceModel {
             if ($idUnite1 == $idUnite && $rappel > $frequence) {
                 return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
             }
+            else if($idUnite1 > $idUnite && $rappel > $frequence){
+                return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
+            }
         }
 
         // Insertion dans la base de données
@@ -165,6 +168,9 @@ class RecurrenceModel {
                 if ($idUnite1 == $idUnite && $rappel > $frequence) {
                     return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
                 }
+                else if($idUnite1 > $idUnite && $rappel > $frequence){
+                    return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
+                }
             }
 
             if($rappel =="" && $idUnite1==""){
@@ -179,7 +185,6 @@ class RecurrenceModel {
             if($dateAnnivObj < $today){
                 return ['success' => false, 'message' => "La date n'est pas valide"];
             }
-
 
             $stmt = $this->db->prepare("
                 UPDATE recurrence 

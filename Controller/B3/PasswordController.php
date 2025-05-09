@@ -79,11 +79,14 @@ class PasswordController
 
             // Créer le lien de réinitialisation
             // Le lien du site Web Albatros : https://www.albatros-asbl.be/
-            $defaultResetLink = "localhost/Albatros-GroupeB";
+            $defaultResetLink = "localhost/helha/Albatros-GroupeB";
             
             // Si on est en prod, on utilise le mail prod, sinon on utilise l'email de dev locale (localhost). On a de l'erreur checking pour éviter tout bug
-            $reset_link = (($_ENV['APP_ENV'] ?? '') === 'prod') ? ($_ENV['URL_PROD_RESET_MDP'] ?? $defaultResetLink) : ($_ENV['URL_LOCALE_RESET_MDP'] ?? $defaultResetLink);  
+           // Si on est en prod, on utilise le mail prod, sinon on utilise l'email de dev locale (localhost). On a de l'erreur checking pour éviter tout bug
+            
+$reset_link = (($_ENV['APP_ENV'] ?? '') === 'prod') ? ($_ENV['URL_PROD_RESET_MDP'] ?? $defaultResetLink) : ($_ENV['URL_LOCALE_RESET_MDP'] ?? $defaultResetLink);  
             $reset_link .= "/motdepasse/changer?token=" . $token->GetToken();
+
 
             // Envoyer l'email
             $subject = "Réinitialisation de votre mot de passe - Albatros";

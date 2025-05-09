@@ -7,6 +7,19 @@ require_once __DIR__ . '/../../Model/UserConnectionUtils.php';
 if (!UserConnectionUtils::isAdminConnected()) {
     header('Location: ' . BASE_URL . "/connexion");
     exit;
+    
+    if (isset($_SESSION['popup_message'])) { 
+    $message = $_SESSION['popup_message'];
+    $success = $_SESSION['popup_success'];
+
+    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showPopup(" . json_encode($message) . ", " . ($success ? 'false' : 'true') . ");
+    });
+    </script>";
+
+    unset($_SESSION['popup_message'], $_SESSION['popup_success']);
+}
 }
 ?>
 <!DOCTYPE html>

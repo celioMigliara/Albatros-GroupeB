@@ -309,10 +309,11 @@ class DemandesController
             // Statut 6 = Annulée
             $success = DemandeB1::updateStatut($idDemande, 6);
 
-            if ($success) {
-header('Location: ' . BASE_URL . '/ListeDemandes');
-                exit;
-            } else {
+           if ($success) {
+    $_SESSION['popup_annulation'] = true; //  stocke le flag
+    header('Location: ' . BASE_URL . '/ListeDemandes'); // redirection vers index route
+    exit;
+}else {
                 die("Erreur lors de l'annulation de la demande.");
             }
         }

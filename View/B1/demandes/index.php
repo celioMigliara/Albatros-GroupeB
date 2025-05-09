@@ -158,5 +158,28 @@ $filters = $filters ?? [];
             </form>
         <?php endif; ?>
     </div>
+    <?php if (!empty($_SESSION['popup_annulation'])): ?>
+    <div id="popupModal" class="modal">
+        <div class="modal-content">
+                  <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2" data-effect="mfp-move-horizontal">
+            <span class="close-btn" onclick="closePopupModal()">&times;</span>
+            <p>Votre demande a bien été annulée.</p>
+               <button onclick="closePopup()">FERMER</button>
+        </div>
+    </div>
+    <?php unset($_SESSION['popup_annulation']); ?>
+<?php endif; ?>
 </body>
 </html>
+<script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById("popupModal");
+
+    });
+    function closePopup() {
+     const modal = document.getElementById("popupModal");
+        if (modal) modal.style.display = "none";
+   
+}
+</script>

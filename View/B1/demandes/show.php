@@ -103,7 +103,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
                 </div>
             <?php endif; ?>
 
-            <?php if ($_SESSION['user']['role_id'] == 3 || ($_SESSION['user']['role_id'] == 2 && $isDemandeModifiable)): ?>
+            <?php if ($isDemandeModifiable && $_SESSION['user']['role_id'] == 3 || ($_SESSION['user']['role_id'] == 2 && $isDemandeModifiable )): ?>
                 <div class="form-row">
                     <button type="submit" class="btn btn-primary btn-modif">Modifier</button>
                 </div>
@@ -112,9 +112,9 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
 
 
         <!-- Bouton d'annulation pour les utilisateurs -->
-        <?php if ($_SESSION['user']['role_id']  == 3 || $_SESSION['user']['role_id']  == 2 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
+        <?php if ($isDemandeModifiable &&  $_SESSION['user']['role_id']  == 3 || $_SESSION['user']['role_id']  == 2 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
             <div class="user-actions">
-<form method="POST" action="<?= BASE_URL ?>/annulerDemande/<?= htmlspecialchars($demande['id_demande']) ?>">
+            <form method="POST" action="<?= BASE_URL ?>/annulerDemande/<?= htmlspecialchars($demande['id_demande']) ?>">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
                     <button type="submit" class="btn-danger">Annuler ma demande</button>
                 </form>

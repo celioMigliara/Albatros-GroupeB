@@ -128,7 +128,7 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
   </div>
  
 
-  <div id="popup-overlay-B2" class="popup-overlay"></div>
+  <div id="popup-overlay-B2" class="popup-overlay-B2"></div>
   <div id="popup" class="popup-B2">
     <div class="popup-content-B2">
       <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2" data-effect="mfp-move-horizontal">

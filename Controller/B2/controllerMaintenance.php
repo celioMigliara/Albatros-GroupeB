@@ -64,11 +64,10 @@ function ajouterMaintenance() {
                 $unite_freq, $unite_rappel
             );
 
-            echo "<script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    showPopup(" . json_encode($result["message"]) . ", " . ($result["success"] ? "false" : "true") . ");
-                });
-            </script>";
+         $_SESSION['popup_message'] = $result["message"];
+$_SESSION['popup_success'] = $result["success"];
+header('Location: ' . BASE_URL . '/recurrence');
+exit;
 
         } catch (Exception $e) {
             echo "<p style='color: red;'>Erreur : " . $e->getMessage() . "</p>";

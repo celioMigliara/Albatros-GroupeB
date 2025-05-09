@@ -20,6 +20,8 @@ body {
   align-items: center;
   flex-direction: column;
   font-family: "Caveat Brush", cursive;
+      background-color: #f5f3f3;
+
 }
 
 /* Overlay semi-transparent avec effet de flou */
@@ -38,6 +40,8 @@ body {
   /* Permet de ne pas interférer avec les interactions utilisateur */
   z-index: -999;
   /* Assure que l'overlay est derrière le contenu */
+      background-color: #f5f3f3;
+
 }
 
 /* ========================================================================== */

@@ -20,10 +20,11 @@
 /* Base */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f3f3;
     color: var(--dark-color);
     margin: 0;
     padding: 0;
+                background-color: #f5f3f3;
+
 }
 
 .container {

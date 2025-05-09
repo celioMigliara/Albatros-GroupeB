@@ -16,7 +16,7 @@ class DemandesController
             session_start();
         }
 
-        
+
 
         $userId = $_SESSION['user']['id'];
         $userRole = $_SESSION['user']['role_id'];
@@ -212,7 +212,8 @@ class DemandesController
         }
     }
 
-    public function updateDemande() {
+    public function updateDemande()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = intval($_POST['id']);
             $data = [
@@ -221,45 +222,54 @@ class DemandesController
                 'nom_lieu' => $_POST['nom_lieu'] ?? null,
                 'description_dmd' => $_POST['description_dmd'] ?? null,
             ];
-    
+
             // Si le formulaire ne vient que pour ajouter un média, ne pas mettre à jour les autres champs
-            $isMediaUploadOnly = !empty($_FILES['media']['name']) && 
-                                 empty($data['nom_site']) && 
-                                 empty($data['nom_batiment']) && 
-                                 empty($data['nom_lieu']) && 
-                                 empty($data['description_dmd']);
-    
+            $isMediaUploadOnly = !empty($_FILES['media']['name']) &&
+                empty($data['nom_site']) &&
+                empty($data['nom_batiment']) &&
+                empty($data['nom_lieu']) &&
+                empty($data['description_dmd']);
+
             // Mettre à jour la demande seulement si ce n'est pas un simple upload de média
             if (!$isMediaUploadOnly) {
                 DemandeB1::updateDemande($id, $data);
             }
-    
+
             // Gérer l'upload du média
             if (!empty($_FILES['media']['name'])) {
                 $uploadDir = __DIR__ . '/../../Public/Uploads/';
 
-                
+
                 // Créer le répertoire s'il n'existe pas
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-                
+
                 // Générer un nom de fichier unique
                 $mediaName = time() . '_' . basename($_FILES['media']['name']);
                 $targetFile = $uploadDir . $mediaName;
-    
+
                 // Vérifier le type de fichier
                 $allowedTypes = [
-                    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
-                    'video/mp4', 'video/webm', 'audio/mpeg', 'application/pdf',
-                    'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                    'image/webp',
+                    'video/mp4',
+                    'video/webm',
+                    'audio/mpeg',
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'application/vnd.ms-excel',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'application/vnd.ms-powerpoint',
+                    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                     'text/plain'
                 ];
-                
+
                 $fileType = $_FILES['media']['type'];
-                
+
                 if (in_array($fileType, $allowedTypes) && move_uploaded_file($_FILES['media']['tmp_name'], $targetFile)) {
                     // Ajouter le média à la base de données
                     Media::addMediaToDemande($id, $mediaName);
@@ -309,11 +319,11 @@ class DemandesController
             // Statut 6 = Annulée
             $success = DemandeB1::updateStatut($idDemande, 6);
 
-           if ($success) {
-    $_SESSION['popup_annulation'] = true; //  stocke le flag
-    header('Location: ' . BASE_URL . '/ListeDemandes'); // redirection vers index route
-    exit;
-}else {
+            if ($success) {
+                $_SESSION['popup_annulation'] = true; //  stocke le flag
+                header('Location: ' . BASE_URL . '/ListeDemandes'); // redirection vers index route
+                exit;
+            } else {
                 die("Erreur lors de l'annulation de la demande.");
             }
         }

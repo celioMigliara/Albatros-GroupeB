@@ -5,6 +5,15 @@ const END_DATE_KEY = "endDate";
 const STATUS_FILTER_KEY = "statusFilter";
 const MEDIA_FILTER_KEY = "mediaFilter";
 
+// Feature non testée !!
+// Mettre ce flag à true si on veut changer le comportement des médias
+// Par défaut (à false), l'url du média est affichée et l'admin clique dessus pour accéder à la
+// ressource qui est hébérgée sur internet.
+// Avec le flag à true, l'url du média devient le nom du fichier qui est contenu
+// dans /Public/Uploads/
+// Et donc on ouvre le fichier qui est stocké en local
+let OUVRIR_MEDIA_EN_TANT_QUE_FICHIER_LOCAL = false;
+
 // Définition des clés pour la gestion des techniciens du localStorage
 const PRESENT_KEY = "techniciens_presents";
 const TECHNICIEN_KEY = "technicien_courant";
@@ -284,7 +293,13 @@ function showMediaPopup(mediaList) {
 
     mediaList.forEach(media => {
         const li = document.createElement('li');
-        li.innerHTML = `<strong>${escapeHTML(media.nom_media)}:</strong> <a href="${escapeHTML(media.url_media)}" target="_blank">${escapeHTML(media.url_media)}</a>`;
+        let mediaUrl = media.url_media;
+        if (OUVRIR_MEDIA_EN_TANT_QUE_FICHIER_LOCAL === true)
+        {
+            mediaUrl = BASE_URL + "/Public/Uploads/" + mediaUrl;
+        }
+
+        li.innerHTML = `<strong>${escapeHTML(media.nom_media)}:</strong> <a href="${escapeHTML(mediaUrl)}" target="_blank">${escapeHTML(media.url_media)}</a>`;
         ul.appendChild(li);
     });
 

@@ -31,7 +31,7 @@ if (!isset($nbComptesEnAttente)) {
 
  
         <div class="logo-container">
-            <a href="<?= BASE_URL ?>/AccueilAdmin.php">
+            <a href="<?= BASE_URL ?>/AccueilAdmin">
                 <div class="logo-wrapper">
                     <img src="https://www.albatros-asbl.be/wp-content/uploads/assets/little-circle-green.svg" class="cercle-vert" alt="cercle vert">
                     <img src="https://www.albatros-asbl.be/wp-content/uploads/assets/little-circle-white.svg" class="cercle-blanc" alt="cercle blanc">

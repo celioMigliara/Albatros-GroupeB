@@ -20,7 +20,22 @@ class RecurrenceModel {
         // 🔹 Insérer la récurrence
         $idUnite = $this->obtenirIdUnite($uniteFrequence);
         $idUnite1 = $this->obtenirIdUnite($uniteRappel);
-    
+
+        // Vérification que le lieu, le bâtiment et le site sont tous actifs
+        $stmt = $this->db->prepare("
+            SELECT l.id_lieu
+            FROM lieu l
+            JOIN batiment b ON l.id_batiment = b.id_batiment
+            JOIN site s ON b.id_site = s.id_site
+            WHERE l.id_lieu = ? AND l.actif_lieu != 0 AND b.actif_batiment != 0 AND s.actif_site != 0
+        ");
+        $stmt->execute([$idLieu]);
+        $lieuActif = $stmt->fetch();
+
+        if (!$lieuActif) {
+            return ['success' => false, 'message' => "Le lieu sélectionné n'est pas valide ou inactif."];
+        }
+
         // 🔹 Vérifications des champs obligatoires
         if (empty($sujet)) {
             return ['success' => false, 'message' => "Entrez un titre pour la maintenance"];
@@ -32,15 +47,6 @@ class RecurrenceModel {
     
         if (!is_numeric($frequence) || $frequence <= 0) {
             return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
-        }
-    
-        // Vérifications supplémentaires
-        if($frequence > 100 && $uniteFrequence == "mois"){
-            return ['success' => false, 'message' => "Entrez une fréquence valide pour les mois, pas plus de 100 mois"];
-        }
-    
-        if($frequence > 5 && $uniteFrequence == "année"){
-            return ['success' => false, 'message' => "Entrez une fréquence valide pour les années, pas plus de 5 ans"];
         }
 
         if (!$idUnite) {
@@ -125,16 +131,23 @@ class RecurrenceModel {
             $idUnite = $this->obtenirIdUnite($uniteFrequence);
             $idUnite1 = $this->obtenirIdUnite($uniteRappel);
 
-            if (!is_numeric($frequence) || $frequence <= 0) {
-                return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
+            // Vérification que le lieu, le bâtiment et le site sont tous actifs
+            $stmt = $this->db->prepare("
+                SELECT l.id_lieu
+                FROM lieu l
+                JOIN batiment b ON l.id_batiment = b.id_batiment
+                JOIN site s ON b.id_site = s.id_site
+                WHERE l.id_lieu = ? AND l.actif_lieu != 0 AND b.actif_batiment != 0 AND s.actif_site != 0
+            ");
+            $stmt->execute([$idLieu]);
+            $lieuActif = $stmt->fetch();
+
+            if (!$lieuActif) {
+                return ['success' => false, 'message' => "Le lieu sélectionné n'est pas valide ou inactif."];
             }
 
-            if($frequence >100 && $uniteFrequence =="mois"){
-                return ['success' => false, 'message' => "Entrez une frequence valide pour les mois , pas plus de 100 mois"];
-            }
-            
-            if($frequence >5 && $uniteFrequence =="année"){
-                return ['success' => false, 'message' => "Entrez une frequence valide pour les années , pas plus de 5 ans"];
+            if (!is_numeric($frequence) || $frequence <= 0) {
+                return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
             }
 
             if (!$idUnite) {

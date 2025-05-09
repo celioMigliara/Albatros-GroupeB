@@ -109,7 +109,7 @@ if (isset($_SESSION['popup_message'])) {
                         foreach ($result as $row): ?>
                             <tr class="table-row" data-site="<?= htmlspecialchars($row['id_site']) ?>">
                                 <td><?= htmlspecialchars($row["sujet_reccurrence"]) ?></td>
-                                <td><?= htmlspecialchars($row["date_anniv_recurrence"]) ?></td>
+                                <td><?= date('d/m/Y', strtotime($row["date_anniv_recurrence"])) ?></td>
                                 <td><?= htmlspecialchars($row["nom_site"]) ?></td>
                                 <td><?= htmlspecialchars($row["nom_batiment"]) ?></td>
                                 <td>

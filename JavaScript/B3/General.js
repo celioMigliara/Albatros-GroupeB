@@ -1,6 +1,44 @@
 // On initialise l'objet XMLHttpRequest
 var xhr = null;
+var pendingPopup = null;
 InitXHR();
+
+document.addEventListener("DOMContentLoaded", handlePopup);
+
+// Fonction appelée à chaque chargement du script JS pour gérer les popup en attente
+function handlePopup() {
+  // Récupérer l'objet JSON de localStorage
+  const popupDataStr = localStorage.getItem('popupData');
+
+  // Vérifier si l'objet existe dans localStorage
+  if (popupDataStr) {
+    // Convertir la chaîne JSON en objet JavaScript
+    const popupData = safeJsonParse(popupDataStr);
+    if (!popupData)
+    {
+      console.warn("Erreur de parsing JSON, la popup est ignorée.");
+      return;
+    }
+
+    // On crée la popup
+    CreateSimplePopup(popupData.message, popupData.status === "success");
+
+    // Supprimer les données de localStorage après utilisation
+    localStorage.removeItem('popupData');
+  }
+}
+
+// Fonction pour stocker une popup en attente
+function storePopupData(message, success) {
+  // Création d'un objet avec les données dynamiques
+  const popupData = {
+    "status": success,
+    "message": message
+  };
+
+  // Stocker l'objet JSON dans localStorage en le convertissant en chaîne JSON
+  localStorage.setItem('popupData', JSON.stringify(popupData));
+}
 
 function InitXHR() {
   xhr = new XMLHttpRequest();
@@ -280,6 +318,12 @@ function HandleReadyStateChange() {
 
     if (Json.redirect) {
       console.log(xhr.responseText);
+
+      // Si on a un message du serveur, le mettre dans une popup en attente
+      if (Json.message)
+      {
+        storePopupData(Json.message, Json.status);
+      }
 
       // Se rediriger vers la page
       window.location.href = Json.redirect;

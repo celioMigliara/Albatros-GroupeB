@@ -141,7 +141,8 @@ class AuthController
             // Réponse JSON avec le message de succès
             echo json_encode([
                 'status' => 'success',
-                'message' => 'Votre demande d\'inscription a bien été envoyée. Elle sera examinée par un administrateur.'
+                'message' => 'Votre demande d\'inscription a bien été envoyée. Elle sera examinée par un administrateur.',
+                'redirect' => BASE_URL . '/connexion'
             ]);
             return true;
         } else {

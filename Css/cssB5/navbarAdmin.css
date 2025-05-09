@@ -45,7 +45,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    right: 6%;
     z-index: 200; /* Inférieur au z-index du logo pour ne pas le cacher */
     padding: 0;
     display: flex;
@@ -92,7 +92,7 @@ nav ul li {
 nav ul li a {
     font-family: 'Caveat Brush', cursive; 
     font-weight: bold;
-    font-size: 20px;
+    font-size: 23px;
     color: white;
     text-decoration: none;
     padding: 8px 16px;

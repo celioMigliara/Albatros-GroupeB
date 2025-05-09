@@ -17,8 +17,8 @@
 }
 
 .logo {
-    width: 110%;
-      margin-left: 24%; 
+    width: 98%;
+      margin-left: 18%; 
     cursor: pointer;
 }
 
@@ -31,8 +31,8 @@
 .cercle-vert {
       position: absolute ;
     top: -100%;
-     right: 1%;
-    width: 300px;
+     right: 15%;
+    width: 260px;
     height: auto;
     transform: rotate(75deg);
     z-index: -1;
@@ -40,8 +40,8 @@
 
 .cercle-blanc {
     position: absolute ;
-    top: -68%; 
-    right: -55%;
+    top: -88%; 
+    right: -43%;
     width: 220px;   
     height: auto;
     transform: rotate(145deg);

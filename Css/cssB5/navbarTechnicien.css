@@ -30,8 +30,8 @@
 
 .cercle-vert {
       position: absolute ;
-    top: -20%;
-     right: 90%;
+    top: -100%;
+     right: 1%;
     width: 300px;
     height: auto;
     transform: rotate(75deg);
@@ -40,8 +40,8 @@
 
 .cercle-blanc {
     position: absolute ;
-    top: -14%; 
-    right: 86.5%;
+    top: -68%; 
+    right: -55%;
     width: 220px;   
     height: auto;
     transform: rotate(145deg);

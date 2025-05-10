@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../Model/B4/Lieu.php';
 require_once __DIR__ . '/../../Model/B4/Batiment.php';
+require_once __DIR__ . '/../../Model/B4/Site.php';
 
 class LieuxController
 {
@@ -78,6 +79,8 @@ class LieuxController
 
         $lieu = Lieu::getLieuById($id_lieu);
         $id_batiment = $lieu['id_batiment'] ?? null;
+        $everythingActive = $lieu['actif_lieu'] && $lieu['actif_batiment'] && $lieu['actif_site'];
+        $batimentAndSiteActive = $lieu['actif_batiment'] && $lieu['actif_site'];
 
         if (!$lieu) {
             header('Location: sites');
@@ -103,7 +106,9 @@ class LieuxController
 
             if (isset($_POST['activate_lieu'])) {
                 Lieu::reactivateLieu($id_lieu);
-                header('Location: ../lieux?id=' . $id_lieu);
+                Batiment::reactivateBatiment($id_batiment);
+                Site::reactivateSite($lieu['id_site']);
+                header('Location: detail?id=' . $id_lieu);
                 exit;
             }
         }

@@ -34,7 +34,7 @@ class BatimentsController
                 }
 
                 if (isset($_POST['activate_site'])) {
-                    Site::reacticateSite($id_site);
+                    Site::reactivateSite($id_site);
                     header("Location: batiments?id=$id_site");
                     exit;
                 }

@@ -35,11 +35,15 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <h2>Modification du Lieu</h2>
 
         <!-- Bouton supprimer ou réactiver -->
-        <?php if ($lieu['actif_lieu']): 
+        <?php if ($everythingActive): 
             $message = "Êtes‑vous sûr de vouloir supprimer le lieu {$lieu['nom_lieu']} ?";?>
             <button type="button" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)" class="delete">Supprimer le lieu</button>
         <?php else: 
-            $message = "Êtes-vous sûr de vouloir réactiver le lieu {$lieu['nom_lieu']} ?";?>
+            if ($batimentAndSiteActive){
+                $message = "Êtes-vous sûr de vouloir réactiver le lieu {$lieu['nom_lieu']} ?";
+            } else {
+                $message = "En reactivant ce lieu, vous réactiverez également le bâtiment et le site associés. Êtes-vous sûr de vouloir continuer ?";
+            }?>
             <button type="button" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)" class="add">Réactiver le lieu</button>
         <?php endif; ?>
         
@@ -64,7 +68,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <!-- Popup dynamique : suppression ou réactivation -->
         <div class="overlay" id="overlay" onclick="closeLieuDetailPopup()"></div>
         <div class="popup" id="deletePopup">
-            <?php if ($lieu['actif_lieu']): ?>
+            <?php if ($everythingActive): ?>
                 <h3>Confirmer la suppression</h3>
                 <p id="deletePopupMessage">Êtes-vous sûr de vouloir supprimer ce lieu ?</p>
                 <form method="post">

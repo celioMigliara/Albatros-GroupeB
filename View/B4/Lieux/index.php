@@ -73,18 +73,21 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <?php endif; ?>
     </div>
 
-     <table class="table">
-            <thead class="table-header">
-        <tr>
-            <th>Lieu</th>
-            <?php if (!isset($id_batiment)): ?>
-                <th>Bâtiment</th>
-                <th>Site</th>
-            <?php endif; ?>
-        </tr>
-    </thead>
+    <table class="table">
+<thead class="table-header">
+    <tr>
+        <th>Lieu</th>
+        <?php if (!isset($id_batiment)): ?>
+            <th>Bâtiment</th>
+            <th>Site</th>
+        <?php endif; ?>
 
-      <tbody class="tbody">
+        <?php if (($filter ?? '') === 'all'): ?>
+            <th>Statut</th>   <!-- nouvelle colonne -->
+        <?php endif; ?>
+    </tr>
+</thead>
+        <tbody class="tbody">
         <?php if (!empty($lieux)): ?>
             <?php foreach ($lieux as $lieu): ?>
                 <tr
@@ -97,17 +100,23 @@ if (!UserConnectionUtils::isAdminConnected()) {
                         <td><?= htmlspecialchars($lieu['nom_batiment']) ?></td>
                         <td><?= htmlspecialchars($lieu['nom_site']) ?></td>
                     <?php endif; ?>
+
+                    <?php if (($filter ?? '') === 'all'): ?>
+                        <td><?= $lieu['actif_lieu'] ? 'Actif' : 'Inactif' ?></td>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         <?php else: ?>
+            <?php
+                // Colspan dynamique : 1 (Lieu) + évent. 2 (Bâtiment/Site) + évent. 1 (Statut)
+                $colspan = 1 + (!isset($id_batiment) ? 2 : 0) + (($filter ?? '') === 'all' ? 1 : 0);
+            ?>
             <tr>
-                <td colspan="<?= !isset($id_batiment) ? 3 : 1 ?>">
-                    Aucun lieu disponible.
-                </td>
+                <td colspan="<?= $colspan ?>">Aucun lieu disponible.</td>
             </tr>
         <?php endif; ?>
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 
     <?php if (isset($id_batiment)): ?>

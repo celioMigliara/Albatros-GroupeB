@@ -35,7 +35,12 @@ class Lieu
     public static function getLieuById($id)
     {
         self::initDb();
-        $stmt = self::$db->prepare("SELECT * FROM lieu WHERE id_lieu = ?");
+        $stmt = self::$db->prepare("
+        SELECT l.*, b.actif_batiment, s.id_site, s.actif_site 
+        FROM lieu AS l
+        JOIN batiment AS b ON b.id_batiment = l.id_batiment
+        JOIN site AS s ON s.id_site = b.id_site
+        WHERE l.id_lieu = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -86,7 +91,20 @@ class Lieu
     public static function getAllLieuByBatiment($id_batiment)
     {
         self::initDb();
-        $stmt = self::$db->prepare("SELECT * FROM lieu WHERE id_batiment = ?");
+        $stmt = self::$db->prepare("        SELECT  l.*,
+                b.nom_batiment                                                     AS nom_batiment,
+                s.nom_site                                                         AS nom_site,
+                CASE
+                    WHEN b.actif_batiment = 0          -- ou = FALSE
+                    OR s.actif_site     = 0          -- ou = FALSE
+                    THEN 0                             -- renvoyé comme FALSE
+                    ELSE s.actif_site                  -- valeur réelle sinon
+                END AS actif_lieu
+
+        FROM    lieu      AS l
+        JOIN    batiment  AS b ON b.id_batiment = l.id_batiment
+        JOIN    site      AS s ON s.id_site     = b.id_site
+		WHERE l.id_batiment = ?;");
         $stmt->execute([$id_batiment]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -114,11 +132,18 @@ public static function getAllLieuxWithBatiment(): array
 
     $sql = "
         SELECT  l.*,
-                b.nom_batiment                         AS nom_batiment,
-                s.nom_site                             AS nom_site
-        FROM    lieu l
-        JOIN    batiment b ON l.id_batiment = b.id_batiment
-        JOIN    site     s ON b.id_site     = s.id_site
+                b.nom_batiment                                                     AS nom_batiment,
+                s.nom_site                                                         AS nom_site,
+                CASE
+                    WHEN b.actif_batiment = 0          -- ou = FALSE
+                    OR s.actif_site     = 0          -- ou = FALSE
+                    THEN 0                             -- renvoyé comme FALSE
+                    ELSE s.actif_site                  -- valeur réelle sinon
+                END AS actif_lieu
+
+        FROM    lieu      AS l
+        JOIN    batiment  AS b ON b.id_batiment = l.id_batiment
+        JOIN    site      AS s ON s.id_site     = b.id_site;
     ";
 
     return self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);

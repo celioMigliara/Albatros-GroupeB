@@ -136,6 +136,8 @@ public static function getActiveLieuxWithBatiment(): array
         JOIN    batiment b ON l.id_batiment = b.id_batiment
         JOIN    site     s ON b.id_site     = s.id_site
         WHERE   l.actif_lieu      = TRUE
+        AND     b.actif_batiment = TRUE
+        AND     s.actif_site     = TRUE
     ";
 
     return self::$db->query($sql)->fetchAll(PDO::FETCH_ASSOC);

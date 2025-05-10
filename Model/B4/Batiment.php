@@ -25,7 +25,7 @@ class Batiment
     public static function getActiveBatiments()
     {
         self::initDb();
-        $query = self::$db->query("SELECT * FROM batiment WHERE actif_batiment = true");
+        $query = self::$db->query("SELECT b.* FROM batiment AS b INNER JOIN site AS s  ON s.id_site = b.id_site WHERE b.actif_batiment = true AND s.actif_site     = true");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 

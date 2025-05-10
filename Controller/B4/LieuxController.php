@@ -7,7 +7,7 @@ class LieuxController
     public function index()
     {
         $id_batiment = $_GET['id'] ?? null;
-        $filter = $_GET['filter'] ?? 'all';
+        $filter = $_GET['filter'] ?? 'active';
 
         $lieux = [];
 

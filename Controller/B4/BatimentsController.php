@@ -7,7 +7,7 @@ class BatimentsController
     public function index()
     {
         $id_site = $_GET['id'] ?? null;
-        $filter = $_GET['filter'] ?? 'all';
+        $filter = $_GET['filter'] ?? 'active';
 
         $batiments = [];
         if ($id_site) {

@@ -9,7 +9,7 @@ class SitesController
 {
     public function index()
     {
-        $filter = $_GET['filter'] ?? 'all';
+        $filter = $_GET['filter'] ?? 'active';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_site'])) {
             $nom = $_POST['site_name'] ?? '';

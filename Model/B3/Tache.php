@@ -45,15 +45,17 @@ class Tache
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
 
-        // Requête SQL pour récupérer le numero de ticket
+        // Requête SQL pour récupérer le numero de ticket, le lieu, batiment et site d'une tache
         $sql = "SELECT 
-                    d.num_ticket_dmd,
-                    l.nom_lieu, 
-                    b.nom_batiment
-                FROM demande d
-                INNER JOIN lieu l ON d.Id_lieu = l.Id_lieu
-                INNER JOIN batiment b ON l.Id_batiment = b.Id_batiment
-                WHERE d.Id_demande = :demandeId";
+            d.num_ticket_dmd,
+            l.nom_lieu, 
+            b.nom_batiment,
+            s.nom_site
+        FROM demande d
+        INNER JOIN lieu l ON d.Id_lieu = l.Id_lieu
+        INNER JOIN batiment b ON l.Id_batiment = b.Id_batiment
+        INNER JOIN site s ON b.Id_site = s.Id_site
+        WHERE d.Id_demande = :demandeId";
 
         // Préparation de la requête
         $stmt = $pdo->prepare($sql);

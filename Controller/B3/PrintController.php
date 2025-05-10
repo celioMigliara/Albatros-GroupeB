@@ -64,6 +64,36 @@ class PrintController
             return false;
         }
 
+        // On ajoute ici le lieu, le batiment, le site et le numéro de ticket de la demande 
+        foreach ($tasks as &$task)
+        {
+            // On recupère l'id de la tâche et de la demande
+            $taskId = $task['Id_tache'] ?? null;
+            $demandeId = $task['Id_demande'] ?? null;
+
+            // Si un des deux champs est absent, alors on skip cette tache qui est invalide
+            if (empty($taskId) || empty($demandeId))
+            {
+                continue;
+            }
+
+            // On va créer une instance de la classe Tache pour chaque tâche
+            $tache = new Tache($taskId);
+            $tache->setDemandeId($demandeId);
+
+            $taskData = $tache->getTasksDataByDemandeId();
+
+            // Si on a bien reçu un array
+            if (is_array($taskData)) 
+            {
+                // Alors on boucle dessus pour rajouter les infos du lieu dans chaque tache
+                foreach ($taskData as $key => $value) 
+                {
+                    $task[$key] = $value;
+                }
+            }
+        }
+
         // retourne le code HTTP 200 (OK) si tout est bon
         http_response_code(200);
 

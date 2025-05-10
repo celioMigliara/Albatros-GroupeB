@@ -29,42 +29,105 @@ class FeuilleDeRoute
     
         // Construction du HTML
         $html = "<html><head><style>
-            body { font-family: DejaVu Sans, sans-serif; padding: 30px; font-size: 12px; }
-            h1 { text-align: center; font-size: 20px; margin-bottom: 30px; }
-            .info { margin-bottom: 20px; }
-            .tache { border: 1px solid #aaa; padding: 10px; margin-bottom: 20px; border-radius: 5px; }
-            .tache h2 { margin: 0 0 10px; font-size: 16px; }
-            .meta { color: #555; font-size: 11px; margin-bottom: 5px; }
-            .commentaire, .description { margin-top: 10px; }
+            body { font-family: DejaVu Sans, sans-serif; padding: 30px; font-size: 13px; color: #000; }
+            h1 { text-align: center; font-size: 22px; margin-bottom: 30px; color: #000; }
+            .info { margin-bottom: 20px; font-weight: bold; }
+            .tache {
+                border: 1px solid #aaa;
+                padding: 10px 15px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                position: relative;
+            }
+            .tache h2 {
+                margin: 0 0 10px;
+                font-size: 16px;
+                font-weight: bold;
+                color: #111;
+            }
+            .meta, .localisation {
+                color: #333;
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            .description, .commentaire {
+                margin-top: 10px;
+                font-size: 13px;
+                color: #111;
+            }
+            .checkbox {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                text-align: center;
+                font-size: 11px;
+                color: #333;
+            }
+            .checkbox label {
+                display: block;
+                margin-bottom: 3px;
+                font-weight: bold;
+            }
+            .checkbox input[type='checkbox'] {
+                width: 18px;
+                height: 18px;
+                margin-top: 3px;
+                background-color: #f2f2f2;
+            }
             .page { page-break-after: always; }
-            .footer { position: fixed; bottom: -30px; left: 0; right: 0; text-align: center; font-size: 11px; color: #666; }
+            .footer {
+                position: fixed;
+                bottom: -30px;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 11px;
+                color: #667;
+            }
         </style></head><body>";
-    
+
         $numeroOrdre = 1;
-        // Génération de chaque page
-        foreach ($groupes as $index => $pageTasks) 
-        {
+
+        foreach ($groupes as $index => $pageTasks) {
             $html .= "<div class='page'>";
             $html .= "<h1>Feuille de route - $prenom $nom</h1>";
             $html .= "<div class='info'>Date : $dateJour</div>";
-    
-            foreach ($pageTasks as $task) 
-            {
+
+            foreach ($pageTasks as $task) {
+
+                // On setup les données avec le format souhaité
                 $planif = $task['date_planif_tache'] ? date('d/m/Y H:i', strtotime($task['date_planif_tache'])) : 'Non planifiée';
+                $lieu = ucfirst(strtolower($task['nom_lieu'] ?? ''));
+                $batiment = ucfirst(strtolower($task['nom_batiment'] ?? ''));
+                $site = ucfirst(strtolower($task['nom_site'] ?? ''));
+                $ticket = htmlspecialchars($task['num_ticket_dmd'] ?? 'N/A');
+                $sujet = htmlspecialchars($task['sujet_tache'] ?? '');
+                $description = nl2br(htmlspecialchars($task['description_tache'] ?? ''));
+                $commentaire = nl2br(htmlspecialchars($task['commentaire_technicien_tache'] ?? ''));
+
+                // On rajoute les données pour l'affichage
                 $html .= "<div class='tache'>
-                    <h2>#{$numeroOrdre} - " . htmlspecialchars($task['sujet_tache']) . "</h2>
-                    <div class='meta'>Planifiée le : $planif</div>
-                    <div class='description'><strong>Description :</strong><br>" . nl2br(htmlspecialchars($task['description_tache'] ?? '')) . "</div>
-                    <div class='commentaire'><strong>Commentaire :</strong><br>" . nl2br(htmlspecialchars($task['commentaire_technicien_tache'] ?? '')) . "</div>
+                    <div class='checkbox'>
+                        <label>Tâche complétée</label>
+                        <input type='checkbox'>
+                    </div>
+                    <h2>#{$numeroOrdre} - $sujet</h2>
+                    <div class='meta'><strong>Ticket :</strong> $ticket &nbsp; | &nbsp; <strong>Planifiée le :</strong> $planif</div>
+                    <div class='localisation'><strong>Site :</strong> $site &nbsp; | &nbsp; <strong>Bâtiment :</strong> $batiment &nbsp; | &nbsp; <strong>Lieu :</strong> $lieu</div>
+                    <div class='description'><strong>Description :</strong><br>$description</div>
+                    <div class='commentaire'><strong>Commentaire :</strong><br>$commentaire</div>
                 </div>";
+
+                // On incrémente le compteur pour que la prochaine tache est le numéro d'ordre "virtuel" suivant
                 $numeroOrdre++;
             }
-    
+
             $html .= "</div>"; // .page
         }
-    
+
         $html .= "</body></html>";
-    
+
         // Configuration Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);

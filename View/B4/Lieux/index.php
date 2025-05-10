@@ -16,6 +16,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+        <script src="<?= BASE_URL ?>/JavaScript/B4/popup.js"></script>
    
 </head>
 
@@ -33,11 +34,12 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <br>
         <div class="header">
             <h2>Modifier le bâtiment</h2>
-
-            <?php if ($batiment['actif_batiment']): ?>
-                <button type="button" class="delete" onclick="openDeletePopup()">Supprimer le bâtiment</button>
-            <?php else: ?>
-                <button type="button" class="add" onclick="openDeletePopup()">Réactiver le bâtiment</button>
+            <?php if ($batiment['actif_batiment']): 
+                $message = "Êtes‑vous sûr de vouloir supprimer le bâtiment {$batiment['nom_batiment']} ?";?>
+                <button type="button" class="delete" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Supprimer le bâtiment</button>
+            <?php else: 
+                $message = "Êtes‑vous sûr de vouloir réactiver le bâtiment {$batiment['nom_batiment']} ?";?>
+                <button type="button" class="add" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Réactiver le bâtiment</button>
             <?php endif; ?>
         </div>
 
@@ -65,7 +67,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
             </form>
             
         <?php if (isset($id_batiment)): ?>
-            <button class="add" onclick="openPopup()">Ajouter un lieu</button>
+            <button class="add" onclick="openAddPopup()">Ajouter un lieu</button>
         <?php else: ?>
             <br>
         <?php endif; ?>
@@ -114,61 +116,42 @@ if (!UserConnectionUtils::isAdminConnected()) {
 </div>
 
 <!-- Popup suppression ou réactivation -->
+<div class="overlay" id="overlay" onclick="closeLieuPopup()"></div>
 <?php if (isset($id_batiment)): ?>
-    <div class="overlay" id="overlay-delete" onclick="closeDeletePopup()"></div>
     <?php if ($batiment['actif_batiment']): ?>
-        <div class="popup-delete" id="popup-delete">
+        <div class="popup-delete" id="deletePopup">
             <h3>Confirmer la suppression</h3>
-            <p>Êtes-vous sûr de vouloir supprimer ce bâtiment ?</p>
+            <p id="deletePopupMessage">Êtes-vous sûr de vouloir supprimer ce bâtiment ?</p>
             <form method="post">
                 <div class="button-group">
                     <button type="submit" name="delete_batiment" class="delete">Confirmer</button>
-                    <button type="button" onclick="closeDeletePopup()" class="stop">Annuler</button>
+                    <button type="button" onclick="closeLieuPopup()" class="stop">Annuler</button>
                 </div>
             </form>
         </div>
     <?php else: ?>
-        <div class="popup-delete" id="popup-delete">
+        <div class="popup-delete" id="deletePopup">
             <h3>Confirmer la réactivation</h3>
-            <p>Voulez-vous réactiver ce bâtiment ?</p>
+            <p id="deletePopupMessage">Voulez-vous réactiver ce bâtiment ?</p>
             <form method="post">
                 <div class="button-group">
                     <button type="submit" name="activate_batiment" class="save">Confirmer</button>
-                    <button type="button" onclick="closeDeletePopup()" class="delete">Annuler</button>
+                    <button type="button" onclick="closeLieuPopup()" class="delete">Annuler</button>
                 </div>
             </form>
         </div>
     <?php endif; ?>
 
     <!-- Popup ajout lieu -->
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
-    <div class="popup" id="popup">
+    
+    <div class="popup" id="addPopup">
         <h3>Ajouter un lieu</h3>
         <form method="post">
             <label for="lieuName">Nom du lieu :</label>
             <input type="text" id="lieuName" name="lieu_name" required>
             <br><br>
             <button type="submit" name="add_lieu" class="save">Ajouter</button>
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeLieuPopup()" class="delete">Annuler</button>
         </form>
     </div>
 <?php endif; ?>
-
-<script>
-    function openDeletePopup() {
-        document.getElementById("popup-delete").style.display = "block";
-        document.getElementById("overlay-delete").style.display = "block";
-    }
-    function closeDeletePopup() {
-        document.getElementById("popup-delete").style.display = "none";
-        document.getElementById("overlay-delete").style.display = "none";
-    }
-    function openPopup() {
-        document.getElementById("popup").style.display = "block";
-        document.getElementById("overlay").style.display = "block";
-    }
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-        document.getElementById("overlay").style.display = "none";
-    }
-</script>

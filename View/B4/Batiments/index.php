@@ -16,6 +16,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+        <script src="<?= BASE_URL ?>/JavaScript/B4/popup.js"></script>
    
 </head>
 
@@ -46,10 +47,12 @@ if (!UserConnectionUtils::isAdminConnected()) {
                 </select>
             </form>
 
-            <?php if ($site['actif_site']): ?>
-                <button type="button" class="delete" onclick="openDeletePopup()">Supprimer le site</button>
-            <?php else: ?>
-                <button type="button" class="add" onclick="openDeletePopup()">Activer le site</button>
+            <?php if ($site['actif_site']): 
+                $message = "Êtes‑vous sûr de vouloir supprimer le site {$site['nom_site']} ?";?>
+                <button type="button" class="delete" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Supprimer le site</button>
+            <?php else: 
+                $message = "Êtes‑vous sûr de vouloir réactiver le site {$site['nom_site']} ?";?>
+                <button type="button" class="add" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Activer le site</button>
             <?php endif; ?>
         </div>
 
@@ -68,7 +71,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <h2>Bâtiments</h2>
         
         <?php if(isset($id_site)): ?>
-            <button class="add" onclick="openPopup()">Ajouter un bâtiment</button>
+            <button class="add" onclick="openAddPopup()">Ajouter un bâtiment</button>
         <?php else: ?>
 
              <!-- Formulaire de filtrage des bâtiments -->
@@ -121,38 +124,35 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <br><a href="sites">← Retour à la liste des sites</a>
     <?php endif; ?>
 </div>
-
+<div class="overlay" id="overlay" onclick="closeBatimentPopup()"></div>
 <!-- Popup suppression -->
 <?php if (isset($id_site)): ?>
     <?php if ($site['actif_site']): ?>
-        <div class="overlay" id="overlay-delete" onclick="closeDeletePopup()"></div>
-        <div class="popup-delete" id="popup-delete">
+        <div class="popup-delete" id="deletePopup">
             <h3>Confirmer la suppression</h3>
-            <p>Êtes-vous sûr de vouloir supprimer ce site ?</p>
+            <p id="deletePopupMessage">Êtes-vous sûr de vouloir supprimer ce site ?</p>
             <form method="post">
                 <div class="button-group">
                     <button type="submit" name="delete_site" class="delete">Confirmer</button>
-                    <button type="button" onclick="closeDeletePopup()" class="stop">Annuler</button>
+                    <button type="button" onclick="closeBatimentPopup()" class="stop">Annuler</button>
                 </div>
             </form>
         </div>
     <?php else: ?>
-        <div class="overlay" id="overlay-delete" onclick="closeDeletePopup()"></div>
-        <div class="popup-delete" id="popup-delete">
+        <div class="popup-delete" id="deletePopup">
             <h3>Confirmer l'activation</h3>
-            <p>Êtes-vous sûr de vouloir réactiver ce site ?</p>
+            <p id="deletePopupMessage">Êtes-vous sûr de vouloir réactiver ce site ?</p>
             <form method="post">
                 <div class="button-group">
                     <button type="submit" name="activate_site" class="save">Confirmer</button>
-                    <button type="button" onclick="closeDeletePopup()" class="delete">Annuler</button>
+                    <button type="button" onclick="closeBatimentPopup()" class="delete">Annuler</button>
                 </div>
             </form>
         </div>
     <?php endif; ?>
 
     <!-- Popup ajout bâtiment -->
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
-    <div class="popup" id="popup">
+    <div class="popup" id="addPopup">
         <h3>Ajouter un bâtiment</h3>
         <form method="post">
             <input type="hidden" name="id_site" value="<?= $id_site ?>">
@@ -160,26 +160,11 @@ if (!UserConnectionUtils::isAdminConnected()) {
             <input type="text" id="batimentName" name="batiment_name" required>
             <br><br>
             <button type="submit" name="add_batiment" class="save">Ajouter</button>
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeBatimentPopup()" class="delete">Annuler</button>
         </form>
     </div>
 <?php endif; ?>
 
 <script>
-    function openDeletePopup() {
-        document.getElementById("popup-delete").style.display = "block";
-        document.getElementById("overlay-delete").style.display = "block";
-    }
-    function closeDeletePopup() {
-        document.getElementById("popup-delete").style.display = "none";
-        document.getElementById("overlay-delete").style.display = "none";
-    }
-    function openPopup() {
-        document.getElementById("popup").style.display = "block";
-        document.getElementById("overlay").style.display = "block";
-    }
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-        document.getElementById("overlay").style.display = "none";
-    }
+
 </script>

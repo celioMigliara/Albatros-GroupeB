@@ -41,7 +41,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
                     <option value="active" <?= $filter === 'active' ? 'selected' : '' ?>>Sites actifs</option>
                 </select>
             </form>
-            <button class="add" onclick="openPopup()">Ajouter</button>
+            <button class="add" onclick="openAddPopup()">Ajouter</button>
         </div>
         <!-- Affichage des sites -->
        <table class="table">
@@ -73,20 +73,20 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <form action="sites/import" method="post" enctype="multipart/form-data" onsubmit="return validateUpload()">
             <input type="file" name="excel_file" id="excel_file" accept=".xlsx" required><br><br>
             <input type="submit" value="Importer" class="save">
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeSitePopup()" class="delete">Annuler</button>
         </form>
     </div>
 
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+    <div class="overlay" id="overlay" onclick="closeSitePopup()"></div>
     <!-- Popup pour ajouter un site -->
-    <div class="popup" id="popup">
+    <div class="popup" id="addPopup">
         <h3>Ajouter un site</h3>
         <form method="post">
             <label for="site_name">Nom du site :</label>
             <input type="text" id="site_name" name="site_name" required>
             <br><br>
             <button class="save" type="submit" name="add_site">Ajouter</button>
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeSitePopup()" class="delete">Annuler</button>
         </form>
     </div>
 </body>

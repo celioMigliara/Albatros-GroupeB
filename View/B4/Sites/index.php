@@ -41,24 +41,44 @@ if (!UserConnectionUtils::isAdminConnected()) {
                     <option value="active" <?= $filter === 'active' ? 'selected' : '' ?>>Sites actifs</option>
                 </select>
             </form>
-            <button class="add" onclick="openAddPopup()">Ajouter</button>
+        <button class="add" onclick="openAddPopup()">Ajouter</button>
         </div>
         <!-- Affichage des sites -->
-       <table class="table">
+        <table class="table">
             <thead class="table-header">
                 <tr>
                     <th>Nom</th>
+
+                    <!-- ► Colonne « Statut » quand on affiche TOUS les sites -->
+                    <?php if (($filter ?? '') === 'all'): ?>
+                        <th>Statut</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
+
             <tbody class="tbody">
+            <?php if (!empty($sites)): ?>
                 <?php foreach ($sites as $site): ?>
-                    <tr onclick="window.location.href='batiments?id=<?= $site['id_site'] ?>'" style="cursor: pointer;">
+                    <tr
+                        onclick="window.location.href='batiments?id=<?= $site['id_site'] ?>'"
+                        style="cursor: pointer;"
+                    >
                         <td><?= htmlspecialchars($site['nom_site']) ?></td>
+
+                        <?php if (($filter ?? '') === 'all'): ?>
+                            <td><?= $site['actif_site'] ? 'Actif' : 'Inactif' ?></td>
+                        <?php endif; ?>
                     </tr>
-                    
                 <?php endforeach; ?>
+            <?php else: ?>
+                <?php $colspan = 1 + (($filter ?? '') === 'all' ? 1 : 0); ?>
+                <tr>
+                    <td colspan="<?= $colspan ?>">Aucun site disponible.</td>
+                </tr>
+            <?php endif; ?>
             </tbody>
         </table>
+
         <div class="center"></div>
             <button id="openImport" class="center" onclick="openImportPopup()">Importer via un fichier Excel</button>
         </div>

@@ -34,12 +34,16 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <br>
         <div class="header">
             <h2>Modifier le bâtiment</h2>
-            <?php if ($batiment['actif_batiment']): 
+            <?php if ($batimentAndSiteActive): 
                 $message = "Êtes‑vous sûr de vouloir supprimer le bâtiment {$batiment['nom_batiment']} ?";?>
-                <button type="button" class="delete" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Supprimer le bâtiment</button>
+                <button type="button" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)" class="delete">Supprimer le lieu</button>
             <?php else: 
-                $message = "Êtes‑vous sûr de vouloir réactiver le bâtiment {$batiment['nom_batiment']} ?";?>
-                <button type="button" class="add" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Réactiver le bâtiment</button>
+                if ($batiment['actif_site']){
+                    $message = "Êtes-vous sûr de vouloir réactiver le bâtiment {$batiment['nom_batiment']} ?";
+                } else {
+                    $message = "En reactivant ce bâtiment, vous réactiverez également le site associé. Êtes-vous sûr de vouloir continuer ?";
+                }?>
+                <button type="button" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)" class="add">Réactiver le lieu</button>
             <?php endif; ?>
         </div>
 
@@ -57,14 +61,16 @@ if (!UserConnectionUtils::isAdminConnected()) {
     <div class="header">
         <h2 style="margin-top: 30px;">Lieux</h2>
             <!-- Formulaire de filtrage des lieux -->
-            <form method="get" action="" style="margin-top: 10px;">
-                <input type="hidden" name="id" value="<?= $id_batiment ?>">
-                <label for="filter">Afficher:</label>
-                <select name="filter" id="filter" onchange="this.form.submit()">
-                    <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les lieux</option>
-                    <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Lieux actifs</option>
-                </select>
-            </form>
+            <?php if ((isset($batiment['actif_batiment']) && $batiment['actif_batiment']) || !isset($batiment['actif_batiment'])): ?>
+                <form method="get" action="" style="margin-top: 10px;">
+                    <input type="hidden" name="id" value="<?= $id_batiment ?>">
+                    <label for="filter">Afficher:</label>
+                    <select name="filter" id="filter" onchange="this.form.submit()">
+                        <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les lieux</option>
+                        <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Lieux actifs</option>
+                    </select>
+                </form>
+            <?php endif; ?>
             
         <?php if (isset($id_batiment)): ?>
             <button class="add" onclick="openAddPopup()">Ajouter un lieu</button>
@@ -74,19 +80,19 @@ if (!UserConnectionUtils::isAdminConnected()) {
     </div>
 
     <table class="table">
-<thead class="table-header">
-    <tr>
-        <th>Lieu</th>
-        <?php if (!isset($id_batiment)): ?>
-            <th>Bâtiment</th>
-            <th>Site</th>
-        <?php endif; ?>
+        <thead class="table-header">
+            <tr>
+                <th>Lieu</th>
+                <?php if (!isset($id_batiment)): ?>
+                    <th>Bâtiment</th>
+                    <th>Site</th>
+                <?php endif; ?>
 
-        <?php if (($filter ?? '') === 'all'): ?>
-            <th>Statut</th>   <!-- nouvelle colonne -->
-        <?php endif; ?>
-    </tr>
-</thead>
+                <?php if (($filter ?? '') === 'all'): ?>
+                    <th>Statut</th>
+                <?php endif; ?>
+            </tr>
+        </thead>
         <tbody class="tbody">
         <?php if (!empty($lieux)): ?>
             <?php foreach ($lieux as $lieu): ?>
@@ -108,7 +114,6 @@ if (!UserConnectionUtils::isAdminConnected()) {
             <?php endforeach; ?>
         <?php else: ?>
             <?php
-                // Colspan dynamique : 1 (Lieu) + évent. 2 (Bâtiment/Site) + évent. 1 (Statut)
                 $colspan = 1 + (!isset($id_batiment) ? 2 : 0) + (($filter ?? '') === 'all' ? 1 : 0);
             ?>
             <tr>
@@ -127,7 +132,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
 <!-- Popup suppression ou réactivation -->
 <div class="overlay" id="overlay" onclick="closeLieuPopup()"></div>
 <?php if (isset($id_batiment)): ?>
-    <?php if ($batiment['actif_batiment']): ?>
+    <?php if ($batimentAndSiteActive): ?>
         <div class="popup-delete" id="deletePopup">
             <h3>Confirmer la suppression</h3>
             <p id="deletePopupMessage">Êtes-vous sûr de vouloir supprimer ce bâtiment ?</p>

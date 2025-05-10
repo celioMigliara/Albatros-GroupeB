@@ -36,17 +36,6 @@ if (!UserConnectionUtils::isAdminConnected()) {
     <?php if (isset($site)): ?>
         <div class="header">
             <h2>Modifier le site</h2>
-            
-        <!-- Formulaire de filtrage des bâtiments -->
-            <form method="get" action="">
-                <input type="hidden" name="id" value="<?= $id_site ?>">
-                <label for="filter">Afficher:</label>
-                <select name="filter" id="filter" onchange="this.form.submit()">
-                    <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les bâtiments</option>
-                    <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Bâtiments actifs</option>
-                </select>
-            </form>
-
             <?php if ($site['actif_site']): 
                 $message = "Êtes‑vous sûr de vouloir supprimer le site {$site['nom_site']} ?";?>
                 <button type="button" class="delete" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)">Supprimer le site</button>
@@ -69,56 +58,71 @@ if (!UserConnectionUtils::isAdminConnected()) {
     <!-- Bâtiments -->
     <div class="header">
         <h2>Bâtiments</h2>
+
+            <?php if ((isset($site['actif_site']) && $site['actif_site'])|| !isset($site['actif_site'])): ?>
+                <form method="get" action="" style="margin-top: 10px;">
+                    <input type="hidden" name="id" value="<?= $id_site ?>">
+                    <label for="filter">Afficher:</label>
+                    <select name="filter" id="filter" onchange="this.form.submit()">
+                        <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les bâtiments</option>
+                        <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Bâtiments actifs</option>
+                    </select>
+                </form>
+            <?php endif; ?>
+
         
         <?php if(isset($id_site)): ?>
             <button class="add" onclick="openAddPopup()">Ajouter un bâtiment</button>
         <?php else: ?>
-
-             <!-- Formulaire de filtrage des bâtiments -->
-             <form method="get" action="">
-                <input type="hidden" name="id" value="<?= $id_site ?>">
-                <label for="filter">Afficher:</label>
-                <select name="filter" id="filter" onchange="this.form.submit()">
-                    <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les bâtiments</option>
-                    <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Bâtiments actifs</option>
-                </select>
-            </form>
-            <br>
+            <br>           
         <?php endif; ?>
     </div>
-     <table class="table">
-            <thead class="table-header">
+    <table class="table">
+        <thead class="table-header">
             <tr>
                 <th>Bâtiment</th>
                 <?php if ($id_site === null): ?>
                     <th>Site</th>
                 <?php endif; ?>
+
+                <!-- ► nouvelle colonne « Statut » quand $filter == false -->
+                <?php if ($filter === 'all'): ?>
+                    <th>Statut</th>
+                <?php endif; ?>
             </tr>
         </thead>
 
-      <tbody class="tbody">
-            <?php if (!empty($batiments)): ?>
-                <?php foreach ($batiments as $batiment): ?>
-                    <tr
-                        onclick="window.location.href='lieux?id=<?= $batiment['id_batiment'] ?>'"
-                        style="cursor:pointer;"
-                    >
-                        <td><?= htmlspecialchars($batiment['nom_batiment']) ?></td>
+        <tbody class="tbody">
+        <?php if (!empty($batiments)): ?>
+            <?php foreach ($batiments as $batiment): ?>
+                <tr
+                    onclick="window.location.href='lieux?id=<?= $batiment['id_batiment'] ?>'"
+                    style="cursor:pointer;"
+                >
+                    <td><?= htmlspecialchars($batiment['nom_batiment']) ?></td>
 
-                        <?php if ($id_site === null): ?>
-                            <td><?= htmlspecialchars($batiment['nom_site']) ?></td>
-                        <?php endif; ?>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="<?= $id_site === null ? 2 : 1 ?>">
-                        Aucun bâtiment disponible.
-                    </td>
+                    <?php if ($id_site === null): ?>
+                        <td><?= htmlspecialchars($batiment['nom_site']) ?></td>
+                    <?php endif; ?>
+
+                    <!-- ► valeur de la nouvelle colonne -->
+                    <?php if ($filter === 'all'): ?>
+                        <td><?= $batiment['actif_batiment'] ? 'Actif' : 'Inactif' ?></td>
+                    <?php endif; ?>
                 </tr>
-            <?php endif; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <?php
+                /* colspan dynamique : 1 (Bâtiment) + évent. 1 (Site) + évent. 1 (Statut) */
+                $colspan = 1 + ($id_site === null ? 1 : 0) + ($filter === false ? 1 : 0);
+            ?>
+            <tr>
+                <td colspan="<?= $colspan ?>">Aucun bâtiment disponible.</td>
+            </tr>
+        <?php endif; ?>
         </tbody>
     </table>
+
 
     <?php if (isset($id_site)): ?>
         <br><a href="sites">← Retour à la liste des sites</a>
@@ -164,7 +168,3 @@ if (!UserConnectionUtils::isAdminConnected()) {
         </form>
     </div>
 <?php endif; ?>
-
-<script>
-
-</script>

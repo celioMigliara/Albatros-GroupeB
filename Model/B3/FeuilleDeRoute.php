@@ -8,7 +8,7 @@ use Dompdf\Options;
 class FeuilleDeRoute 
 {
     // Constantes pour la pagination
-    public const tasksParPage = 4;
+    public const tasksParPage = 3;
 
     // Fonction pour générer le PDF
     public static function generatePDF($tasks, $prenom, $nom, $debutPage = 1, $nombreDePages = 1) 
@@ -24,7 +24,8 @@ class FeuilleDeRoute
         $tasks = array_slice($tasks, max(($debutPage - 1) * self::tasksParPage, 0), $maxTasks);
     
         // Découpage des tâches par page avec un principe de groupes
-        $groupes = array_chunk($tasks, self::tasksParPage);
+        $tasksPerPage = $_ENV['TASK_PAR_PAGE_FDR'] ?? self::tasksParPage; 
+        $groupes = array_chunk($tasks, $tasksPerPage);
         $dateJour = date('d/m/Y');
     
         // Construction du HTML
@@ -70,9 +71,8 @@ class FeuilleDeRoute
                 font-weight: bold;
             }
             .checkbox input[type='checkbox'] {
-                width: 18px;
-                height: 18px;
-                margin-top: 3px;
+                transform: scale(2);
+                margin-top: 10px;
                 background-color: #f2f2f2;
             }
             .page { page-break-after: always; }

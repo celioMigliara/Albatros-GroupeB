@@ -5,7 +5,7 @@
   padding: 30px;
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   max-width: 80%;
   margin: auto;
   align-items: flex-start;
@@ -26,18 +26,70 @@
 }
 
 .reset-input-btn {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #f9bb30;
-    font-size: 1.2em;
-    cursor: pointer;
-    z-index: 2;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #f9bb30;
+  font-size: 1.2em;
+  cursor: pointer;
+  z-index: 2;
 }
 
 .reset-input-btn:hover {
-    color: #d33;
+  color: #d33;
+}
+
+
+#modifier-profil-btn {
+  background-color: #ea742f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#modifier-profil-btn:hover {
+  background-color: #fece58;
+}
+
+#modifier-profil-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.TextNameFirstName {
+  margin: 0;
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.TextEmail {
+  margin: 0;
+  color: #666;
+  font-size: 1.1em;
+}
+
+
+@media (min-width: 577px) and (max-width: 1300px) {
+
+  .profile-summary {
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .TextNameFirstName {
+    font-size: 20px;
+  }
+
+  .TextEmail {
+    font-size: 15px;
+  }
 }

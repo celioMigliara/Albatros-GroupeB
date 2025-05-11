@@ -12,7 +12,6 @@
     <?php else: ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
     <?php endif; ?>
-
 </head>
 
 <body style="background: none !important;">
@@ -30,10 +29,10 @@
 
         <div class="left">
             <section class="profile-summary" style="display: flex; align-items: center; gap: 16px; margin: 30px auto; width: fit-content;">
-                <img src="<?= BASE_URL ?>/Assets/B5/iconusr_orange.png" alt="Icone utilisateur" style="width: 60px; height: 60px;">
+                <img src="<?= BASE_URL ?>/Assets/B3/LogoUserVert.png" alt="Icone utilisateur" style="width: 65px; height: 65px;">
                 <div>
-                    <p style="margin: 0; font-weight: bold; font-size: 1.2em;"><?php echo htmlspecialchars(strtoupper($userNom) . ' ' . ucfirst(strtolower($userPrenom))); ?></p>
-                    <p style="margin: 0; color: #666;"><?php echo htmlspecialchars($userEmail); ?></p>
+                    <p class ="TextNameFirstName"><?php echo htmlspecialchars(strtoupper($userNom) . ' ' . ucfirst(strtolower($userPrenom))); ?></p>
+                    <p class ="TextEmail"><?php echo htmlspecialchars($userEmail); ?></p>
                 </div>
             </section>
         </div>

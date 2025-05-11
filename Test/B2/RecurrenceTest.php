@@ -90,7 +90,8 @@ class RecurrenceTest  extends TestCase{
         $this->assertEquals($_SESSION['user_agent'], $_SERVER['HTTP_USER_AGENT'], "L'agent utilisateur dans la session ne correspond pas.");
     }
 
-    public function testAjouterRecurrence(): void {
+   
+   public function testAjouterRecurrence(): void {
 
         // 🔹 Date actuelle + 1 jour
         $date = new DateTime();
@@ -237,7 +238,7 @@ class RecurrenceTest  extends TestCase{
         );
     
         $this->assertFalse($result['success']);
-        $this->assertEquals("Le délai de rappel ne peut être supérieur à la fréquence de la maintenance.", $result['message']);
+        $this->assertEquals("Le délai de rappel ne peut pas dépasser la fréquence, toutes unités confondues.", $result['message']);
     }
     
     public function testAjouterRecurrenceSansUniteRappelMaisAvecFrequence(): void {
@@ -258,7 +259,7 @@ class RecurrenceTest  extends TestCase{
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
         $frequence = 20; 
-        $rappel = 21;
+        $rappel = 17;
         $idLieu = 1;
 
         $uniteFrequence = 'jour';
@@ -270,7 +271,7 @@ class RecurrenceTest  extends TestCase{
         );
     
         $this->assertFalse($result['success']);
-        $this->assertEquals("Le délai de rappel et l'unité de rappel ne peuvent êtres supérieur à la fréquence de la maintenance.", $result['message']);
+        $this->assertEquals("Le délai de rappel ne peut pas dépasser la fréquence, toutes unités confondues.", $result['message']);
     }
     
     public function testAjouterRecurrenceDateInvalide(): void {
@@ -582,14 +583,14 @@ class RecurrenceTest  extends TestCase{
         $description = 'Description de test modifié';
         $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
         $frequence = 8; 
-        $rappel = 9;
+        $rappel = 7;
         $idLieu = 1;
         $uniteFrequence = 'jour';
         $uniteRappel = 'mois';
 
         $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
         $this->assertFalse($result['success']);
-        $this->assertEquals("Le délai de rappel et l'unité de rappel ne peuvent êtres supérieur à la fréquence de la maintenance.", $result['message']);
+        $this->assertEquals("Le délai de rappel ne peut pas dépasser la fréquence, toutes unités confondues.", $result['message']);
     }
     public function testModifierRecurrenceDateInvalide(): void {
 
@@ -653,7 +654,7 @@ class RecurrenceTest  extends TestCase{
 
         $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
         $this->assertFalse($result['success']);
-        $this->assertEquals("Le délai de rappel ne peut être supérieur à la fréquence de la maintenance.", $result['message']);
+        $this->assertEquals("Le délai de rappel ne peut pas dépasser la fréquence, toutes unités confondues.", $result['message']);
     }
     public function testModifierRecurrenceDelaiRappelNegatif(): void {
 

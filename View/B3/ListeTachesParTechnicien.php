@@ -11,7 +11,7 @@
 </head>
 
 <body data-page="ListeTaches">
-<?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
+    <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
     <div class="overlay"></div>
 
@@ -26,7 +26,7 @@
             <!-- Conteneur du choix du technicien -->
             <div class="container_technicien">
                 <select name="technicien_id" id="technicienSelect">
-                    <option value="">Sélectionnez un technicien</option>
+                    <option value="0">Sélectionnez un technicien</option>
                     <?php
                     foreach ($techniciens as $tech): ?>
                         <option value="<?= htmlspecialchars($tech['Id_utilisateur']) ?>">
@@ -48,37 +48,55 @@
         <!-- Zone des filtres de recherche -->
         <div class="filters">
             <div class="filter-group">
-                <input type="text" id="searchInput" placeholder="Rechercher...">
-
-                <!-- Ajouter les champs pour la recherche par date -->
                 <div>
+                    <label for="searchInput">Recherche par mot-clé :</label>
+                    <br>
+                    <input type="text" id="searchInput" placeholder="Rechercher...">
+                </div>
+
+                <div>
+                    <label for="startDate">Date de début :</label>
+                    <br>
                     <input type="date" id="startDate" placeholder="Date début">
                 </div>
+
                 <div>
+                    <label for="endDate">Date de fin :</label>
+                    <br>
                     <input type="date" id="endDate" placeholder="Date fin">
                 </div>
 
-                <select name="statusFilter" id="statusFilter" multiple size=6>
-                    <option value="0">Tous statuts</option>
-                    <?php
-                    foreach ($statuts as $statut): ?>
-                        <option value="<?= htmlspecialchars($statut['Id_statut']) ?>">
-                            <?= htmlspecialchars($statut['nom_statut']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div>
+                    <label for="statusFilter">Filtrer par statut :</label>
+                    <br>
+                    <select name="statusFilter" id="statusFilter" multiple size="6">
+                        <option value="0">Tous statuts</option>
+                        <?php foreach ($statuts as $statut): ?>
+                            <option value="<?= htmlspecialchars($statut['Id_statut']) ?>">
+                                <?= htmlspecialchars($statut['nom_statut']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <select id="mediaFilter">
-                    <option value="0">Pas de filtre média</option>
-                    <option value="1">Uniquement sans média</option>
-                    <option value="2">Uniquement avec média</option>
-                </select>
+                <div>
+                    <label for="mediaFilter">Filtrer par média :</label>
+                    <br>
+                    <select id="mediaFilter">
+                        <option value="0">Pas de filtre média</option>
+                        <option value="1">Uniquement sans média</option>
+                        <option value="2">Uniquement avec média</option>
+                    </select>
+                </div>
 
-                <button id="resetFiltersBtn">
-                    🔄 Réinitialiser les filtres
-                </button>
+                <div>
+                    <button id="resetFiltersBtn">
+                        🔄 Réinitialiser les filtres
+                    </button>
+                </div>
             </div>
         </div>
+
 
         <div class="buttons">
             <button id="saveOrder">Enregistrer l'ordre des taches</button>

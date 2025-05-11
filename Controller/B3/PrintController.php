@@ -49,8 +49,8 @@ class PrintController
         }
 
         // Declare les variables pour la pagination
-        $debutPage = $_GET['debutPage'] ?? 1;
-        $nombreDePages = $_GET['nombrePage'] ?? 0; // 0 veut dire tout
+        $debutTask = $_GET['debutTask'] ?? 1; // On commence à la task 1
+        $nombreDeTask = $_GET['nombreTask'] ?? 0; // 0 veut dire tout
 
         // Vérifie si le technicien existe et a des tâches assignées
         $technicien = new Technicien(intval($techId));
@@ -105,7 +105,7 @@ class PrintController
         $prenom = $techNomEtPrenom['prenom_utilisateur'] ?? "prenom absent";
         
         // Vérifie si le technicien a des tâches assignées
-        FeuilleDeRoute::generatePDF($tasks, $nom, $prenom, $debutPage, $nombreDePages);
+        FeuilleDeRoute::generatePDF($tasks, $nom, $prenom, $debutTask, $nombreDeTask);
         return true;
     }
 }

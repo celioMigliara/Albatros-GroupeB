@@ -229,53 +229,6 @@ if (ChangerMdpForm) {
   });
 }
 
-// Ajout d'un listener pour changer le mot de passe
-var ModifierProfilForm = document.getElementById(
-  "formulaire-modification-profil"
-);
-if (ModifierProfilForm) {
-  ModifierProfilForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // Récupération des données du formulaire
-    let newNom = document.getElementById("nom_utilisateur").value;
-    let newPrenom = document.getElementById("prenom_utilisateur").value;
-    let newMail = document.getElementById("mail_utilisateur").value;
-    let newPassword = document.getElementById("mdp_utilisateur").value;
-    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-
-    // On ajoute les paramètres de requete
-    let RequestParameter = "";
-
-    // Ajouter les paramètres uniquement si la valeur est définie (non vide)
-    if (newNom) {
-      RequestParameter += "nom_utilisateur=" + encodeURIComponent(newNom);
-    }
-
-    if (newPrenom) {
-      RequestParameter +=
-        "&prenom_utilisateur=" + encodeURIComponent(newPrenom);
-    }
-
-    if (newMail) {
-      RequestParameter += "&mail_utilisateur=" + encodeURIComponent(newMail);
-    }
-
-    if (newPassword) {
-      RequestParameter += "&mdp_utilisateur=" + encodeURIComponent(newPassword);
-    }
-    // Ajout du token CSRF aux paramètres de requête
-    RequestParameter += "&csrf_token=" + encodeURIComponent(csrfToken);
-    
-
-    if (RequestParameter.charAt(0) === "&") {
-      RequestParameter = RequestParameter.slice(1);
-    }
-    // Et on l'envoie, si aucune requete n'est déjà en cours
-    SendRequestPOST(RequestParameter, BASE_URL + "/profil/modifier", true);
-  });
-}
-
 function SendRequestPOST(SendParameter, OpenPath, StopIfSending = true) {
   // On peut autoriser seulement 1 requete à la fois grace à StopIfSending
   // Si le readyState est différent de 0, cela voudrait dire qu'on est en pleine requete
@@ -337,6 +290,21 @@ function HandleReadyStateChange() {
       console.log(Json.debug);
     }
   }
+}
+
+function isValidEmail(email) {
+    const basicCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const strictCheck = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+    return basicCheck && strictCheck;
+}
+
+function isStrongPassword(password, minLength = 8, maxLength = 64) {
+    const lengthOK = password.length >= minLength && password.length <= maxLength;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+
+    return lengthOK && hasUpper && hasLower && hasDigit;
 }
 
 function CreateSimplePopup(message, IsSuccess) {

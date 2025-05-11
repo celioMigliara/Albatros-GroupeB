@@ -7,6 +7,33 @@ require_once 'Model/UserConnectionUtils.php';
 
 class ProfileController
 {
+    public function index()
+    {
+        // Instanciation de l'object Security pour les sessions protégées
+        $securityObj = new Security();
+
+        if (UserConnectionUtils::isUserConnected()) 
+        {
+            // Génération du token CSRF pour le formulaire
+            $csrf_token = $securityObj->genererCSRFToken();
+
+            // Affectation des variables suivantes pour la vue ModifierProfil.php
+            $userNom = $_SESSION['user']['nom'] ?? 'Nom introuvable';
+            $userPrenom = $_SESSION['user']['prenom']?? 'Prénom introuvable';
+            $userEmail = $_SESSION['user']['email'] ?? 'Email introuvable';
+
+            require './View/B3/ModifierProfil.php';
+            return true;
+        } 
+        else 
+        {
+            // On setup le message d'erreur pour la vue
+            $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
+            require './View/B3/PageErreur.php';
+            return false;
+        }
+    }
+
     // Fonction pour modifier le profil de l'utilisateur
     public function updateProfile()
     {
@@ -178,22 +205,16 @@ class ProfileController
             }
 
             return $result;
-        } else {
-            if (UserConnectionUtils::isUserConnected()) {
+        } 
+        else 
+        {
+            // Code 403 (accès refusé)
+            http_response_code(403);
 
-                // Génération du token CSRF pour le formulaire
-                $csrf_token = $securityObj->genererCSRFToken();
-
-                // Affiche la page si la méthode n'est pas POST (en cas de simple visite de la page)
-                require './View/B3/ModifierProfil.php';
-                return true;
-            } else {
-
-                // On setup le message d'erreur pour la vue
-                $errorMsg = new MessageErreur("Chargement de la page impossible", "Veuillez vous connecter pour changer votre profil.");
-                require './View/B3/PageErreur.php';
-                return false;
-            }
+            // On setup le message d'erreur pour la vue
+            $errorMsg = new MessageErreur("Chargement de la page impossible", "Méthode non autorisée");
+            require './View/B3/PageErreur.php';
+            return false;
         }
     }
 }

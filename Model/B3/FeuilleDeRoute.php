@@ -11,17 +11,17 @@ class FeuilleDeRoute
     public const tasksParPage = 3;
 
     // Fonction pour générer le PDF
-    public static function generatePDF($tasks, $prenom, $nom, $debutPage = 1, $nombreDePages = 1) 
+    public static function generatePDF($tasks, $prenom, $nom, $debutTask = 1, $nombreDeTask = 1) 
     {
         // On veut les nom/prenoms en miniscule avec la première lettre en majuscule
         $prenom = ucfirst(strtolower($prenom));
         $nom = ucfirst(strtolower($nom));
     
         // Déterminer combien de tâches à afficher
-        $maxTasks = $nombreDePages > 0 ? $nombreDePages * self::tasksParPage : count($tasks);
+        $maxTasks = $nombreDeTask > 0 ? $nombreDeTask : count($tasks);
         
         // Prendre uniquement les taches pertinentes à nos critères
-        $tasks = array_slice($tasks, max(($debutPage - 1) * self::tasksParPage, 0), $maxTasks);
+        $tasks = array_slice($tasks, max($debutTask - 1, 0), $maxTasks);
     
         // Découpage des tâches par page avec un principe de groupes
         $tasksPerPage = $_ENV['TASK_PAR_PAGE_FDR'] ?? self::tasksParPage; 

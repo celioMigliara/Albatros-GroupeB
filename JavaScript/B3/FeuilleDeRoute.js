@@ -12,7 +12,7 @@ const MEDIA_FILTER_KEY = "mediaFilter";
 // Avec le flag à true, l'url du média devient le nom du fichier qui est contenu
 // dans /Public/Uploads/
 // Et donc on ouvre le fichier qui est stocké en local
-let OUVRIR_MEDIA_EN_TANT_QUE_FICHIER_LOCAL = false;
+let OUVRIR_MEDIA_EN_TANT_QUE_FICHIER_LOCAL = true;
 
 // Définition des clés pour la gestion des techniciens du localStorage
 const PRESENT_KEY = "techniciens_presents";

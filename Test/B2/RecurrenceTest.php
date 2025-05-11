@@ -184,7 +184,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5; 
         $rappel = 1;
 
         // Vérifier si le lieu existe déjà
@@ -252,6 +252,26 @@ class RecurrenceTest  extends TestCase{
         $this->assertFalse($result['success']);
         $this->assertEquals("Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel", $result['message']);
     }
+
+     public function testAjouterRecurrenceUniteRappelEtDelaiPlusEleveQueFreq(): void {
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 20; 
+        $rappel = 21;
+        $idLieu = 1;
+
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'mois';
+
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet,$description,$dateAnniv,$frequence,$rappel,$idLieu,$uniteFrequence,$uniteRappel
+        );
+    
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Le délai de rappel et l'unité de rappel ne peuvent êtres supérieur à la fréquence de la maintenance.", $result['message']);
+    }
     
     public function testAjouterRecurrenceDateInvalide(): void {
         $date = new DateTime();
@@ -284,7 +304,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5;
         $rappel = null;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -301,7 +321,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test_sujet_modifie';
         $description = 'Description de test modifié';
         $dateAnniv = (new DateTime('+5 day'))->format('Y-m-d');
-        $frequence = 9; // Valeur invalide
+        $frequence = 9; 
         $rappel = null;
         $idLieu = 1;
         $uniteFrequence = 'mois';
@@ -407,7 +427,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5; 
         $rappel = 1;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -477,7 +497,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5; 
         $rappel = 1;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -494,7 +514,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test_sujet_modifie';
         $description = 'Description de test modifié';
         $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
-        $frequence = 8; // Valeur invalide
+        $frequence = 8; 
         $rappel = 3;
         $idLieu = 1;
         $uniteFrequence = null;
@@ -510,7 +530,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5; 
         $rappel = 1;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -527,7 +547,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test_sujet_modifie';
         $description = 'Description de test modifié';
         $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
-        $frequence = 8; // Valeur invalide
+        $frequence = 8; 
         $rappel = 3;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -537,12 +557,14 @@ class RecurrenceTest  extends TestCase{
         $this->assertFalse($result['success']);
         $this->assertEquals("Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel", $result['message']);
     }
-    public function testModifierRecurrenceDateInvalide(): void {
 
+    
+     public function testModifierRecurrenceUniteRappelEtDelaiPlusEleveQueFreq(): void {
+        
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5; 
         $rappel = 1;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -558,8 +580,40 @@ class RecurrenceTest  extends TestCase{
 
         $sujet = 'Test_sujet_modifie';
         $description = 'Description de test modifié';
-        $dateAnniv = (new DateTime('-5 day'))->format('Y-m-d');
-        $frequence = 8; // Valeur invalide
+        $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
+        $frequence = 8; 
+        $rappel = 9;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'mois';
+
+        $result = $this->modele->update($idRecurrence,$sujet,$description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+        $this->assertFalse($result['success']);
+        $this->assertEquals("Le délai de rappel et l'unité de rappel ne peuvent êtres supérieur à la fréquence de la maintenance.", $result['message']);
+    }
+    public function testModifierRecurrenceDateInvalide(): void {
+
+        $sujet = 'Test';
+        $description = 'Description test';
+        $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
+        $frequence = 5; 
+        $rappel = 1;
+        $idLieu = 1;
+        $uniteFrequence = 'jour';
+        $uniteRappel = 'jour';
+
+        $result = $this->modele->ajouterRecurrence(
+            $sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel);
+
+        $this->assertTrue($result['success']);
+
+        $stmt = $this->pdo->query("SELECT id_recurrence FROM recurrence WHERE sujet_reccurrence = 'Test Sujet_modif'");
+        $idRecurrence = $stmt->fetchColumn(); // On récupère l'ID
+
+        $sujet = 'Test_sujet_modifie';
+        $description = 'Description de test modifié';
+        $dateAnniv = (new DateTime('-5 day'))->format('Y-m-d'); // Valeur invalide
+        $frequence = 8; 
         $rappel = 3;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -574,7 +628,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5; 
         $rappel = 1;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -591,7 +645,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test_sujet_modifie';
         $description = 'Description de test modifié';
         $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
-        $frequence = 8; // Valeur invalide
+        $frequence = 8; 
         $rappel = 9;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -606,7 +660,7 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test';
         $description = 'Description test';
         $dateAnniv = (new DateTime('+1 day'))->format('Y-m-d');
-        $frequence = 5; // Valeur invalide
+        $frequence = 5;
         $rappel = 1;
         $idLieu = 1;
         $uniteFrequence = 'jour';
@@ -623,8 +677,8 @@ class RecurrenceTest  extends TestCase{
         $sujet = 'Test_sujet_modifie';
         $description = 'Description de test modifié';
         $dateAnniv = (new DateTime('+2 day'))->format('Y-m-d');
-        $frequence = 8; // Valeur invalide
-        $rappel = -5;
+        $frequence = 8; 
+        $rappel = -5; // Valeur invalide
         $idLieu = 1;
         $uniteFrequence = 'jour';
         $uniteRappel = null;

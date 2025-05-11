@@ -78,7 +78,7 @@ class RecurrenceModel {
                 return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
             }
             else if($idUnite1 > $idUnite && $rappel > $frequence){
-                return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
+                return ['success' => false, 'message' => "Le délai de rappel et l'unité de rappel ne peuvent êtres supérieur à la fréquence de la maintenance."];
             }
         }
 
@@ -169,7 +169,7 @@ class RecurrenceModel {
                     return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
                 }
                 else if($idUnite1 > $idUnite && $rappel > $frequence){
-                    return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
+                    return ['success' => false, 'message' => "Le délai de rappel et l'unité de rappel ne peuvent êtres supérieur à la fréquence de la maintenance."];
                 }
             }
 

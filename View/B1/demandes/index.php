@@ -101,7 +101,7 @@ $filters = $filters ?? [];
                             ?>
                             <p><strong>Statut :</strong> <span class="statut-label <?= $statutClass ?>"><?= htmlspecialchars($demande['nom_statut']) ?></span></p>
                         </div>
-                        <?php if ($_SESSION['user']['id'] == $demande['id_utilisateur']): ?>
+<?php if ($_SESSION['user']['id'] == $demande['id_utilisateur'] || $_SESSION['user']['id'] == 1): ?>
                         <div class="demande-actions">
                                 <a href="<?= BASE_URL ?>/listedemande/<?= htmlspecialchars($demande['id_demande']) ?>" class="action-button">Voir</a>
                         </div>

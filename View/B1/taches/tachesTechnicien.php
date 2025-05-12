@@ -5,7 +5,7 @@ if (!UserConnectionUtils::isUserConnected()) {
     header('Location: ' . BASE_URL . "/connexion");
     exit;
 }
-var_dump($_SESSION['user']);
+
 ?>
 
 <!DOCTYPE html>

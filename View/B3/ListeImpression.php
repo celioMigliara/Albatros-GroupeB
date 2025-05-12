@@ -17,7 +17,7 @@
 <h1>Liste d'impression</h1>
       <div class="separateur-double-ligne-B2"></div>
 
-  <div class="block_taches">
+  <div class="block_taches" style="height: auto;">
     <div class="overlay"></div>
     
     <div> <button id="openTechPopup" class="back-btn">Ajouter des techniciens</button>

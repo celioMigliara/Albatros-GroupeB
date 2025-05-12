@@ -79,7 +79,7 @@
                 </div>
 
                 <div>
-                    <label for="statusFilter">Filtrer par statut :</label>
+                    <label for="statusFilter">Filtrer par statut <br>(Ctrl + clic pour sélectionner plusieurs statuts) :</label>
                     <br>
                     <select name="statusFilter" id="statusFilter" multiple>
                         <option value="0" <?= (!isset($_GET['status']) || $_GET['status'] == '0') ? 'selected' : '' ?>>Tous statuts</option>

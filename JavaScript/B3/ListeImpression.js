@@ -1,4 +1,3 @@
-
 // On setup la print list
 document.addEventListener("DOMContentLoaded", function () 
 {
@@ -70,7 +69,7 @@ function displayPrintList() {
         <td>
         <button class="action-btn" onclick="window.open('${BASE_URL}/feuillederoute/imprimer?tech_id=${tech.id}', '_blank')">Voir la feuille de route</button>
         <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
-        <button class="action-btn" onclick="removeTechnician('${tech.id}')">Supprimer</button>
+        <button class="action-btn" onclick="removeTechnician('${tech.id}')">Retirer de la liste d'impression</button>
         </td>
         `;
         tbody.appendChild(tr);

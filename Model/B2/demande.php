@@ -11,8 +11,7 @@ class RecurrenceModel {
         $this->db = $connexion;
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
-
-    public function ajouterRecurrence($sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel) {
+ public function ajouterRecurrence($sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $uniteFrequence, $uniteRappel) {
 
         $today = new DateTime(); // Date actuelle
         $dateAnnivObj = new DateTime($dateAnniv); // Conversion de la date en objet DateTime
@@ -20,7 +19,22 @@ class RecurrenceModel {
         // 🔹 Insérer la récurrence
         $idUnite = $this->obtenirIdUnite($uniteFrequence);
         $idUnite1 = $this->obtenirIdUnite($uniteRappel);
-    
+
+        // Vérification que le lieu, le bâtiment et le site sont tous actifs
+        $stmt = $this->db->prepare("
+            SELECT l.id_lieu
+            FROM lieu l
+            JOIN batiment b ON l.id_batiment = b.id_batiment
+            JOIN site s ON b.id_site = s.id_site
+            WHERE l.id_lieu = ? AND l.actif_lieu != 0 AND b.actif_batiment != 0 AND s.actif_site != 0
+        ");
+        $stmt->execute([$idLieu]);
+        $lieuActif = $stmt->fetch();
+
+        if (!$lieuActif) {
+            return ['success' => false, 'message' => "Le lieu sélectionné n'est pas valide ou inactif."];
+        }
+
         // 🔹 Vérifications des champs obligatoires
         if (empty($sujet)) {
             return ['success' => false, 'message' => "Entrez un titre pour la maintenance"];
@@ -32,15 +46,6 @@ class RecurrenceModel {
     
         if (!is_numeric($frequence) || $frequence <= 0) {
             return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
-        }
-    
-        // Vérifications supplémentaires
-        if($frequence > 100 && $uniteFrequence == "mois"){
-            return ['success' => false, 'message' => "Entrez une fréquence valide pour les mois, pas plus de 100 mois"];
-        }
-    
-        if($frequence > 5 && $uniteFrequence == "année"){
-            return ['success' => false, 'message' => "Entrez une fréquence valide pour les années, pas plus de 5 ans"];
         }
 
         if (!$idUnite) {
@@ -67,9 +72,12 @@ class RecurrenceModel {
                 return ['success' => false, 'message' => "Le délai de rappel doit être un nombre positif."];
             }
 
-            // Cas où les unités sont les mêmes
-            if ($idUnite1 == $idUnite && $rappel > $frequence) {
-                return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
+            // Obtenir les durées en jours pour comparer plus logiquement
+            $joursFrequence = $this->convertirEnJours($frequence, $idUnite);
+            $joursRappel = $this->convertirEnJours($rappel, $idUnite1);
+
+            if ($joursRappel > $joursFrequence) {
+                return ['success' => false, 'message' => "Le délai de rappel ne peut pas dépasser la fréquence, toutes unités confondues."];
             }
         }
 
@@ -79,6 +87,20 @@ class RecurrenceModel {
         $stmt->execute([$sujet, $description, $dateAnniv, $frequence, $rappel, $idLieu, $idUnite, $idUnite1]);
     
         return ["success" => true, "message" => "Récurrence ajoutée avec succès !"];
+    }
+
+    private function convertirEnJours($valeur, $idUnite) {
+        // Mappe les ID d'unités aux jours 
+        switch ($idUnite) {
+            case 1: // Jour
+                return $valeur;
+            case 2: // Mois
+                return $valeur * 30;
+            case 3: // Année
+                return $valeur * 365;
+            default:
+                return 0;
+        }
     }
 
     public function obtenirIdUnite($nomUnite) {
@@ -125,16 +147,23 @@ class RecurrenceModel {
             $idUnite = $this->obtenirIdUnite($uniteFrequence);
             $idUnite1 = $this->obtenirIdUnite($uniteRappel);
 
-            if (!is_numeric($frequence) || $frequence <= 0) {
-                return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
+            // Vérification que le lieu, le bâtiment et le site sont tous actifs
+            $stmt = $this->db->prepare("
+                SELECT l.id_lieu
+                FROM lieu l
+                JOIN batiment b ON l.id_batiment = b.id_batiment
+                JOIN site s ON b.id_site = s.id_site
+                WHERE l.id_lieu = ? AND l.actif_lieu != 0 AND b.actif_batiment != 0 AND s.actif_site != 0
+            ");
+            $stmt->execute([$idLieu]);
+            $lieuActif = $stmt->fetch();
+
+            if (!$lieuActif) {
+                return ['success' => false, 'message' => "Le lieu sélectionné n'est pas valide ou inactif."];
             }
 
-            if($frequence >100 && $uniteFrequence =="mois"){
-                return ['success' => false, 'message' => "Entrez une frequence valide pour les mois , pas plus de 100 mois"];
-            }
-            
-            if($frequence >5 && $uniteFrequence =="année"){
-                return ['success' => false, 'message' => "Entrez une frequence valide pour les années , pas plus de 5 ans"];
+            if (!is_numeric($frequence) || $frequence <= 0) {
+                return ['success' => false, 'message' => "La fréquence doit être un nombre positif"];
             }
 
             if (!$idUnite) {
@@ -148,9 +177,12 @@ class RecurrenceModel {
                     return ['success' => false, 'message' => "Le délai de rappel doit être un nombre positif ou alors 0 si vous ne voulez pas de rappel."];
                 }
 
-                // Cas où les unités sont les mêmes
-                if ($idUnite1 == $idUnite && $rappel > $frequence) {
-                    return ['success' => false, 'message' => "Le délai de rappel ne peut être supérieur à la fréquence de la maintenance."];
+                 // Obtenir les durées en jours pour comparer plus logiquement
+                $joursFrequence = $this->convertirEnJours($frequence, $idUnite);
+                $joursRappel = $this->convertirEnJours($rappel, $idUnite1);
+
+                if ($joursRappel > $joursFrequence) {
+                    return ['success' => false, 'message' => "Le délai de rappel ne peut pas dépasser la fréquence, toutes unités confondues."];
                 }
             }
 
@@ -166,7 +198,6 @@ class RecurrenceModel {
             if($dateAnnivObj < $today){
                 return ['success' => false, 'message' => "La date n'est pas valide"];
             }
-
 
             $stmt = $this->db->prepare("
                 UPDATE recurrence 

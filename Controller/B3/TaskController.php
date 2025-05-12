@@ -53,18 +53,27 @@ class TaskController
                 return false;
             }
 
-            // recueillir les paramètres de la requête
+            // Recueillir les paramètres de la requête
             $technicienId = $_GET['technicien_id'] ?? null;
-            $start = $_GET['start'] ?? 0; // Index de départ
-
-            // Limiter à 10 tâches par page si la variable d'env n'est pas SET
-            $limit = $_ENV['GET_TASK_LIMIT'] ?? self::TaskBaseLimit;
-
+            
+            // Vérifier que le technicien ID est présent
             if (empty($technicienId)) 
             {
                 echo json_encode(['status' => 'error', 'message' => 'ID technicien manquant']);
                 return false;
             }
+
+            // Page de départ (offset)
+            $start = $_GET['start'] ?? 0; 
+
+            // Limiter à 10 tâches par page de base si la variable d'env n'est pas SET
+            $baseLimit = $_ENV['GET_TASK_LIMIT'] ?? self::TaskBaseLimit;
+            
+            // La limite demandée par le client, si présente. 
+            $clientLimit = $_GET['limit'] ?? $baseLimit; 
+
+            // On restraint la limite de taches à trouver par la base limit
+            $limit = min($clientLimit, $baseLimit);
 
             // Vérifier si le technicien existe réellement
             $technicien = new Technicien(intval($technicienId));
@@ -74,8 +83,10 @@ class TaskController
                 return false;
             }
             
+            // On récupère les taches avec un certain offset et une limite. 
+            // On récupère aussi le nombre total de tâches sans distinction pour le statut
             $tasks = $technicien->getTachesForTechnicien($start, $limit);
-            $totalTasks = $technicien->getTotalTaches(); // Nombre total de tâches
+            $totalTasks = $technicien->getTotalTaches(); 
 
             // Vérifier si des tâches ont été trouvées
             foreach ($tasks as &$task) 

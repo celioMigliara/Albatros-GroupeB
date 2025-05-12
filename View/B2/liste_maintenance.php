@@ -54,9 +54,12 @@ if (isset($_SESSION['popup_message'])) {
 
     <!-- Pop-up d’erreur -->
     <div id="error-popup" class="popup error" style="display: none;">
-        <span id="error-popup-close" class="popup-close">&times;</span>
-        <p id="error-message"></p>
-        <button id="error-ok-btn">OK</button>
+        <div class="modal-content">
+            <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2"
+                data-effect="mfp-move-horizontal">
+            <p id="error-message"></p>
+            <button id="error-ok-btn" class="">OK</button>
+        </div>
     </div>
     <h1 class="titre">Liste des maintenances</h1>
     <div class="separateur-double-ligne-B2"></div>
@@ -109,7 +112,7 @@ if (isset($_SESSION['popup_message'])) {
                         foreach ($result as $row): ?>
                             <tr class="table-row" data-site="<?= htmlspecialchars($row['id_site']) ?>">
                                 <td><?= htmlspecialchars($row["sujet_reccurrence"]) ?></td>
-                                <td><?= htmlspecialchars($row["date_anniv_recurrence"]) ?></td>
+                                <td><?= date('d/m/Y', strtotime($row["date_anniv_recurrence"])) ?></td>
                                 <td><?= htmlspecialchars($row["nom_site"]) ?></td>
                                 <td><?= htmlspecialchars($row["nom_batiment"]) ?></td>
                                 <td>

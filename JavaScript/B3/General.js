@@ -1,6 +1,44 @@
 // On initialise l'objet XMLHttpRequest
 var xhr = null;
+var pendingPopup = null;
 InitXHR();
+
+document.addEventListener("DOMContentLoaded", handlePopup);
+
+// Fonction appelée à chaque chargement du script JS pour gérer les popup en attente
+function handlePopup() {
+  // Récupérer l'objet JSON de localStorage
+  const popupDataStr = localStorage.getItem('popupData');
+
+  // Vérifier si l'objet existe dans localStorage
+  if (popupDataStr) {
+    // Convertir la chaîne JSON en objet JavaScript
+    const popupData = safeJsonParse(popupDataStr);
+    if (!popupData)
+    {
+      console.warn("Erreur de parsing JSON, la popup est ignorée.");
+      return;
+    }
+
+    // On crée la popup
+    CreateSimplePopup(popupData.message, popupData.status === "success");
+
+    // Supprimer les données de localStorage après utilisation
+    localStorage.removeItem('popupData');
+  }
+}
+
+// Fonction pour stocker une popup en attente
+function storePopupData(message, success) {
+  // Création d'un objet avec les données dynamiques
+  const popupData = {
+    "status": success,
+    "message": message
+  };
+
+  // Stocker l'objet JSON dans localStorage en le convertissant en chaîne JSON
+  localStorage.setItem('popupData', JSON.stringify(popupData));
+}
 
 function InitXHR() {
   xhr = new XMLHttpRequest();
@@ -191,53 +229,6 @@ if (ChangerMdpForm) {
   });
 }
 
-// Ajout d'un listener pour changer le mot de passe
-var ModifierProfilForm = document.getElementById(
-  "formulaire-modification-profil"
-);
-if (ModifierProfilForm) {
-  ModifierProfilForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    // Récupération des données du formulaire
-    let newNom = document.getElementById("nom_utilisateur").value;
-    let newPrenom = document.getElementById("prenom_utilisateur").value;
-    let newMail = document.getElementById("mail_utilisateur").value;
-    let newPassword = document.getElementById("mdp_utilisateur").value;
-    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-
-    // On ajoute les paramètres de requete
-    let RequestParameter = "";
-
-    // Ajouter les paramètres uniquement si la valeur est définie (non vide)
-    if (newNom) {
-      RequestParameter += "nom_utilisateur=" + encodeURIComponent(newNom);
-    }
-
-    if (newPrenom) {
-      RequestParameter +=
-        "&prenom_utilisateur=" + encodeURIComponent(newPrenom);
-    }
-
-    if (newMail) {
-      RequestParameter += "&mail_utilisateur=" + encodeURIComponent(newMail);
-    }
-
-    if (newPassword) {
-      RequestParameter += "&mdp_utilisateur=" + encodeURIComponent(newPassword);
-    }
-    // Ajout du token CSRF aux paramètres de requête
-    RequestParameter += "&csrf_token=" + encodeURIComponent(csrfToken);
-    
-
-    if (RequestParameter.charAt(0) === "&") {
-      RequestParameter = RequestParameter.slice(1);
-    }
-    // Et on l'envoie, si aucune requete n'est déjà en cours
-    SendRequestPOST(RequestParameter, BASE_URL + "/profil/modifier", true);
-  });
-}
-
 function SendRequestPOST(SendParameter, OpenPath, StopIfSending = true) {
   // On peut autoriser seulement 1 requete à la fois grace à StopIfSending
   // Si le readyState est différent de 0, cela voudrait dire qu'on est en pleine requete
@@ -281,6 +272,12 @@ function HandleReadyStateChange() {
     if (Json.redirect) {
       console.log(xhr.responseText);
 
+      // Si on a un message du serveur, le mettre dans une popup en attente
+      if (Json.message)
+      {
+        storePopupData(Json.message, Json.status);
+      }
+
       // Se rediriger vers la page
       window.location.href = Json.redirect;
     } else if (Json.message) {
@@ -293,6 +290,39 @@ function HandleReadyStateChange() {
       console.log(Json.debug);
     }
   }
+}
+
+function isValidEmail(email) {
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+}
+
+function isStrongPassword(password, minLength = 8, maxLength = 64) {
+    const lengthOK = password.length >= minLength && password.length <= maxLength;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+
+    return lengthOK && hasUpper && hasLower && hasDigit;
+}
+
+// Fonction pour valider un nom
+function isNomValid(nom)
+{
+  // Expression régulière qui autorise uniquement :
+  // - Lettres majuscules et minuscules (y compris les lettres accentuées)
+  // - Tirets (par exemple, "Jean-Paul")
+  const regex = /^[a-zA-ZÀ-ÿ\-]+$/u;
+
+  // Vérifie si le nom est suffisamment long (plus de 1 caractère)
+  // Mais pas trop long (moins de 50 caractères)
+  return nom.length > 1 && nom.length < 50 && regex.test(nom);
+}
+
+// Fonction pour valider un prénom
+function isPrenomValid(prenom)
+{
+  // La meme fonction que le nom est utilisée ici 
+  return isNomValid(prenom);
 }
 
 function CreateSimplePopup(message, IsSuccess) {
@@ -331,7 +361,6 @@ function CreateSimplePopup(message, IsSuccess) {
 
   // Si c'est mobile, applique le style "popup-mobile" en JS
   if (isMobile) {
-    // Tu peux ajuster ces styles selon tes besoins
     popup.style.display = "flex";
     popup.style.flexDirection = "column";
     popup.style.alignItems = "center";

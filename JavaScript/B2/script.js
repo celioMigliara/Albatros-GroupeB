@@ -247,7 +247,6 @@ document.querySelectorAll('.supp-btn_recurr').forEach(btn => {
                 })
                 .then(res => res.json())
                 .then(data => {
-                    alert(data.message);
                     if (data.success) {
                         window.location.href = BASE_URL + "/recurrence";
                     } else {

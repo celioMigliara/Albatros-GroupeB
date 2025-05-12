@@ -310,10 +310,10 @@ switch ($segments[0])
     // Profil
     case 'profil':
         if (!isset($segments[1])) {
-            // Appel à updateProfile en GET pour afficher ModifierProfil.php
-            (new ProfileController())->updateProfile(); 
+            // Si aucun segment secondaire, afficher l'accueil de la feuille de route
+            (new ProfileController())->index(); 
         } elseif ($segments[1] === 'modifier') {
-            (new ProfileController())->updateProfile(); // Même méthode gère POST
+            (new ProfileController())->updateProfile();
         } else {
             $pageNotFound = true;
         }

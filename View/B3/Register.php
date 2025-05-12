@@ -113,6 +113,10 @@
                         <!-- Bouton pour fermer la popup -->
                         <button class="fermer-popup" type="button" onclick="closePopup()">×</button>
                         <h3>Sélection des bâtiments</h3>
+
+                        <!-- Barre de recherche pour trouver le batiment souhaité -->
+                        <input type="text" id="searchInputBatiments" placeholder="Rechercher...">
+
                         <!-- div qui permet de gerer les bouton checkbox -->
                         <div class="checkbox-wrapper-checkbox">
                             <!-- Logique PHP qui permet d'afficher la liste des bâtiments de manière dynamique dans le cas où de nouveaux bâtiments sont ajoutés -->
@@ -237,7 +241,8 @@
             const BASE_URL = <?= json_encode(BASE_URL) ?>;
         </script>
         <script src="<?= BASE_URL ?>/JavaScript/B3/General.js"></script>
-
+        <script src="<?= BASE_URL ?>/JavaScript/B3/Register.js"></script>
+                           
 </body>
 
 </html>

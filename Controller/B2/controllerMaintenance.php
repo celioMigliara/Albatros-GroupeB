@@ -64,10 +64,10 @@ function ajouterMaintenance() {
                 $unite_freq, $unite_rappel
             );
 
-         $_SESSION['popup_message'] = $result["message"];
-$_SESSION['popup_success'] = $result["success"];
-header('Location: ' . BASE_URL . '/recurrence');
-exit;
+        $_SESSION['popup_message'] = $result["message"];
+        $_SESSION['popup_success'] = $result["success"];
+        header('Location: ' . BASE_URL . '/recurrence');
+        exit;
 
         } catch (Exception $e) {
             echo "<p style='color: red;'>Erreur : " . $e->getMessage() . "</p>";

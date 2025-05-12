@@ -100,9 +100,9 @@ nav {
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     width: 65%; /* Réduire la largeur */
     max-width: 800px;
-    margin: 0; /* Supprimer le centrage automatique */
-    margin-left: auto; /* Pousser vers la droite */
-    margin-right: 20px; /* Petit espace avec le bord droit */
+    margin: 0 auto; /* Supprimer le centrage automatique */
+    /* margin-left: auto; /* Pousser vers la droite */
+    /* margin-right: 20px; Petit espace avec le bord droit */ 
     justify-content: center;
 }
 

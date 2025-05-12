@@ -181,9 +181,11 @@ class TaskController
             // Vérifier que chaque sous-tableau contient les clés 'id' et 'order'
             if (isset($change['id']) && isset($change['order'])) 
             {
+                // On récupère les données
                 $id = intval($change['id']);
                 $order = intval($change['order']);
     
+                // On met à jour l'ordre de la tache
                 $tache = new Tache($id);
                 $returnValue &= $tache->updateOrder($order);
             }

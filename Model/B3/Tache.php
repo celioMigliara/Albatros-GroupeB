@@ -119,8 +119,20 @@ class Tache
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
 
-        // Préparation de la requête
-        $stmt = $pdo->prepare("UPDATE tache SET ordre_tache = :order WHERE Id_tache = :id");
+        // On ne veut modifier l'ordre des taches qui sont
+        // "en cours", avec un id_statut inférieur à 5
+        $stmt = $pdo->prepare("
+        UPDATE tache
+        SET ordre_tache = :order
+        WHERE id_tache = :id
+        AND (
+            SELECT h.id_statut
+            FROM historique h
+            WHERE h.id_tache = tache.id_tache
+            ORDER BY h.date_modif DESC
+            LIMIT 1
+        ) < 5
+        ");
         
         // Exécution de la requête
         return $stmt->execute(['order' => $order, 'id' => $this->tacheId]);

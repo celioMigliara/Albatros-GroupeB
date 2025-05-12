@@ -70,6 +70,10 @@ function displayPrintList() {
         <button class="action-btn" onclick="window.open('${BASE_URL}/feuillederoute/imprimer?tech_id=${tech.id}', '_blank')">Voir la feuille de route</button>
         <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
         <button class="action-btn" onclick="removeTechnician('${tech.id}')">Retirer de la liste d'impression</button>
+        <label for="NbTaches">Combien de taches ?</label>
+        <input id="NbTaches" type="text" placeholder="1">
+        <label for="startTache">On commence à quelle tache ?</label>
+        <input id="startTache" type="text" placeholder="1">
         </td>
         `;
         tbody.appendChild(tr);

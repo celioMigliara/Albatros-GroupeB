@@ -99,8 +99,10 @@
 
 
         <div class="buttons">
+            <button id="modifOrdreTache">Modifier l'ordre d'une tache</button>
             <button id="saveOrder">Enregistrer l'ordre des taches</button>
             <button id="listeImpression">Gérer la liste d'impression</button>
+            <button id="documentationFdr">Documentation</button>
         </div>
 
         <div id="dropPrevPage" class="drop-zone">← Déposer ici pour page précédente</div>

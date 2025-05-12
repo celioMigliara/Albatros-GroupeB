@@ -91,55 +91,60 @@ function handleProfileForm(event) {
     let newPasswordConfirm = document.getElementById("confirm_mdp_utilisateur").value;
     const csrfToken = document.querySelector('input[name="csrf_token"]').value;
 
-    // On ajoute les paramètres de requete
-    let RequestParameter = "";
+    // Création d'une instance de URLSearchParams pour gérer les paramètres de requête
+    const params = new URLSearchParams();
 
-    // Ajouter les paramètres uniquement si la valeur est définie (non vide)
+    // On vérifie si chaque champ a été modifié et ajoute les paramètres si nécessaire
+
+    // Vérification du nom
     if (newNom !== defaultNomValue) {
-        RequestParameter += "nom_utilisateur=" + encodeURIComponent(newNom);
+        if (!isNomValid(newNom)) {
+            CreateSimplePopup("Le nom n'est pas valide.", false);
+            return;
+        }
+        params.append("nom_utilisateur", newNom);
     }
 
+    // Vérification du prénom
     if (newPrenom !== defaultPrenomValue) {
-        RequestParameter +=
-            "&prenom_utilisateur=" + encodeURIComponent(newPrenom);
+        if (!isPrenomValid(newPrenom)) {
+            CreateSimplePopup("Le prénom n'est pas valide.", false);
+            return;
+        }
+        params.append("prenom_utilisateur", newPrenom);
     }
 
+    // Vérification de l'email
     if (newMail !== defaultMailValue) {
         if (!isValidEmail(newMail)) {
             CreateSimplePopup("Le format de l'email est incorrect. Veuillez suivre cette norme : example@mail.com", false);
             return;
         }
         if (newMail !== newMailConfirm) {
-            CreateSimplePopup("Les emails ne correspondent pas", false);
+            CreateSimplePopup("Les emails ne correspondent pas.", false);
             return;
         }
-        RequestParameter += "&mail_utilisateur=" + encodeURIComponent(newMail);
+        params.append("mail_utilisateur", newMail);
     }
 
+    // Vérification du mot de passe
     if (newPassword) {
-        if (!isStrongPassword(newPassword))
-        {
-            CreateSimplePopup("Le mot de passe n'est pas assez fort. Veuillez inclure au moins 1 miniscule, 1 majuscule, 1 nombre avec au moins 8 caractères.", false);
+        if (!isStrongPassword(newPassword)) {
+            CreateSimplePopup("Le mot de passe n'est pas assez fort. Veuillez inclure au moins 1 minuscule, 1 majuscule, 1 chiffre avec au moins 8 caractères.", false);
             return;
         }
         if (newPassword !== newPasswordConfirm) {
-            CreateSimplePopup("Les mots de passe ne correspondent pas", false);
+            CreateSimplePopup("Les mots de passe ne correspondent pas.", false);
             return;
         }
-
-        RequestParameter += "&mdp_utilisateur=" + encodeURIComponent(newPassword);
+        params.append("mdp_utilisateur", newPassword);
     }
 
     // Ajout du token CSRF aux paramètres de requête
-    RequestParameter += "&csrf_token=" + encodeURIComponent(csrfToken);
+    params.append("csrf_token", csrfToken);
 
-    // Si on commence par un "&", alors on le supprime
-    if (RequestParameter.charAt(0) === "&") {
-        RequestParameter = RequestParameter.slice(1);
-    }
-
-    // Appel de la fonction 
-    SendRequestPOST(RequestParameter, BASE_URL + "/profil/modifier", true);
+    // Envoi de la requête
+    SendRequestPOST(params.toString(), BASE_URL + "/profil/modifier", true);
 }
 
 function registerInputEventsToValidate() {
@@ -172,21 +177,24 @@ function validateForm()
 
     // On évalue nos conditions
     const emailChanged = newEmailValue !== defaultMailValue;
-    const emailMatch = newEmailValue === confirmEmail.value;
-    const passwordNotEmpty = passwordValue.trim() !== "";
+    const emailMatch = newEmailValue === confirmEmail;
+    const passwordNotEmpty = passwordValue.length > 0;
     const passwordMatch = passwordValue === confirmPasswordValue;
     const nomChanged = nomValue !== defaultNomValue;
     const prenomChanged = prenomValue !== defaultPrenomValue;
 
     // On décide si le bouton devrait être actif ou non
     // Les conditions sont tells que :
-    const shouldEnable =
-        (
-            (emailChanged && isValidEmail(newEmailValue) && emailMatch) ||
-            (passwordNotEmpty && isStrongPassword(passwordValue) && passwordMatch) ||
-            nomChanged ||
-            prenomChanged
-        );
+    // Si l'email a changé et est valide et la confirmation-email match
+    // ou si le password n'est plus vide, est valide et la confirmation-password match
+    // ou si le nom/prénom ont changés, alors on peut envoyer la requete
+    const emailValid = !emailChanged || (isValidEmail(newEmailValue) && emailMatch);
+    const passwordValid = !passwordNotEmpty || (isStrongPassword(passwordValue) && passwordMatch);
+    const nomValid = !nomChanged || isNomValid(nomValue);
+    const prenomValid = !prenomChanged || isPrenomValid(prenomValue);
+
+    const shouldEnable = emailValid && passwordValid && nomValid && prenomValid &&
+    (emailChanged || passwordNotEmpty || nomChanged || prenomChanged);
 
     // On active/désactive le bouton suivant nos conditions
     submitBtn.disabled = !shouldEnable;

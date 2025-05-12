@@ -5,7 +5,6 @@ const END_DATE_KEY = "endDate";
 const STATUS_FILTER_KEY = "statusFilter";
 const MEDIA_FILTER_KEY = "mediaFilter";
 
-// Feature non testée !!
 // Mettre ce flag à true si on veut changer le comportement des médias
 // Par défaut (à false), l'url du média est affichée et l'admin clique dessus pour accéder à la
 // ressource qui est hébérgée sur internet.

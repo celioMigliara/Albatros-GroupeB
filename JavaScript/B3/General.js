@@ -293,9 +293,7 @@ function HandleReadyStateChange() {
 }
 
 function isValidEmail(email) {
-    const basicCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const strictCheck = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-    return basicCheck && strictCheck;
+    return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
 }
 
 function isStrongPassword(password, minLength = 8, maxLength = 64) {
@@ -305,6 +303,26 @@ function isStrongPassword(password, minLength = 8, maxLength = 64) {
     const hasDigit = /[0-9]/.test(password);
 
     return lengthOK && hasUpper && hasLower && hasDigit;
+}
+
+// Fonction pour valider un nom
+function isNomValid(nom)
+{
+  // Expression régulière qui autorise uniquement :
+  // - Lettres majuscules et minuscules (y compris les lettres accentuées)
+  // - Tirets (par exemple, "Jean-Paul")
+  const regex = /^[a-zA-ZÀ-ÿ\-]+$/u;
+
+  // Vérifie si le nom est suffisamment long (plus de 1 caractère)
+  // Mais pas trop long (moins de 50 caractères)
+  return nom.length > 1 && nom.length < 50 && regex.test(nom);
+}
+
+// Fonction pour valider un prénom
+function isPrenomValid(prenom)
+{
+  // La meme fonction que le nom est utilisée ici 
+  return isNomValid(prenom);
 }
 
 function CreateSimplePopup(message, IsSuccess) {
@@ -343,7 +361,6 @@ function CreateSimplePopup(message, IsSuccess) {
 
   // Si c'est mobile, applique le style "popup-mobile" en JS
   if (isMobile) {
-    // Tu peux ajuster ces styles selon tes besoins
     popup.style.display = "flex";
     popup.style.flexDirection = "column";
     popup.style.alignItems = "center";

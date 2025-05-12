@@ -8,6 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
 
+    <style>
+        /* Styles existants */
+        /* ... existing code ... */
+
+        
+    </style>
+
 </head>
 
 <body data-page="ListeTaches">
@@ -35,6 +42,11 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+
+                <div class="form-row">
+                    <label for="nombreTaches">Nombre de tâches à imprimer :</label>
+                    <input type="number" id="nombreTaches" name="nombreTaches" min="1" value="1" class="input">
+                </div>
 
                 <div class="buttons">
                     <button type="button" id="ajouterPrintList">Ajouter ce technicien à la liste d'impression</button>
@@ -69,10 +81,11 @@
                 <div>
                     <label for="statusFilter">Filtrer par statut :</label>
                     <br>
-                    <select name="statusFilter" id="statusFilter" multiple size="6">
-                        <option value="0">Tous statuts</option>
+                    <select name="statusFilter" id="statusFilter" multiple>
+                        <option value="0" <?= (!isset($_GET['status']) || $_GET['status'] == '0') ? 'selected' : '' ?>>Tous statuts</option>
                         <?php foreach ($statuts as $statut): ?>
-                            <option value="<?= htmlspecialchars($statut['Id_statut']) ?>">
+                            <option value="<?= htmlspecialchars($statut['Id_statut']) ?>" 
+                                <?= (isset($_GET['status']) && $_GET['status'] == $statut['Id_statut']) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($statut['nom_statut']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -82,10 +95,10 @@
                 <div>
                     <label for="mediaFilter">Filtrer par média :</label>
                     <br>
-                    <select id="mediaFilter">
-                        <option value="0">Pas de filtre média</option>
-                        <option value="1">Uniquement sans média</option>
-                        <option value="2">Uniquement avec média</option>
+                    <select name="mediaFilter" id="mediaFilter">
+                        <option value="0" selected>Pas de filtres médias</option>
+                        <option value="1">Uniquement Sans média</option>
+                        <option value="2">Uniquement Avec média</option>
                     </select>
                 </div>
 
@@ -105,23 +118,25 @@
 
         <div id="dropPrevPage" class="drop-zone">← Déposer ici pour page précédente</div>
         <!-- Tableau des tâches -->
-        <table id="tasksTable">
-            <thead>
-                <tr>
-                    <th>N° Tâche</th>
-                    <th>Date</th>
-                    <th>Ticket</th>
-                    <th>Bâtiment</th>
-                    <th>Lieu</th>
-                    <th>Description</th>
-                    <th>Média</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Les lignes de tâches vont ici -->
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table id="tasksTable">
+                <thead>
+                    <tr>
+                        <th>N° Tâche</th>
+                        <th>Date</th>
+                        <th>Ticket</th>
+                        <th>Bâtiment</th>
+                        <th>Lieu</th>
+                        <th>Description</th>
+                        <th>Média</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les lignes de tâches vont ici -->
+                </tbody>
+            </table>
+        </div>
         <div id="dropNextPage" class="drop-zone">Déposer ici pour page suivante →</div>
     </div>
 

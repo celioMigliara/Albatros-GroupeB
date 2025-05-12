@@ -57,7 +57,7 @@ function displayPrintList() {
     
     if (techs.length === 0) {
         tbody.innerHTML =
-        '<tr><td colspan="2">Aucun technicien présent pour l\'impression.</td></tr>';
+            '<tr><td colspan="3">Aucun technicien présent pour l\'impression.</td></tr>';
         return;
     }
     
@@ -65,14 +65,25 @@ function displayPrintList() {
     techs.forEach((tech) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-        <td>${tech.name}</td>
-        <td>
-        <button class="action-btn" onclick="window.open('${BASE_URL}/feuillederoute/imprimer?tech_id=${tech.id}', '_blank')">Voir la feuille de route</button>
-        <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
-        <button class="action-btn" onclick="removeTechnician('${tech.id}')">Retirer de la liste d'impression</button>
-        </td>
+            <td>${tech.name}</td>
+            <td style="display: flex; align-items: center; gap: 10px;">
+                <label for="nombre-taches-${tech.id}" style="font-size: 0.95em; color: #bfae7c; margin-right: 2px;">
+                  Saisissez le nombre de tâches à imprimer :
+                </label>
+                <input type="number" min="1" value="1" id="nombre-taches-${tech.id}" class="nombre-taches" data-tech-id="${tech.id}" style="width: 70px;" placeholder="Veuillez entrer le nombre de tâches à imprimer">
+                <button class="action-btn imprimer-btn" data-tech-id="${tech.id}">Imprimer la feuille de route</button>
+                <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
+                <button class="action-btn" onclick="removeTechnician('${tech.id}')">Retirer de la liste d'impression</button>
+            </td>
         `;
         tbody.appendChild(tr);
+
+        // Ajouter l'événement click pour le bouton d'impression
+        tr.querySelector('.imprimer-btn').addEventListener('click', function() {
+            const techId = this.dataset.techId;
+            const nombreTaches = tr.querySelector('.nombre-taches').value;
+            window.open(`${BASE_URL}/feuillederoute/imprimer?tech_id=${techId}&nombreTask=${nombreTaches}`, '_blank');
+        });
     });
 }
 

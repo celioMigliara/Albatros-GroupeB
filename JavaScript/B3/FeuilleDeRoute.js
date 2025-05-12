@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     else {
-        // Sélectionne par défaut l'option "0" s’il n’y a rien en localStorage
+        // Sélectionne par défaut l'option "0" s'il n'y a rien en localStorage
         Array.from(statusSelect.options).forEach(opt => {
             opt.selected = opt.value === "0";
         });
@@ -266,7 +266,7 @@ let draggedTaskData = null; // Pour stocker la tâche à déplacer entre pages
 let pendingDrop = false;    // Pour savoir si on attend un drop sur la nouvelle page
 let currentPage = 1; // Page initiale
 let totalPages = 1;  // Nombre total de pages
-const tasksPerPage = 6; // Nombre de tâches par page
+const tasksPerPage = 8; // Nombre de tâches par page
 
 // Fonction pour afficher ou masquer les zones de drop
 function showDropZones(show = true) {
@@ -409,11 +409,11 @@ document.getElementById("searchInput").addEventListener("input", RefreshTableAnd
 function RefreshTableAndApplyFilters() {
     const mediaFilterValue = document.getElementById("mediaFilter").value;
 
-    // Récupère un tableau de valeurs sélectionnées (castées en chaînes)
+    // Récupère un tableau de valeurs sélectionnées
     const statutSelect = document.getElementById("statusFilter");
     const selectedStatusValues = Array.from(statutSelect.selectedOptions).map(opt => opt.value);
 
-    const filteredTaches = listeTaches.filter(tache => {
+    let filteredTaches = listeTaches.filter(tache => {
         const hasMedias = Array.isArray(tache.medias) && tache.medias.length > 0;
 
         // Filtrage par médias
@@ -423,53 +423,52 @@ function RefreshTableAndApplyFilters() {
         // Filtrage par statut
         const idStatut = String(tache.statut.Id_statut ?? 0);
 
-        // Si "0" est dans les options sélectionnées, on ignore le filtre
-        if (!selectedStatusValues.includes("0")) {
-            if (!selectedStatusValues.includes(idStatut)) {
-                return false;
-            }
+        // Si aucune option n'est sélectionnée ou si "Tous statuts" (0) est sélectionné, on affiche tout
+        if (selectedStatusValues.length === 0 || selectedStatusValues.includes("0")) {
+            return true;
         }
 
-        const startDateValue = document.getElementById("startDate").value;
-        const endDateValue = document.getElementById("endDate").value;
-
-        const start = startDateValue ? normalizeDateToUTC(startDateValue) : null;
-
-        // Filtrage par dates
-        const tacheDate = normalizeDateToUTC(parseDate(tache.date_creation_tache ?? '')); // supposée en format ISO
-        if (startDateValue && tacheDate < start) {
-            return false;
-        }
-        if (endDateValue) {
-            endDate = new Date(endDateValue);
-            endDate.setDate(endDate.getDate() + 1);
-            endDate.setHours(0, 0, 0, 0); // On évite le décalage horaire
-            const end = normalizeDateToUTC(endDate);
-
-            if (tacheDate >= end) return false;
-        }
-
-        const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-
-        if (searchQuery) {
-            const ticket = (tache.num_ticket_dmd ?? '').toLowerCase();
-            const batiment = (tache.nom_batiment ?? '').toLowerCase();
-            const lieu = (tache.nom_lieu ?? '').toLowerCase();
-            const description = (tache.description_tache ?? '').toLowerCase();
-
-            // Vérifier si le mot-clé de la recherche est dans l'un des champs
-            const match = ticket.includes(searchQuery) ||
-                batiment.includes(searchQuery) ||
-                lieu.includes(searchQuery) ||
-                description.includes(searchQuery);
-
-            // Si un match est trouvé, la tâche sera incluse
-            return match;
-        }
-
-        return true;
+        // Sinon, on vérifie si le statut de la tâche est dans les statuts sélectionnés
+        return selectedStatusValues.includes(idStatut);
     });
 
+    // Filtrage par dates
+    const startDateValue = document.getElementById("startDate").value;
+    const endDateValue = document.getElementById("endDate").value;
+
+    if (startDateValue || endDateValue) {
+        const start = startDateValue ? normalizeDateToUTC(startDateValue) : null;
+        const end = endDateValue ? normalizeDateToUTC(new Date(endDateValue)) : null;
+
+        filteredTaches = filteredTaches.filter(tache => {
+            const tacheDate = normalizeDateToUTC(parseDate(tache.date_creation_tache ?? ''));
+            
+            if (start && tacheDate < start) return false;
+            if (end) {
+                const endDate = new Date(end);
+                endDate.setDate(endDate.getDate() + 1);
+                endDate.setHours(0, 0, 0, 0);
+                if (tacheDate >= normalizeDateToUTC(endDate)) return false;
+            }
+            return true;
+        });
+    }
+
+    // Filtrage par recherche
+    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+    if (searchQuery) {
+        filteredTaches = filteredTaches.filter(tache => {
+            return (
+                String(tache.num_tache).toLowerCase().includes(searchQuery) ||
+                String(tache.num_ticket_dmd).toLowerCase().includes(searchQuery) ||
+                String(tache.batiment).toLowerCase().includes(searchQuery) ||
+                String(tache.lieu).toLowerCase().includes(searchQuery) ||
+                String(tache.description_tache).toLowerCase().includes(searchQuery)
+            );
+        });
+    }
+
+    // Mise à jour du tableau avec les tâches filtrées
     initTableauTechnicien(filteredTaches);
 }
 
@@ -775,25 +774,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (imprimerBtn) {
         imprimerBtn.addEventListener("click", function (e) {
-            e.preventDefault(); // Évite l'envoi du formulaire
+            e.preventDefault();
 
             const select = document.getElementById("technicienSelect");
             const techId = select.value;
+            const nombreTaches = document.getElementById("nombreTaches").value;
+            const tbody = document.querySelector("#tasksTable tbody");
+            const hasTasks = tbody && tbody.querySelector("tr") && !tbody.querySelector("tr td[colspan='8']");
 
             if (!techId) {
-                alert(
-                    "Veuillez sélectionner un technicien avant d'imprimer sa feuille de route."
-                );
+                alert("Veuillez sélectionner un technicien avant d'imprimer sa feuille de route.");
+                return;
+            }
+
+            if (!hasTasks) {
+                alert("Ce technicien n'a aucune tâche assignée. Impossible d'imprimer une feuille de route vide.");
                 return;
             }
 
             // Ouvre la feuille de route du technicien sélectionné
             window.open(
-                `${BASE_URL}/feuillederoute/imprimer/${encodeURIComponent(techId)}`,
+                `${BASE_URL}/feuillederoute/imprimer?tech_id=${encodeURIComponent(techId)}&nombreTask=${encodeURIComponent(nombreTaches)}`,
                 "_blank"
             );
-            
-
         });
     }
 });

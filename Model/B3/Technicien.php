@@ -76,7 +76,7 @@ class Technicien
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
     
-        // Requête SQL pour récupérer les tâches liées à un utilisateur (technicien) avec le nombre de médias associés
+        // Requête SQL pour récupérer les tâches liées à un utilisateur (technicien)
         $sql = "SELECT 
             t.Id_tache, 
             t.sujet_tache, 
@@ -89,15 +89,26 @@ class Technicien
             t.Id_demande 
             FROM tache t 
             WHERE t.Id_utilisateur = :userId 
-            ORDER BY t.ordre_tache ASC LIMIT :page_fin OFFSET :page_debut";
+            AND t.Id_utilisateur IN (SELECT Id_utilisateur FROM utilisateur WHERE Id_Role = 2 AND valide_utilisateur = 1 AND actif_utilisateur = 1)
+            ORDER BY t.ordre_tache ASC";
+        
+        // Si on veut toutes les tâches (page_fin = 0), on n'applique pas la limite
+        if ($page_fin > 0) {
+            $sql .= " LIMIT :page_fin OFFSET :page_debut";
+        }
+    
     
         // Préparation de la requête
         $stmt = $pdo->prepare($sql);
     
-        // Lier l'ID de l'utilisateur et les paramètres de pagination
+        // Lier l'ID de l'utilisateur
         $stmt->bindParam(':userId', $this->techId, PDO::PARAM_INT);
-        $stmt->bindParam(':page_fin', $page_fin, PDO::PARAM_INT);
-        $stmt->bindParam(':page_debut', $page_debut, PDO::PARAM_INT);
+        
+        // Lier les paramètres de pagination seulement si nécessaire
+        if ($page_fin > 0) {
+            $stmt->bindParam(':page_fin', $page_fin, PDO::PARAM_INT);
+            $stmt->bindParam(':page_debut', $page_debut, PDO::PARAM_INT);
+        }
 
         // Exécution de la requête
         $stmt->execute();

@@ -49,18 +49,31 @@ class PrintController
         }
 
         // Declare les variables pour la pagination
-        $debutTask = $_GET['debutTask'] ?? 1; // On commence à la task 1
-        $nombreDeTask = $_GET['nombreTask'] ?? 0; // 0 veut dire tout
+        $debutTask = 1; // On commence toujours à la première tâche
+        $nombreDeTask = intval($_GET['nombreTask'] ?? 0); // On récupère le nombre saisi par l'utilisateur
 
         // Vérifie si le technicien existe et a des tâches assignées
         $technicien = new Technicien(intval($techId));
         
-        // Vérifie si le technicien est valide
-        $tasks = $technicien->getTachesEnCours();
+        // Vérifie d'abord si le technicien existe
+        if (!$technicien->exists()) {
+            header("Content-Type: application/json");
+            echo json_encode(["status" => "warning", "message" => "Le technicien n'existe pas."]);
+            return false;
+        }
+
+        // Vérifie si le technicien est valide et récupère ses tâches
+        // On récupère le nombre de tâches demandé par l'utilisateur, en commençant toujours par la première
+        $tasks = $technicien->getTachesForTechnicien(0, $nombreDeTask); // 0 pour commencer au début, $nombreDeTask pour le nombre demandé
+        
+        // Log pour déboguer
+        error_log("Technicien ID: " . $techId);
+        error_log("Nombre de tâches trouvées: " . count($tasks));
+        
         if (empty($tasks))
         {
             header("Content-Type: application/json");
-            echo json_encode(["status" => "warning", "message" => "Le technicien est invalide ou n'a aucune tâche assignée."]);
+            echo json_encode(["status" => "warning", "message" => "Le technicien n'a aucune tâche assignée."]);
             return false;
         }
 

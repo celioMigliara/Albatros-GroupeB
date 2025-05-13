@@ -39,6 +39,44 @@ class Tache
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllStatusEnCours()
+    {
+        // Connexion à la base de données
+        $pdo = Database::getInstance()->getConnection();
+
+        // Requête SQL pour récupérer tous les techniciens
+        $sql = "SELECT id_statut, nom_statut
+            FROM statut WHERE id_statut < 5";
+
+        // Préparer la requête
+        $stmt = $pdo->prepare($sql);
+
+        // Exécution de la requête
+        $stmt->execute();
+
+        // Récupérer et retourner les résultats sous forme de tableau associatif
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getAllStatutsTermines()
+    {
+        // Connexion à la base de données
+        $pdo = Database::getInstance()->getConnection();
+
+        // Requête SQL pour récupérer tous les techniciens
+        $sql = "SELECT id_statut, nom_statut
+            FROM statut WHERE id_statut >= 5";
+
+        // Préparer la requête
+        $stmt = $pdo->prepare($sql);
+
+        // Exécution de la requête
+        $stmt->execute();
+
+        // Récupérer et retourner les résultats sous forme de tableau associatif
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Fonction pour récupérer les informations d'une tâche par son ID
     public function getTasksDataByDemandeId()
     {
@@ -113,49 +151,85 @@ class Tache
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function updateLinearOrder($start, $end)
+    // Fonction qui met à jour l'ordre des taches d'un technicien à partir du start au end.
+    public static function updateLinearOrder($start, $end, $techId)
     {
-        // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
 
-        // Démarrer la transaction pour garantir la cohérence des données
+        // On commence une transaction car on enchaine les requetes SQL qui pourraient ne pas passer
+        // On s'assure de la cohérence des données avec le concept de transaction
         $pdo->beginTransaction();
 
-        // On vérifie que les deux ordres existent et on récupère aussi l'id de la tâche
-        // On sélectionne "ordre_tache" en premier pour qu'il devienne la clé, et "id_tache" ensuite
-        $stmt = $pdo->prepare("SELECT ordre_tache, id_tache FROM tache WHERE ordre_tache IN (?, ?)");
-        $stmt->execute([$start, $end]);
-        $results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // => [ordre_tache => id_tache]
+        // 1. Récupérer la tâche de départ avec statut < 5
+        // C'est pour s'assurer qu'on modifie bien la bonne tache start
+        $stmt = $pdo->prepare("
+            SELECT id_tache
+            FROM tache
+            WHERE ordre_tache = :start
+            AND id_utilisateur = :techId
+            AND (
+                SELECT h.id_statut
+                FROM historique h
+                WHERE h.id_tache = tache.id_tache
+                ORDER BY h.date_modif DESC
+                LIMIT 1
+            ) < 5
+        ");
+        $stmt->execute(['start' => $start, 'techId' => $techId]);
+        $startTask = $stmt->fetch();
 
-        // Vérifier que les deux ordres existent bien dans la base
-        if (!isset($results[$start]) || !isset($results[$end])) {
+        // On rollback si on a rien trouvé
+        if (!$startTask) {
             $pdo->rollBack();
             return false;
         }
 
-        // Récupérer l'id de la tâche se trouvant à l'ordre $start (on profite de la syntaxe du key-pair)
-        $startId = $results[$start];
+        $startId = $startTask['id_tache'];
 
-        // Mise à jour des autres tâches pour faire de la place pour le déplacement
+        // 2. Mise à jour des autres tâches dans l'intervalle, statut < 5 uniquement
         if ($start > $end) {
-            // Pour un déplacement vers le haut (ex: ordre 5 -> 2),
-            // on décale les tâches entre $end et $start - 1 vers le bas (+1)
-            $update = $pdo->prepare("UPDATE tache SET ordre_tache = ordre_tache + 1 WHERE ordre_tache >= ? AND ordre_tache < ?");
-            $update->execute([$end, $start]);
+            $update = $pdo->prepare("
+                UPDATE tache
+                SET ordre_tache = ordre_tache + 1
+                WHERE ordre_tache >= :end AND ordre_tache < :start
+                AND id_utilisateur = :techId
+                AND (
+                    SELECT h.Id_statut
+                    FROM historique h
+                    WHERE h.Id_tache = tache.id_tache
+                    ORDER BY h.date_modif DESC
+                    LIMIT 1
+                ) < 5
+            ");
+            $update->execute(['end' => $end, 'start' => $start, 'techId' => $techId]);
         } else {
-            // Pour un déplacement vers le bas (ex: ordre 2 -> 5),
-            // on décale les tâches entre $start + 1 et $end vers le haut (-1)
-            $update = $pdo->prepare("UPDATE tache SET ordre_tache = ordre_tache - 1 WHERE ordre_tache > ? AND ordre_tache <= ?");
-            $update->execute([$start, $end]);
+            $update = $pdo->prepare("
+                UPDATE tache
+                SET ordre_tache = ordre_tache - 1
+                WHERE ordre_tache > :start AND ordre_tache <= :end
+                AND id_utilisateur = :techId
+                AND (
+                    SELECT h.Id_statut
+                    FROM historique h
+                    WHERE h.Id_tache = tache.id_tache
+                    ORDER BY h.date_modif DESC
+                    LIMIT 1
+                ) < 5
+            ");
+            $update->execute(['start' => $start, 'end' => $end, 'techId' => $techId]);
         }
 
-        // On met à jour la tâche identifiée par $startId pour la placer à la position $end
-        $stmt = $pdo->prepare("UPDATE tache SET ordre_tache = ? WHERE id_tache = ?");
-        $stmt->execute([$end, $startId]);
+        // 3. Mise à jour de la tâche de départ
+        $stmt = $pdo->prepare("
+            UPDATE tache
+            SET ordre_tache = :end
+            WHERE id_tache = :startId
+            AND id_utilisateur = :techId
+        ");
+        $stmt->execute(['end' => $end, 'startId' => $startId, 'techId' => $techId]);
 
-        // Commit de la transaction si tout s'est bien passé
+        // On commit la transaction une fois que tout s'est bien passé
         $pdo->commit();
-
         return true;
     }
 

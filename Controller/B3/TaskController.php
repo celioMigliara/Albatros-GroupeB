@@ -11,14 +11,13 @@ class TaskController
 {
     // On va définir une constante pour le nombre de tâches par page
     public const TaskBaseLimit = 10;
-    public const OrdreDeTacheFinie = 999999;
 
     public function index()
     {
         if (UserConnectionUtils::isAdminConnected()) {
             // On les set pour la vue qui va les utiliser
             $techniciens = Technicien::getTechniciens();
-            $statuts = Tache::getAllStatuts();
+            $statutsEnCours = Tache::getAllStatusEnCours();
 
             // Générer le token CSRF pour la liste des taches
             $securityObj = new Security();
@@ -80,9 +79,9 @@ class TaskController
             }
 
             // On récupère les taches avec un certain offset et une limite. 
-            // On récupère aussi le nombre total de tâches sans distinction pour le statut. Utile pour la pagination
-            $tasks = $technicien->getTachesForTechnicien($start, $limit);
-            $totalTasks = $technicien->getTotalTaches();
+            // On récupère aussi le nombre total de tâches. Utile pour la pagination
+            $tasks = $technicien->getTachesEnCours(intval($start), intval($limit));
+            $totalTasks = $technicien->getTotalTachesEnCours();
 
             // Vérifier si des tâches ont été trouvées
             foreach ($tasks as &$task) {
@@ -154,15 +153,20 @@ class TaskController
                 return false;
             }
 
+            // On récupère nos données en POST
+            $techId = $_POST['techId'] ?? null;
             $start = $_POST['start'] ?? null;
             $end = $_POST['end'] ?? null;
-            if (empty($start) || empty($end)) {
+
+            // On vérifie qu'elles soient bien présentes
+            if (empty($start) || empty($end) || empty($techId)) {
                 http_response_code(400);
-                echo json_encode(['status' => 'warning', 'message' => "La requete est mal formée, il faut renseigner un paramètre 'start' ainsi qu'un paramètre 'end'"]);
+                echo json_encode(['status' => 'warning', 'message' => "La requete est mal formée, il faut renseigner un paramètre 'techId', 'start' ainsi que 'end'"]);
                 return false;
             }
 
-            $result = Tache::updateLinearOrder(intval($start), intval($end));
+            // On appelle la fonction qui update linéairement les numéros d'ordres
+            $result = Tache::updateLinearOrder(intval($start), intval($end), intval($techId));
             if ($result) {
                 http_response_code(200);
 
@@ -239,14 +243,6 @@ class TaskController
 
                 // On met à jour l'ordre de la tache
                 $tache = new Tache($id);
-                $taskStatut = $tache->getTaskStatutByTacheId();
-
-                // Si la tache est considérée comme finie, alors on lui attribute une valeur qui 
-                // la différencie des autres taches. 
-                if ($taskStatut['id_statut'] >= 5) {
-                    $order = $_ENV['ORDRE_DE_TACHE_FINIE'] ?? self::OrdreDeTacheFinie;
-                }
-
                 $returnValue &= $tache->updateOrder($order);
             }
         }

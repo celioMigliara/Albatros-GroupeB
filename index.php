@@ -33,7 +33,6 @@ if (!empty($segments[0]) && $segments[0] === basename($_SERVER['SCRIPT_NAME'])) 
 }
 
 // Les require pour les B3
-require_once 'Controller/B3/UserControlleur.php';
 require_once 'Controller/B3/AuthController.php';
 require_once 'Controller/B3/PasswordController.php';
 require_once 'Controller/B3/PrintController.php';

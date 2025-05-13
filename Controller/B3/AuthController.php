@@ -4,6 +4,7 @@ require_once 'Model/B3/UserCredentials.php';
 require_once 'Model/B3/Role.php';
 require_once 'Model/B3/Batiment.php';
 require_once 'Model/B3/Security.php';
+require_once 'Model/B3/MessageErreur.php';
 
 class AuthController
 {
@@ -39,45 +40,75 @@ class AuthController
             $confirmEmail = $_POST['confirmer_mail'] ?? null;
             $confirmPassword = $_POST['confirmer_mots_de_passe'] ?? null;
 
-
-            // On verifie si le formulaire est complet
-            if (empty($nom) || empty($prenom) || empty($email) || empty($role) || empty($pass) || empty($confirmEmail) || empty($confirmPassword)) {
-                echo json_encode(['status' => 'error', 'message' => 'Le formulaire d\'inscription n\'est pas complet.']);
-                return false;
-            }
-
-
-            // On vérifie si l'email confirmation et le mot de passe confirmation correspondent
-            if ($email !== $confirmEmail) {
-                echo json_encode(['status' => 'error', 'message' => 'Les emails ne correspondent pas.']);
-                return false;
-            }
-            
-            if ($pass !== $confirmPassword) {
-                echo json_encode(['status' => 'error', 'message' => 'Les mots de passe ne correspondent pas.']);
-                return false;
-            }
-
-            // Validation renforcée, on ne peut choisir que ces 2 roles pour l'inscription
+            // Validation du rôle en premier
             if (!in_array($role, [Role::TECHNICIEN, Role::UTILISATEUR])) {
                 echo json_encode(['status' => 'error', 'message' => "Rôle invalide"]);
                 return false;
             }
 
-            // Le techicien a par défaut tous les batiments. Si on recoit des batiments pour 
-            // l'inscription d'un technicien, c'est probablement du à un bug sur le front end 
-            // de la page d'inscription qui donne l'opportunité à un technicien de choisir des batiments
+            // Validation des bâtiments selon le rôle
             if ($role == Role::TECHNICIEN && !empty($batiments)) {
                 echo json_encode(['status' => 'error', 'message' => "Les techniciens ne doivent pas sélectionner de bâtiments"]);
                 return false;
             }
 
-            // Les utilisateurs devraient avoir choisi leur batiments
             if ($role == Role::UTILISATEUR && empty($batiments)) {
                 echo json_encode([
                     'status' => 'error',
                     'message' => "Veuillez sélectionner au moins un bâtiment."
                 ]);
+                return false;
+            }
+
+            // Validation des emails
+            if (empty($email) || empty($confirmEmail)) {
+                echo json_encode(['status' => 'error', 'message' => "L'adresse e-mail est requise."]);
+                return false;
+            }
+
+            if ($email !== $confirmEmail) {
+                echo json_encode(['status' => 'error', 'message' => 'Les emails ne correspondent pas.']);
+                return false;
+            }
+
+            // Validation du format de l'email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo json_encode(['status' => 'error', 'message' => "L'adresse e-mail n'est pas valide."]);
+                return false;
+            }
+
+            // Vérification si l'email est déjà utilisé
+            if (UserCredentials::isEmailAlreadyTaken($email)) {
+                echo json_encode(['status' => 'error', 'message' => "L'adresse email est déjà utilisée. Veuillez changer d'adresse email pour votre inscription"]);
+                return false;
+            }
+
+            // Validation des mots de passe
+            if (empty($pass) || empty($confirmPassword)) {
+                echo json_encode(['status' => 'error', 'message' => "Le mot de passe est requis."]);
+                return false;
+            }
+
+            if ($pass !== $confirmPassword) {
+                echo json_encode(['status' => 'error', 'message' => 'Les mots de passe ne correspondent pas.']);
+                return false;
+            }
+
+            // Validation du format du mot de passe
+            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $pass)) {
+                echo json_encode(['status' => 'error', 'message' => "Le mot de passe n'est pas valide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre."]);
+                return false;
+            }
+
+            // Validation des autres champs requis
+            if (empty($nom) || empty($prenom)) {
+                echo json_encode(['status' => 'error', 'message' => 'Le nom et le prénom sont requis.']);
+                return false;
+            }
+
+            // Validation du format du nom et prénom
+            if (!preg_match('/^[a-zA-ZÀ-ÿ\s-]+$/', $nom) || !preg_match('/^[a-zA-ZÀ-ÿ\s-]+$/', $prenom)) {
+                echo json_encode(['status' => 'error', 'message' => 'Le nom et le prénom ne peuvent contenir que des lettres, des espaces et des tirets']);
                 return false;
             }
 

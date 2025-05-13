@@ -61,7 +61,7 @@ class RecurrenceModel {
             $idUnite1 = 1;
         }
 
-        if($dateAnnivObj < $today){
+        if($dateAnnivObj < $today->modify('-1 day')){
             return ['success' => false, 'message' => "La date n'est pas valide"];
         }
 
@@ -195,7 +195,7 @@ class RecurrenceModel {
                 return ['success' => false, 'message' => "Vous ne pouvez pas insérer une fréquence de rappel si vous n'avez pas sélectionné une unité de rappel"];
             }
 
-            if($dateAnnivObj < $today){
+            if($dateAnnivObj < $today->modify('-1 day')){
                 return ['success' => false, 'message' => "La date n'est pas valide"];
             }
 

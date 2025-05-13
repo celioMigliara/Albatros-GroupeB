@@ -67,9 +67,9 @@
                 </div>
 
                 <div>
-                    <label for="statusFilter">Filtrer par statut :</label>
+                    <label for="statusFilter">Filtrer par statut <br>(Ctrl + clic pour sélectionner plusieurs statuts) :</label>
                     <br>
-                    <select name="statusFilter" id="statusFilter" multiple size="6">
+                    <select name="statusFilter" id="statusFilter" multiple size="1">
                         <option value="0">Tous statuts</option>
                         <?php foreach ($statuts as $statut): ?>
                             <option value="<?= htmlspecialchars($statut['Id_statut']) ?>">
@@ -100,13 +100,19 @@
 
         <div class="buttons">
             <button id="modifOrdreTache">Modifier l'ordre d'une tache</button>
+            
+            <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
+            <input id="sourceTacheOrdre" type="number" placeholder="1">
+            <label for="targetTacheOrdre">Quel ordre voulez-vous lui assigner ?</label>
+            <input id="targetTacheOrdre" type="number" placeholder="2">
+
             <button id="saveOrder">Enregistrer l'ordre des taches</button>
             <button id="listeImpression">Gérer la liste d'impression</button>
-            <button id="documentationFdr">Documentation</button>
+            
         </div>
 
-        <div id="dropPrevPage" class="drop-zone">← Déposer ici pour page précédente</div>
         <!-- Tableau des tâches -->
+        <div class="table-container">
         <table id="tasksTable">
             <thead>
                 <tr>
@@ -121,10 +127,12 @@
                 </tr>
             </thead>
             <tbody>
+                
                 <!-- Les lignes de tâches vont ici -->
+                
             </tbody>
         </table>
-        <div id="dropNextPage" class="drop-zone">Déposer ici pour page suivante →</div>
+        </div>
     </div>
 
 

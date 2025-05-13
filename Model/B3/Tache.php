@@ -93,9 +93,9 @@ class Tache
         $pdo = Database::getInstance()->getConnection();
 
         // Requête SQL pour récupérer le numero de ticket
-        $sql = "SELECT s.Id_statut, s.nom_statut
+        $sql = "SELECT s.id_statut, s.nom_statut
                 FROM historique h
-                INNER JOIN statut s ON h.Id_statut = s.Id_statut
+                INNER JOIN statut s ON h.id_statut = s.id_statut
                 WHERE h.Id_tache = :taskId
                 ORDER BY h.date_modif DESC
                 LIMIT 1";
@@ -113,26 +113,64 @@ class Tache
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function updateLinearOrder($start, $end)
+    {
+        // Connexion à la base de données
+        $pdo = Database::getInstance()->getConnection();
+
+        // Démarrer la transaction pour garantir la cohérence des données
+        $pdo->beginTransaction();
+
+        // On vérifie que les deux ordres existent et on récupère aussi l'id de la tâche
+        // On sélectionne "ordre_tache" en premier pour qu'il devienne la clé, et "id_tache" ensuite
+        $stmt = $pdo->prepare("SELECT ordre_tache, id_tache FROM tache WHERE ordre_tache IN (?, ?)");
+        $stmt->execute([$start, $end]);
+        $results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // => [ordre_tache => id_tache]
+
+        // Vérifier que les deux ordres existent bien dans la base
+        if (!isset($results[$start]) || !isset($results[$end])) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        // Récupérer l'id de la tâche se trouvant à l'ordre $start (on profite de la syntaxe du key-pair)
+        $startId = $results[$start];
+
+        // Mise à jour des autres tâches pour faire de la place pour le déplacement
+        if ($start > $end) {
+            // Pour un déplacement vers le haut (ex: ordre 5 -> 2),
+            // on décale les tâches entre $end et $start - 1 vers le bas (+1)
+            $update = $pdo->prepare("UPDATE tache SET ordre_tache = ordre_tache + 1 WHERE ordre_tache >= ? AND ordre_tache < ?");
+            $update->execute([$end, $start]);
+        } else {
+            // Pour un déplacement vers le bas (ex: ordre 2 -> 5),
+            // on décale les tâches entre $start + 1 et $end vers le haut (-1)
+            $update = $pdo->prepare("UPDATE tache SET ordre_tache = ordre_tache - 1 WHERE ordre_tache > ? AND ordre_tache <= ?");
+            $update->execute([$start, $end]);
+        }
+
+        // On met à jour la tâche identifiée par $startId pour la placer à la position $end
+        $stmt = $pdo->prepare("UPDATE tache SET ordre_tache = ? WHERE id_tache = ?");
+        $stmt->execute([$end, $startId]);
+
+        // Commit de la transaction si tout s'est bien passé
+        $pdo->commit();
+
+        return true;
+    }
+
     // Fonction pour mettre à jour l'ordre d'une tâche
     public function updateOrder($order)
     {
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
 
-        // On ne veut modifier l'ordre des taches qui sont
-        // "en cours", avec un id_statut inférieur à 5
-        $stmt = $pdo->prepare("
-        UPDATE tache
+        // On modifie le numéro d'ordre de la tache
+        $sql = "UPDATE tache
         SET ordre_tache = :order
-        WHERE id_tache = :id
-        AND (
-            SELECT h.id_statut
-            FROM historique h
-            WHERE h.id_tache = tache.id_tache
-            ORDER BY h.date_modif DESC
-            LIMIT 1
-        ) < 5
-        ");
+        WHERE id_tache = :id ";
+
+        $stmt = $pdo->prepare($sql);
         
         // Exécution de la requête
         return $stmt->execute(['order' => $order, 'id' => $this->tacheId]);

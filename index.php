@@ -340,7 +340,14 @@ switch ($segments[0])
                     break;
                 case 'ordre':
                     if (isset($segments[2]) && $segments[2] === 'update') {
-                        (new TaskController())->updateTasksOrder();
+                        if (isset($segments[3]) && $segments[3] === 'lineaire')
+                        {
+                            (new TaskController())->updateLinearTaskOrder();
+                        }
+                        else
+                        {
+                            (new TaskController())->updateTasksOrder();
+                        }
                     } else {
                         $pageNotFound = true;
                     }

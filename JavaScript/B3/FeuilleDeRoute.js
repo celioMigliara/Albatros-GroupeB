@@ -4,6 +4,9 @@ const START_DATE_KEY = "startDate";
 const END_DATE_KEY = "endDate";
 const STATUS_FILTER_KEY = "statusFilter";
 const MEDIA_FILTER_KEY = "mediaFilter";
+const INVALID_STATUT = 0;
+const FINISHED_STATUT = 5;
+const ORDRE_TACHE_FINIE = 999999;
 
 // Mettre ce flag à true si on veut changer le comportement des médias
 // Par défaut (à false), l'url du média est affichée et l'admin clique dessus pour accéder à la
@@ -18,7 +21,25 @@ const PRESENT_KEY = "techniciens_presents";
 const TECHNICIEN_KEY = "technicien_courant";
 let initialTaskMap = new Map();
 let idToOrderModified = new Map();
-let listeTaches;
+let listeTaches = null;
+
+// Variables pour le drag and drop
+let draggedRow = null;
+let currentPage = 1; // Page initiale
+let totalPages = 1;  // Nombre total de pages
+const tasksPerPage = 8; // Nombre de tâches par page
+
+document.getElementById("saveOrder").addEventListener("click", () => EnregistrerOrdre(true));
+
+// Événements pour les boutons de pagination
+document.getElementById("resetFiltersBtn").addEventListener("click", resetFilters);
+
+// Événements pour les filtres
+document.getElementById("mediaFilter").addEventListener("change", RefreshTableAndApplyFilters);
+document.getElementById("statusFilter").addEventListener("change", RefreshTableAndApplyFilters);
+document.getElementById("startDate").addEventListener("change", RefreshTableAndApplyFilters);
+document.getElementById("endDate").addEventListener("change", RefreshTableAndApplyFilters);
+document.getElementById("searchInput").addEventListener("input", RefreshTableAndApplyFilters);
 
 // Sauvegarde des filtres
 document.getElementById("searchInput").addEventListener("input", function () {
@@ -44,6 +65,42 @@ document.getElementById("statusFilter").addEventListener("change", function () {
 // Sauvegarde du filtre de médias
 document.getElementById("mediaFilter").addEventListener("change", function () {
     localStorage.setItem(MEDIA_FILTER_KEY, this.value);
+});
+
+document.getElementById("technicienSelect").addEventListener("change", function () {
+    const selectedValue = this.value;
+
+    localStorage.setItem(TECHNICIEN_KEY, selectedValue);
+    loadTachesForTechnicien(selectedValue);
+});
+
+document.getElementById("listeImpression").addEventListener("click", function () {
+    window.location.href = BASE_URL + "/feuillederoute/liste/impression";
+});
+
+document.getElementById("modifOrdreTache").addEventListener("click", function () {
+    const start = document.getElementById("sourceTacheOrdre").value;
+    const end = document.getElementById("targetTacheOrdre").value;
+    if (!start || !end) {
+        return;
+    }
+
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+    const params = `start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update/lineaire", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+
+            const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
+            loadTachesForTechnicien(savedTechnicien);
+        }
+    };
+
+    xhr.send(params);
 });
 
 // Restauration des filtres
@@ -90,33 +147,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// Fonction pour récupérer et mettre à jour la liste des techniciens présents
-function getPresentTechnicians() {
-    let techs = localStorage.getItem(PRESENT_KEY);
-    return techs ? JSON.parse(techs) : [];
-}
-
-// Fonction pour mettre à jour la liste des techniciens présents
-function setPresentTechnicians(techs) {
-    localStorage.setItem(PRESENT_KEY, JSON.stringify(techs));
-}
-
-// Fonction pour parser le JSON de manière sécurisée
-function safeJsonParse(str) {
-    try {
-        return JSON.parse(str);
-    } catch (e) {
-        return null;
-    }
-}
-
-// Fonction pour setup le drag and drop
 document.addEventListener("DOMContentLoaded", function () {
-    setupDragAndDrop();
+    const imprimerBtn = document.getElementById("imprimerFeuilleRoute");
+
+    if (imprimerBtn) {
+        imprimerBtn.addEventListener("click", function (e) {
+            e.preventDefault(); // Évite l'envoi du formulaire
+
+            const select = document.getElementById("technicienSelect");
+            const techId = select.value;
+
+            if (!techId) {
+                alert(
+                    "Veuillez sélectionner un technicien avant d'imprimer sa feuille de route."
+                );
+                return;
+            }
+
+            // Ouvre la feuille de route du technicien sélectionné
+            window.open(
+                `${BASE_URL}/feuillederoute/imprimer/${encodeURIComponent(techId)}`,
+                "_blank"
+            );
+
+
+        });
+    }
 });
 
 // Fonction pour restaurer le technicien courant
 document.addEventListener("DOMContentLoaded", function () {
+    setupDragAndDrop();
     const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
     if (savedTechnicien) {
         let TechnicienSelect = document.getElementById("technicienSelect");
@@ -127,24 +188,6 @@ document.addEventListener("DOMContentLoaded", function () {
         loadTachesForTechnicien(savedTechnicien);
     }
 });
-
-let SelectTechnicien = document.getElementById("technicienSelect");
-if (SelectTechnicien) {
-    SelectTechnicien.addEventListener("change", function () {
-        const selectedValue = this.value;
-
-        localStorage.setItem(TECHNICIEN_KEY, selectedValue);
-        loadTachesForTechnicien(selectedValue);
-    });
-}
-
-
-let listeImpression = document.getElementById("listeImpression");
-if (listeImpression) {
-    listeImpression.addEventListener("click", function () {
-        window.location.href = BASE_URL + "/feuillederoute/liste/impression";
-    });
-}
 
 // Fonction pour ajouter un technicien à la liste des présents
 let ajouterPrintList = document.getElementById("ajouterPrintList");
@@ -181,65 +224,24 @@ if (ajouterPrintList) {
     });
 }
 
-// Fonction pour supprimer un technicien de la liste des présents
-let saveOrder = document.getElementById("saveOrder");
-if (saveOrder) {
-    saveOrder.addEventListener("click", function () {
-        if (idToOrderModified.size === 0) {
-            console.log("Aucune modification à sauvegarder.");
-            return;
-        }
+// Fonction pour récupérer et mettre à jour la liste des techniciens présents
+function getPresentTechnicians() {
+    let techs = localStorage.getItem(PRESENT_KEY);
+    return techs ? JSON.parse(techs) : [];
+}
 
-        let queryString = "";
-        let index = 0;
-        for (let [id, order] of idToOrderModified) {
-            if (initialTaskMap.get(id) == order) {
-                console.log(
-                    "On skip l'element " + id + " avec le numero d'ordre " + order
-                );
-                continue;
-            }
+// Fonction pour mettre à jour la liste des techniciens présents
+function setPresentTechnicians(techs) {
+    localStorage.setItem(PRESENT_KEY, JSON.stringify(techs));
+}
 
-            queryString += `&changes[${index}][id]=${encodeURIComponent(
-                id
-            )}&changes[${index}][order]=${encodeURIComponent(order)}`;
-            index++;
-        }
-
-        if (index == 0) {
-            console.log("Aucune modification à sauvegarder.");
-            return;
-        }
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                idToOrderModified.clear();
-                let JsonReponse = safeJsonParse(xhr.responseText);
-                if (!JsonReponse) {
-                    console.log(xhr.responseText);
-                    return;
-                }
-
-                // Remplacer par une popup
-                alert(JsonReponse.message);
-                console.log(JsonReponse.message);
-            }
-        };
-
-        // Rajouter le token csrf manuellement
-        const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-        queryString += "&csrf_token=" + encodeURIComponent(csrfToken);
-
-        if (queryString.charAt(0) === "&") {
-            queryString = queryString.slice(1);
-        }
-
-        xhr.send(queryString);
-    });
+// Fonction pour parser le JSON de manière sécurisée
+function safeJsonParse(str) {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return null;
+    }
 }
 
 // Helper fonction
@@ -260,18 +262,80 @@ function formatDate(dateStr) {
     });
 }
 
-// Variables pour le drag and drop
-let draggedRow = null;
-let draggedTaskData = null; // Pour stocker la tâche à déplacer entre pages
-let pendingDrop = false;    // Pour savoir si on attend un drop sur la nouvelle page
-let currentPage = 1; // Page initiale
-let totalPages = 1;  // Nombre total de pages
-const tasksPerPage = 6; // Nombre de tâches par page
+// Fonction pour normaliser une date en UTC, utile pour la comparaison de dates inclusives
+function normalizeDateToUTC(date) {
+    const d = new Date(date);
+    return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); // Création de la date en UTC (00:00)
+}
 
-// Fonction pour afficher ou masquer les zones de drop
-function showDropZones(show = true) {
-    document.getElementById("dropPrevPage").classList.toggle("active", show && currentPage > 1);
-    document.getElementById("dropNextPage").classList.toggle("active", show && currentPage < totalPages);
+// Avoir le format année/mois/jour plutot que jour/mois/année
+function parseDate(dateStr) {
+    const [day, month, year] = dateStr.split("/");
+    return new Date(`${year}-${month}-${day}`);
+}
+
+function shouldConsiderTaskOrder(taskStatut) {
+    return (taskStatut != INVALID_STATUT && taskStatut < FINISHED_STATUT);
+}
+
+function EnregistrerOrdre(displayAlert = true) {
+    if (idToOrderModified.size === 0) {
+        console.log("Aucune modification à sauvegarder.");
+        return;
+    }
+
+    let queryString = "";
+    let index = 0;
+    for (let [id, order] of idToOrderModified) {
+        if (initialTaskMap.get(id) == order) {
+            console.log(
+                "On skip l'element " + id + " avec le numero d'ordre " + order
+            );
+            continue;
+        }
+
+        queryString += `&changes[${index}][id]=${encodeURIComponent(
+            id
+        )}&changes[${index}][order]=${encodeURIComponent(order)}`;
+        index++;
+    }
+
+    if (index == 0) {
+        console.log("Aucune modification à sauvegarder.");
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            idToOrderModified.clear();
+            let JsonReponse = safeJsonParse(xhr.responseText);
+            if (!JsonReponse) {
+                console.log(xhr.responseText);
+                return;
+            }
+
+            const selectedTech = itemStorage.getItem(TECHNICIEN_KEY);
+            loadTachesForTechnicien(selectedTech);
+
+            // Remplacer par une popup
+            alert(JsonReponse.message);
+            console.log(JsonReponse.message);
+        }
+    };
+
+    // Rajouter le token csrf manuellement
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+    queryString += "&csrf_token=" + encodeURIComponent(csrfToken);
+
+    if (queryString.charAt(0) === "&") {
+        queryString = queryString.slice(1);
+    }
+
+    xhr.send(queryString);
 }
 
 // Fonction pour supprimer les styles de survol
@@ -293,8 +357,7 @@ function showMediaPopup(mediaList) {
     mediaList.forEach(media => {
         const li = document.createElement('li');
         let mediaUrl = media.url_media;
-        if (OUVRIR_MEDIA_EN_TANT_QUE_FICHIER_LOCAL === true)
-        {
+        if (OUVRIR_MEDIA_EN_TANT_QUE_FICHIER_LOCAL === true) {
             mediaUrl = BASE_URL + "/Public/Uploads/" + mediaUrl;
         }
 
@@ -330,13 +393,13 @@ function loadTachesForTechnicien(Technicien) {
             const tasks = response.tasks;
             listeTaches = tasks;
 
-            console.log(response.totalTasks);
+            // On calcule le nombre de pages totales qu'on peut avoir (sans en avoir request les données)
             totalPages = Math.ceil(response.totalTasks / tasksPerPage);
-            taskStartIndex = (currentPage - 1) * tasksPerPage + 1;
 
             // On refresh la table (qu'on reconstruit de 0) et on applique les filtres éxistants
             RefreshTableAndApplyFilters();
 
+            // On update la pagination
             updatePaginationControls();
         }
     };
@@ -362,11 +425,8 @@ function changePage(direction) {
     }
     currentPage = Math.max(1, Math.min(currentPage, totalPages));
     updatePaginationControls();
-    loadTachesForTechnicien(localStorage.getItem('technicien_courant'));  // Recharger les tâches pour le technicien
+    loadTachesForTechnicien(localStorage.getItem(TECHNICIEN_KEY));  // Recharger les tâches pour le technicien
 }
-
-// Événements pour les boutons de pagination
-document.getElementById("resetFiltersBtn").addEventListener("click", resetFilters);
 
 // Fonction pour réinitialiser les filtres
 function resetFilters() {
@@ -398,13 +458,6 @@ function resetFilters() {
     initTableauTechnicien(listeTaches);
 }
 
-// Événements pour les filtres
-document.getElementById("mediaFilter").addEventListener("change", RefreshTableAndApplyFilters);
-document.getElementById("statusFilter").addEventListener("change", RefreshTableAndApplyFilters);
-document.getElementById("startDate").addEventListener("change", RefreshTableAndApplyFilters);
-document.getElementById("endDate").addEventListener("change", RefreshTableAndApplyFilters);
-document.getElementById("searchInput").addEventListener("input", RefreshTableAndApplyFilters);
-
 // Fonction pour rafraîchir le tableau et appliquer les filtres
 function RefreshTableAndApplyFilters() {
     const mediaFilterValue = document.getElementById("mediaFilter").value;
@@ -421,7 +474,7 @@ function RefreshTableAndApplyFilters() {
         if (mediaFilterValue === "1" && hasMedias) return false;
 
         // Filtrage par statut
-        const idStatut = String(tache.statut.Id_statut ?? 0);
+        const idStatut = String(tache.statut.id_statut ?? 0);
 
         // Si "0" est dans les options sélectionnées, on ignore le filtre
         if (!selectedStatusValues.includes("0")) {
@@ -473,18 +526,6 @@ function RefreshTableAndApplyFilters() {
     initTableauTechnicien(filteredTaches);
 }
 
-// Fonction pour normaliser une date en UTC, utile pour la comparaison de dates inclusives
-function normalizeDateToUTC(date) {
-    const d = new Date(date);
-    return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()); // Création de la date en UTC (00:00)
-}
-
-// Avoir le format année/mois/jour plutot que jour/mois/année
-function parseDate(dateStr) {
-    const [day, month, year] = dateStr.split("/");
-    return new Date(`${year}-${month}-${day}`);
-}
-
 // Initialiser le tableau des tâches
 function initTableauTechnicien(taches) {
 
@@ -492,14 +533,16 @@ function initTableauTechnicien(taches) {
     tbody.innerHTML = "";
 
     initialTaskMap.clear();
-    taches.forEach((tache, index) => {
-        initialTaskMap.set(tache.Id_tache, taskStartIndex + index);
+    taches.forEach((tache) => {
+        initialTaskMap.set(tache.Id_tache, tache.ordre_tache);
     });
 
     if (taches.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8">Aucune tâche trouvée</td></tr>`;
     }
     else {
+        // On récupère l'index supposé en fonction de la page. On oublie pas le +1 car ca commence à 1 et non à 0
+        let index = 1 + ((currentPage - 1) * tasksPerPage);
         taches.forEach(tache => {
             // Vérifier si cette tâche a des médias associés
             const hasMedias = Array.isArray(tache.medias) && tache.medias.length > 0;
@@ -507,10 +550,24 @@ function initTableauTechnicien(taches) {
                 ? `<button class="btn-media" data-media='${JSON.stringify(tache.medias)}'>Voir</button>`
                 : `<button class="btn-media no-media" disabled>Pas de média</button>`;
 
+            const idStatut = tache.statut ? tache.statut.id_statut : INVALID_STATUT;
             const nomStatut = tache.statut ? tache.statut.nom_statut : "Non défini";
+
+            // On détécte une anomalie dans l'ordre des taches, on ajoute donc la tache en question dans
+            // celles qui doivent être modifiées. Si c'est une tache finie, alors on set sa valeur
+            if (idStatut >= 5 && tache.ordre_tache != ORDRE_TACHE_FINIE) {
+                idToOrderModified.set(tache.Id_tache, ORDRE_TACHE_FINIE);
+                console.log("Anomalie détéctée dans la DB, l'ordre de la tache finie [" + tache.Id_tache + "] va avoir le numéro d'ordre suivant : " + ORDRE_TACHE_FINIE);
+            }
+            else if (idStatut < 5 && index != tache.ordre_tache) {
+                idToOrderModified.set(tache.Id_tache, index);
+                console.log("Anomalie détéctée dans la DB, l'ordre de la tache ["
+                    + tache.Id_tache + "] est à " + tache.ordre_tache + " à la place de " + index);
+            }
+
             const row = `
-                <tr class="draggable" data-task-id="${escapeHTML(tache.Id_tache)}">
-                    <td>${escapeHTML(tache.ordre_tache)}</td>
+                <tr class="draggable" data-task-id="${escapeHTML(tache.Id_tache)}" data-task-statut="${idStatut}">
+                    <td>${escapeHTML(index)}</td>
                     <td>${formatDate(tache.date_creation_tache)}</td>
                     <td>${escapeHTML(tache.num_ticket_dmd ?? 'N/A')}</td>
                     <td>${escapeHTML(tache.nom_batiment ?? 'Non spécifié')}</td>
@@ -520,7 +577,13 @@ function initTableauTechnicien(taches) {
                     <td>${escapeHTML(nomStatut)}</td>
                 </tr>`;
             tbody.insertAdjacentHTML("beforeend", row);
+            index++;
         });
+
+        // Si on a trouvé des incohérences, alors on enregistre le nouvel ordre des taches
+        if (idToOrderModified.size > 0) {
+            EnregistrerOrdre(false);
+        }
     }
 
     tbody.querySelectorAll('.btn-media').forEach(button => {
@@ -535,46 +598,42 @@ function initTableauTechnicien(taches) {
     initDragAndDrop();
 }
 
-// Fonction pour gérer le survol de la zone de drop
-function handleDropZoneOver(e) {
-    e.preventDefault();
-    e.currentTarget.classList.add("over");
-}
-
-// Fonction pour gérer la sortie de la zone de drop
-function handleDropZoneLeave(e) {
-    e.currentTarget.classList.remove("over");
-}
-
-// Fonction pour gérer le drop sur la zone de drop
-function handleDropZoneDrop(e, direction) {
-    e.preventDefault();
-    e.currentTarget.classList.remove("over");
-    if (!draggedTaskData) return;
-
-    // Change la page
-    if (direction === "prev" && currentPage > 1) {
-        currentPage--;
-    } else if (direction === "next" && currentPage < totalPages) {
-        currentPage++;
-    } else {
+function modifierOrdreTaches(ordreTacheSource, ordreTacheTarget) {
+    const rows = Array.from(document.querySelectorAll('#tasksTable tbody tr'));
+    if (!rows) {
+        console.warn("Les rows du tableau de taches sont invalides");
         return;
     }
 
-    // Recharge la page et mémorise la tâche à déplacer
-    window.taskToDrop = draggedTaskData;
-    pendingDrop = true;
-    loadTachesForTechnicien(localStorage.getItem('technicien_courant'));
+    let start = rows[ordreTacheSource];
+    let end = rows[ordreTacheTarget];
+    if (!start) {
+        alert("Veuillez séléctionner un ordre de tache pour le début valide.");
+        return;
+    }
+    if (!end) {
+        alert("Veuillez séléctionner un ordre de tache pour la fin valide.");
+        return;
+    }
+
+    // Calcul de la nouvelle position
+    const insertBefore = ordreTacheSource > ordreTacheTarget;
+    if (insertBefore) {
+        end.parentNode.insertBefore(start, end);
+    } else {
+        end.parentNode.insertBefore(start, end.nextSibling);
+    }
+
+    // Mise à jour de l'ordre affiché et de la map
+    const updatedRows = Array.from(document.querySelectorAll('#tasksTable tbody tr'));
+    const taskOffset = (currentPage - 1) * tasksPerPage;
+
+    updatedRows.forEach((row, index) => {
+        const taskId = row.dataset.taskId;
+        const newOrder = taskOffset + index + 1; // +1 pour commencer à 1
+        idToOrderModified.set(Number(taskId), newOrder);
+    });
 }
-
-// Attache les événements pour le changement de page
-document.getElementById("dropPrevPage").addEventListener("dragover", handleDropZoneOver);
-document.getElementById("dropPrevPage").addEventListener("dragleave", handleDropZoneLeave);
-document.getElementById("dropPrevPage").addEventListener("drop", e => handleDropZoneDrop(e, "prev"));
-
-document.getElementById("dropNextPage").addEventListener("dragover", handleDropZoneOver);
-document.getElementById("dropNextPage").addEventListener("dragleave", handleDropZoneLeave);
-document.getElementById("dropNextPage").addEventListener("drop", e => handleDropZoneDrop(e, "next"));
 
 // Fonction pour configurer le drag and drop
 function setupDragAndDrop() {
@@ -587,15 +646,13 @@ function setupDragAndDrop() {
     // Écouter les événements de drag & drop
     tableBody.addEventListener("dragstart", function (e) {
         if (e.target && e.target.nodeName === "TR") {
-            draggedRow = e.target;
-            draggedTaskData = {
-                id: e.target.dataset.taskId
-            };
-            // Sauvegarder l'état du drag dans le localStorage
-            localStorage.setItem("draggedTask", JSON.stringify(draggedTaskData));
-            showDropZones(true);
-            draggedRow.style.opacity = "0.5";
-            console.log(`Drag Start: Tâche ID ${draggedRow.dataset.taskId}`);
+            if (shouldConsiderTaskOrder(e.target.dataset.taskStatut)) {
+                draggedRow = e.target;
+                draggedRow.style.opacity = "0.5";
+
+                console.log(`Drag Start: Tâche ID ${draggedRow.dataset.taskId}`);
+            }
+
         }
     });
 
@@ -624,71 +681,16 @@ function setupDragAndDrop() {
 
         const target = e.target.closest("tr");
 
-        // Si nous attendons un drop de la tâche depuis une autre page
-        if (pendingDrop && window.taskToDrop && target) {
-            const taskIdToMove = Number(window.taskToDrop.id);
-            const targetTaskId = Number(target.dataset.taskId);
-
-            // Récupérer l'ordre des tâches sur la page actuelle
-            const rows = Array.from(document.querySelectorAll('#tasksTable tbody tr'));
-            let ids = rows.map(row => Number(row.dataset.taskId));
-
-            // Retirer la tâche à déplacer si elle est déjà dans la liste
-            ids = ids.filter(id => id !== taskIdToMove);
-
-            // Trouver la position de la tâche cible
-            const targetIndex = ids.indexOf(targetTaskId);
-
-            // Insérer la tâche déplacée avant ou après la tâche cible
-            ids.splice(targetIndex, 0, taskIdToMove);
-
-            // Mettre à jour l'ordre des tâches
-            const taskOffset = (currentPage - 1) * tasksPerPage;
-            ids.forEach((id, i) => {
-                const newOrder = taskOffset + i + 1;
-                idToOrderModified.set(id, newOrder);
-            });
-
-            // Recharger l'affichage des tâches
-            loadTachesForTechnicien(localStorage.getItem('technicien_courant'));
-
-            // Réinitialiser l'état du drag
-            window.taskToDrop = null;
-            pendingDrop = false;
-
-            return;
-        }
-
         if (draggedRow && target && draggedRow !== target) {
+            if (!shouldConsiderTaskOrder(target.dataset.taskStatut)) {
+                return;
+            }
+
             const rows = Array.from(document.querySelectorAll('#tasksTable tbody tr'));
             let start = rows.indexOf(draggedRow);
             let end = rows.indexOf(target);
 
-            // Calcul de la nouvelle position
-            const insertBefore = start > end;
-            if (insertBefore) {
-                target.parentNode.insertBefore(draggedRow, target);
-            } else {
-                target.parentNode.insertBefore(draggedRow, target.nextSibling);
-            }
-
-            // Mise à jour de l'ordre affiché et de la map
-            const updatedRows = Array.from(tableBody.querySelectorAll("tr"));
-            const taskOffset = (typeof currentPage !== "undefined" && typeof tasksPerPage !== "undefined")
-                ? (currentPage - 1) * tasksPerPage
-                : 0;
-
-            updatedRows.forEach((row, i) => {
-                const taskId = row.dataset.taskId;
-                const newOrder = taskOffset + i + 1; // +1 pour commencer à 1
-                idToOrderModified.set(Number(taskId), newOrder);
-            });
-
-            draggedRow.style.opacity = "";
-
-            // Reset
-            draggedRow = null;
-            lastTarget = null;
+            modifierOrdreTaches(start, end);
         }
     });
 
@@ -696,10 +698,8 @@ function setupDragAndDrop() {
     tableBody.addEventListener("dragend", function () {
         if (draggedRow) {
             draggedRow.style.opacity = "";
+            draggedRow = null;
         }
-        showDropZones(false);
-        draggedRow = null;
-        draggedTaskData = null;
     });
 }
 
@@ -716,84 +716,3 @@ function initDragAndDrop() {
     });
 }
 
-// Supprimer la fonction autoChangePageOnHover existante et remplacer par :
-
-let hoverTimeout;
-
-function setupPageChangeHover() {
-    const dropPrevPage = document.getElementById("dropPrevPage");
-    const dropNextPage = document.getElementById("dropNextPage");
-
-    const handleHoverStart = (direction) => {
-        // Démarrer le timeout seulement si pas déjà en cours
-        if (!hoverTimeout) {
-            hoverTimeout = setTimeout(() => {
-                if (direction === 'prev' && currentPage > 1) {
-                    currentPage--;
-                    loadTachesForTechnicien(localStorage.getItem('technicien_courant'));
-                } else if (direction === 'next' && currentPage < totalPages) {
-                    currentPage++;
-                    loadTachesForTechnicien(localStorage.getItem('technicien_courant'));
-                }
-                hoverTimeout = null;
-            }, 800);
-        }
-    };
-
-    const handleHoverEnd = () => {
-        // Annuler le timeout si la souris quitte la zone
-        if (hoverTimeout) {
-            clearTimeout(hoverTimeout);
-            hoverTimeout = null;
-        }
-    };
-
-    // Gestionnaire pour la zone précédente
-    dropPrevPage.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        handleHoverStart('prev');
-    });
-
-    dropPrevPage.addEventListener('dragleave', handleHoverEnd);
-    dropPrevPage.addEventListener('drop', handleHoverEnd);
-
-    // Gestionnaire pour la zone suivante
-    dropNextPage.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        handleHoverStart('next');
-    });
-
-    dropNextPage.addEventListener('dragleave', handleHoverEnd);
-    dropNextPage.addEventListener('drop', handleHoverEnd);
-}
-
-// Initialiser une seule fois au chargement
-document.addEventListener("DOMContentLoaded", setupPageChangeHover);
-
-document.addEventListener("DOMContentLoaded", function () {
-    const imprimerBtn = document.getElementById("imprimerFeuilleRoute");
-
-    if (imprimerBtn) {
-        imprimerBtn.addEventListener("click", function (e) {
-            e.preventDefault(); // Évite l'envoi du formulaire
-
-            const select = document.getElementById("technicienSelect");
-            const techId = select.value;
-
-            if (!techId) {
-                alert(
-                    "Veuillez sélectionner un technicien avant d'imprimer sa feuille de route."
-                );
-                return;
-            }
-
-            // Ouvre la feuille de route du technicien sélectionné
-            window.open(
-                `${BASE_URL}/feuillederoute/imprimer/${encodeURIComponent(techId)}`,
-                "_blank"
-            );
-            
-
-        });
-    }
-});

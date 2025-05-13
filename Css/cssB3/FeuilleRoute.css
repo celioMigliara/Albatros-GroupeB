@@ -35,22 +35,22 @@ body {
 
 /* Conteneur principal pour le bloc entier */
 .block_taches {
-    display: flex;
-    flex-direction: column;
-    width: 90%;
-    height: 100%;
-    margin: 0px;
-    border: 1px solid #d1d1d1;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.85);
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 100%;
+  margin: 0px;
+  border: 1px solid #d1d1d1;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* En-tête fixe */
-.block_taches > div:first-child {
+.block_taches>div:first-child {
   flex-shrink: 0;
   padding: 0 20px;
   margin-bottom: 20px;
@@ -69,12 +69,12 @@ h1 {
 }
 
 /* Zone de contenu scrollable */
-.block_taches > form,
-.block_taches > .filters,
-.block_taches > .buttons,
-.block_taches > #dropPrevPage,
-.block_taches > #tasksTable,
-.block_taches > #dropNextPage {
+.block_taches>form,
+.block_taches>.filters,
+.block_taches>.buttons,
+.block_taches>#dropPrevPage,
+.block_taches>#tasksTable,
+.block_taches>#dropNextPage {
   flex-shrink: 0;
 }
 
@@ -154,7 +154,8 @@ h1 {
 
 /* ========================== Pagination Buttons ========================== */
 #pagination button {
-  background-color: #f9bb30;  /* Orange primary */
+  background-color: #f9bb30;
+  /* Orange primary */
   color: white;
   padding: 12px 20px;
   border: none;
@@ -183,7 +184,8 @@ h1 {
 
 /* Active page button */
 #pagination button.active {
-  background: linear-gradient(135deg, #f9bb30, #fcd281); /* Gradient effect for active page */
+  background: linear-gradient(135deg, #f9bb30, #fcd281);
+  /* Gradient effect for active page */
   box-shadow: 0 5px 15px rgba(249, 187, 48, 0.3);
 }
 
@@ -240,7 +242,8 @@ h1 {
 }
 
 button {
-  background-color: #f9bb30; /* Orange principal */
+  background-color: #f9bb30;
+  /* Orange principal */
   color: white;
   padding: 12px 25px;
   border-radius: 15px;
@@ -256,7 +259,8 @@ button {
 
 /* Style pour les boutons survolés */
 button:hover {
-  background: linear-gradient(135deg, #f9bb30, #fcd281); /* Dégradé orange */
+  background: linear-gradient(135deg, #f9bb30, #fcd281);
+  /* Dégradé orange */
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(249, 187, 48, 0.3);
 }
@@ -308,48 +312,49 @@ button:active {
 /* Pour les champs de date avec placeholder */
 #startDate::placeholder,
 #endDate::placeholder {
-  color: #aaa; /* Gris pour un placeholder plus discret */
+  color: #aaa;
+  /* Gris pour un placeholder plus discret */
   font-style: italic;
 }
 
 /* Style pour le select multiple des statuts */
 #statusFilter[multiple] {
-    height: auto;
-    min-height: 120px;
-    padding: 8px;
+  height: auto;
+  min-height: 120px;
+  padding: 8px;
 }
 
 #statusFilter[multiple] option {
-    padding: 8px;
-    margin: 2px 0;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  padding: 8px;
+  margin: 2px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 #statusFilter[multiple] option:hover {
-    background-color: #f9bb30;
-    color: white;
+  background-color: #f9bb30;
+  color: white;
 }
 
 #statusFilter[multiple] option:checked {
-    background-color: #f9bb30;
-    color: white;
-    font-weight: bold;
+  background-color: #f9bb30;
+  color: white;
+  font-weight: bold;
 }
 
 /* Style pour le conteneur du select multiple */
 #statusFilter[multiple] {
-    border: 2px solid #f9bb30;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #f9bb30;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #statusFilter[multiple]:focus {
-    outline: none;
-    border-color: #f9bb30;
-    box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+  outline: none;
+  border-color: #f9bb30;
+  box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
 }
 
 /* ================================ TABLEAU ================================= */
@@ -379,19 +384,15 @@ button:active {
 }
 
 #tasksTable tr:nth-child(even) {
-  background: linear-gradient(
-    to right,
-    rgba(249, 187, 48, 0.2) 0%,
-    rgba(249, 187, 48, 0.05) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(249, 187, 48, 0.2) 0%,
+      rgba(249, 187, 48, 0.05) 100%);
 }
 
 #tasksTable tr:nth-child(even):hover {
-  background: linear-gradient(
-    to right,
-    rgba(249, 187, 48, 0.3) 0%,
-    rgba(249, 187, 48, 0.15) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(249, 187, 48, 0.3) 0%,
+      rgba(249, 187, 48, 0.15) 100%);
 }
 
 /* Animation hover plus cohérente */
@@ -405,9 +406,11 @@ button:active {
 }
 
 #tasksTable tr:hover td {
-  color: #2c3e50; /* Garde la couleur du texte lisible */
+  color: #2c3e50;
+  /* Garde la couleur du texte lisible */
   background: rgba(249, 187, 48, 0.1);
 }
+
 #tasksTable td {
   transition: color 0.3s ease;
 }
@@ -422,81 +425,6 @@ button:active {
   width: 100%;
   margin: 0;
   padding: 15px 0;
-}
-
-/* ========================================================================== */
-/* ======================= LISTE IMPRESSION SPECIFIQUE ====================== */
-/* ========================================================================== */
-
-[data-page="ListeImpression"] .block_taches {
-  align-items: center;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
-
- 
-}
-
-/* Boutons de navigation */
-.back-btn {
-  background: linear-gradient(135deg, #9bac7e, #9faf7f);
-  color: white !important;
-  text-decoration: none;
-  padding: 12px 25px;
-  margin: 10px;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.back-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(155, 172, 126, 0.3);
-}
-
-/* Tableau principal */
-#printTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 25px 0;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
-}
-
-#printTable th {
-  background: linear-gradient(to bottom, #f9bb30, #f8a51c);
-  color: white;
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #f3f3f3;
-}
-
-#printTable td {
-  padding: 15px;
-  border-bottom: 1px solid #f3f3f3;
-  background: rgba(249, 187, 48, 0.05);
-}
-/* Dans la section Liste Impression Spécifique */
-#printTable td:nth-child(2) {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* Si vous avez des boutons dans la colonne Actions */
-#printTable td:nth-child(2) button {
-  white-space: nowrap;
-  margin: 2px;
-  padding: 8px 15px;
-  font-size: 0.9em;
 }
 
 
@@ -557,6 +485,7 @@ button:active {
   border: 2px dashed #f9bb30;
   cursor: pointer;
 }
+
 .drop-zone.active {
   display: block;
 }
@@ -603,22 +532,25 @@ button:active {
   transition: stroke-dashoffset 0.6s ease-in;
 }
 
-.checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-box,
-  .checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-tick {
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-box,
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-tick {
   stroke-dashoffset: 0;
 }
 
 .pagination_container {
   width: 100%;
-  transform: scale(0.95); /* Réduit légèrement la taille */
+  transform: scale(0.95);
+  /* Réduit légèrement la taille */
 }
 
 .pagination_container {
-  transform: scale(1); /* Rétablit la taille normale pour le contenu interne */
+  transform: scale(1);
+  /* Rétablit la taille normale pour le contenu interne */
 }
 
 .block_taches {
-  transform: scale(1); /* Rétablit la taille normale pour le contenu interne */
+  transform: scale(1);
+  /* Rétablit la taille normale pour le contenu interne */
 }
 
 tr.drop-target {
@@ -635,207 +567,247 @@ tr.drop-after {
 
 /*PAS DE RESPONSIVE CAR LA PAGE CONTIENT UN TABLEAU*/
 .separateur-double-ligne-B2 {
-    width: 95%;
-    margin: 0 auto;
-    display: block;
-    background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
-    background-size: 15px 15px;
-    background-repeat: repeat;
-    height: 25px;
-    opacity: 1;
-    
-  
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+  background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+  background-size: 15px 15px;
+  background-repeat: repeat;
+  height: 25px;
+  opacity: 1;
+
+
 }
 
 /* Style pour le filtre média */
 #mediaFilter {
-    width: 200px;
-    padding: 12px;
-    border: 2px solid #e0e0e0;  /* Contour jaune */
-    border-radius: 8px;
-    background-color: white;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 250px;
-    border-color: #f9bb30;
+  width: 200px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  /* Contour jaune */
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 250px;
+  border-color: #f9bb30;
 }
 
 #mediaFilter:hover {
-    border-color: #FFA500;  /* Orange plus foncé au survol */
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);  /* Ombre jaune */
+  border-color: #FFA500;
+  /* Orange plus foncé au survol */
+  box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+  /* Ombre jaune */
 }
 
 #mediaFilter:focus {
-    outline: none;
-    border-color: #FFA500;  /* Orange plus foncé au focus */
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);  /* Ombre jaune plus prononcée */
+  outline: none;
+  border-color: #FFA500;
+  /* Orange plus foncé au focus */
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  /* Ombre jaune plus prononcée */
 }
 
 #mediaFilter option {
-    padding: 8px;
+  padding: 8px;
 }
 
 #mediaFilter option:hover {
-    background-color: #f8f9fa;
+  background-color: #f8f9fa;
 }
 
 /* Style pour l'input de nombre de tâches */
 .input[type="number"] {
-    width: 200px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 2px solid #f9bb30;
-    font-family: "Montserrat Alternates", sans-serif;
-    font-size: 16px;
-    color: #333;
-    background-color: white;
-    transition: all 0.3s ease;
+  width: 200px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #f9bb30;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: white;
+  transition: all 0.3s ease;
 }
 
 /* Pour masquer les flèches de l'input number dans Chrome, Safari, Edge, Opera */
 .input[type="number"]::-webkit-inner-spin-button,
 .input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .input[type="number"]:focus {
-    outline: none;
-    border-color: #f8a51c;
-    box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+  outline: none;
+  border-color: #f8a51c;
+  box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
 }
 
 .input[type="number"]:hover {
-    border-color: #f8a51c;
-    box-shadow: 0 0 5px rgba(249, 187, 48, 0.3);
+  border-color: #f8a51c;
+  box-shadow: 0 0 5px rgba(249, 187, 48, 0.3);
 }
 
 /* Style pour le label associé */
 .form-row label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #495057;
-    font-family: "Montserrat Alternates", sans-serif;
-    font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 16px;
 }
 
 .form-row {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 /* Style pour les checkboxes de statut */
 .status-checkboxes {
-    background: white;
-    border: 2px solid #f9bb30;
-    border-radius: 8px;
-    padding: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 5px;
+  background: white;
+  border: 2px solid #f9bb30;
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 5px;
 }
 
 .checkbox-wrapper {
-    margin: 8px 0;
+  margin: 8px 0;
 }
 
 .checkbox-wrapper input[type="checkbox"] {
-    display: none;
+  display: none;
 }
 
 .checkbox-wrapper .terms-label {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 .checkbox-wrapper .terms-label:hover {
-    background-color: rgba(249, 187, 48, 0.1);
+  background-color: rgba(249, 187, 48, 0.1);
 }
 
 .checkbox-wrapper .label-text {
-    margin-left: 10px;
-    font-family: "Montserrat Alternates", sans-serif;
-    font-size: 14px;
-    color: #333;
+  margin-left: 10px;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 14px;
+  color: #333;
 }
 
 .checkbox-wrapper .checkbox-svg {
-    width: 20px;
-    height: 20px;
-    position: relative;
+  width: 20px;
+  height: 20px;
+  position: relative;
 }
 
 .checkbox-wrapper .checkbox-box {
-    fill: white;
-    stroke: #f9bb30;
-    stroke-width: 2;
-    transition: all 0.2s ease;
+  fill: white;
+  stroke: #f9bb30;
+  stroke-width: 2;
+  transition: all 0.2s ease;
 }
 
 .checkbox-wrapper .checkbox-tick {
-    stroke: #f9bb30;
-    stroke-width: 2;
-    stroke-dasharray: 172;
-    stroke-dashoffset: 172;
-    transition: stroke-dashoffset 0.2s ease;
+  stroke: #f9bb30;
+  stroke-width: 2;
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  transition: stroke-dashoffset 0.2s ease;
 }
 
-.checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-box {
-    fill: rgba(249, 187, 48, 0.1);
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-box {
+  fill: rgba(249, 187, 48, 0.1);
 }
 
-.checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-tick {
-    stroke-dashoffset: 0;
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-tick {
+  stroke-dashoffset: 0;
 }
 
-.checkbox-wrapper input[type="checkbox"]:checked + .terms-label {
-    background-color: rgba(249, 187, 48, 0.1);
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label {
+  background-color: rgba(249, 187, 48, 0.1);
 }
 
 /* Style pour la scrollbar des checkboxes */
 .status-checkboxes::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 .status-checkboxes::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 .status-checkboxes::-webkit-scrollbar-thumb {
-    background: #f9bb30;
-    border-radius: 4px;
+  background: #f9bb30;
+  border-radius: 4px;
 }
 
 .status-checkboxes::-webkit-scrollbar-thumb:hover {
-    background: #f8a51c;
+  background: #f8a51c;
 }
 
 #printTable input.nombre-taches {
-    width: 70px;
-    padding: 6px 10px;
-    border: 1.5px solid #f9bb30;
-    border-radius: 8px;
-    background: #fffbe6;
-    font-size: 1rem;
-    text-align: center;
-    outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
-    color: #333;
-    font-family: 'Montserrat Alternates', sans-serif;
+  width: 70px;
+  padding: 6px 10px;
+  border: 1.5px solid #f9bb30;
+  border-radius: 8px;
+  background: #fffbe6;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  color: #333;
+  font-family: 'Montserrat Alternates', sans-serif;
 }
+
 #printTable input.nombre-taches:focus {
-    border: 2px solid #f9bb30;
-    background: #fff7cc;
-    box-shadow: 0 0 4px #f9bb30;
+  border: 2px solid #f9bb30;
+  background: #fff7cc;
+  box-shadow: 0 0 4px #f9bb30;
 }
+
 #printTable input.nombre-taches::placeholder {
-    color: #bfae7c;
-    font-style: italic;
-    opacity: 1;
+  color: #bfae7c;
+  font-style: italic;
+  opacity: 1;
+}
+
+
+#sourceTacheOrdre {
+  width: 70px;
+  padding: 6px 10px;
+  border: 1.5px solid #f9bb30;
+  border-radius: 8px;
+  background: #fffbe6;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  color: #333;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+#targetTacheOrdre {
+  width: 70px;
+  padding: 6px 10px;
+  border: 1.5px solid #f9bb30;
+  border-radius: 8px;
+  background: #fffbe6;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  color: #333;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+#modifOrdreTache {
+  background-color: #d69813;
 }

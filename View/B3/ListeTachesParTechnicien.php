@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-
 </head>
 
 <body data-page="ListeTaches">
@@ -99,39 +98,40 @@
 
 
         <div class="buttons">
-            <button id="modifOrdreTache">Modifier l'ordre d'une tache</button>
-            
+        
             <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
             <input id="sourceTacheOrdre" type="number" placeholder="1">
             <label for="targetTacheOrdre">Quel ordre voulez-vous lui assigner ?</label>
             <input id="targetTacheOrdre" type="number" placeholder="2">
 
+            <button id="modifOrdreTache">Modifier l'ordre d'une tache</button>
+
             <button id="saveOrder">Enregistrer l'ordre des taches</button>
             <button id="listeImpression">Gérer la liste d'impression</button>
-            
+
         </div>
 
         <!-- Tableau des tâches -->
         <div class="table-container">
-        <table id="tasksTable">
-            <thead>
-                <tr>
-                    <th>N° Tâche</th>
-                    <th>Date</th>
-                    <th>Ticket</th>
-                    <th>Bâtiment</th>
-                    <th>Lieu</th>
-                    <th>Description</th>
-                    <th>Média</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-                <!-- Les lignes de tâches vont ici -->
-                
-            </tbody>
-        </table>
+            <table id="tasksTable">
+                <thead>
+                    <tr>
+                        <th>N° Tâche</th>
+                        <th>Date</th>
+                        <th>Ticket</th>
+                        <th>Bâtiment</th>
+                        <th>Lieu</th>
+                        <th>Description</th>
+                        <th>Média</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Les lignes de tâches vont ici -->
+
+                </tbody>
+            </table>
         </div>
     </div>
 

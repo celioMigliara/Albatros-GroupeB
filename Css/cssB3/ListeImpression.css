@@ -1,0 +1,146 @@
+/* =============================================================== */
+/* ======================= LISTE IMPRESSION ====================== */
+/* =============================================================== */
+
+[data-page="ListeImpression"] .block_taches {
+    align-items: center;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
+    height: 500px;
+}
+
+/* Boutons de navigation */
+.back-btn {
+    background: linear-gradient(135deg, #9bac7e, #9faf7f);
+    color: white !important;
+    text-decoration: none;
+    padding: 12px 25px;
+    margin: 10px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(155, 172, 126, 0.3);
+}
+
+/* Tableau principal */
+#printTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
+}
+
+#printTable th {
+    background: linear-gradient(to bottom, #f9bb30, #f8a51c);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #f3f3f3;
+}
+
+#printTable td {
+    padding: 15px;
+    border-bottom: 1px solid #f3f3f3;
+    background: rgba(249, 187, 48, 0.05);
+}
+
+/* Dans la section Liste Impression Spécifique */
+#printTable td:nth-child(2) {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Si vous avez des boutons dans la colonne Actions */
+#printTable td:nth-child(2) button {
+    white-space: nowrap;
+    margin: 2px;
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+
+/*Style pour le checkbox des paramètres avancés */
+input[type="checkbox"] {
+    display: none;
+}
+
+label[for^="checkbox-taches-"] {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    background: #f8f8f8;
+    border: 2px solid #f9bb30;
+    border-radius: 8px;
+    color: #666;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+}
+
+label[for^="checkbox-taches-"]:hover {
+    background: #fff3e0;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(249, 187, 48, 0.2);
+}
+
+input[type="checkbox"]:checked+label[for^="checkbox-taches-"] {
+    background: #f9bb30;
+    color: white;
+}
+
+/* Style pour le conteneur des paramètres avancés */
+.advanced-settings {
+    margin-top: 10px;
+    padding: 15px;
+    background: #fff;
+    border: 2px solid #f9bb30;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+/* Style pour les inputs dans les paramètres avancés */
+.advanced-settings input[type="number"] {
+    border: 2px solid #f9bb30;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.9em;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.advanced-settings input[type="number"]:focus {
+    outline: none;
+    border-color: #f9bb30;
+    box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+}
+
+.advanced-settings label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-containerr {
+    flex: 1;
+    overflow-y: auto;
+    margin: 0px 0;
+    width: 100%;
+}

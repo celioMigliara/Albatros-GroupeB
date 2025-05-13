@@ -42,8 +42,7 @@
         </div>
 
         <div class="right-panel">
-            <!-- Titre de la </div>section de modification du profil -->
-            <h2 class="title">Modifier son profil</h2>
+            
 
             <!-- Formulaire de modification -->
             <form class="formulaire" id="formulaire-modification-profil" novalidate style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">

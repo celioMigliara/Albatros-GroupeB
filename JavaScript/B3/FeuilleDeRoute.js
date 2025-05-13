@@ -5,8 +5,6 @@ const END_DATE_KEY = "endDate";
 const STATUS_FILTER_KEY = "statusFilter";
 const MEDIA_FILTER_KEY = "mediaFilter";
 const INVALID_STATUT = 0;
-const FINISHED_STATUT = 5;
-const ORDRE_TACHE_FINIE = 999999;
 
 // Mettre ce flag à true si on veut changer le comportement des médias
 // Par défaut (à false), l'url du média est affichée et l'admin clique dessus pour accéder à la
@@ -27,9 +25,9 @@ let listeTaches = null;
 let draggedRow = null;
 let currentPage = 1; // Page initiale
 let totalPages = 1;  // Nombre total de pages
-const tasksPerPage = 8; // Nombre de tâches par page
+const tasksPerPage = 1; // Nombre de tâches par page
 
-document.getElementById("saveOrder").addEventListener("click", () => EnregistrerOrdre(true));
+document.getElementById("saveOrder").addEventListener("click", EnregistrerOrdre);
 
 // Événements pour les boutons de pagination
 document.getElementById("resetFiltersBtn").addEventListener("click", resetFilters);
@@ -82,11 +80,25 @@ document.getElementById("modifOrdreTache").addEventListener("click", function ()
     const start = document.getElementById("sourceTacheOrdre").value;
     const end = document.getElementById("targetTacheOrdre").value;
     if (!start || !end) {
+        CreateSimplePopup("Veuillez renseigner les champs de saisie pour l'ordre des taches.");
         return;
     }
 
+    if (start <= 0)
+    {
+        CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache source (ex: 1)");
+        return
+    }
+
+    if (end <= 0)
+    {
+        CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache destination (ex: 1)");
+        return;
+    }
+
+    const currentTechId = localStorage.getItem(TECHNICIEN_KEY);
     const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-    const params = `start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
+    const params = `techId=${encodeURIComponent(currentTechId)}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update/lineaire", true);
@@ -157,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const techId = select.value;
 
             if (!techId) {
-                alert(
+                CreateSimplePopup(
                     "Veuillez sélectionner un technicien avant d'imprimer sa feuille de route."
                 );
                 return;
@@ -196,9 +208,9 @@ if (ajouterPrintList) {
         const selectedValue = select.value;
         const selectedText = select.options[select.selectedIndex].text;
 
-        if (!selectedValue) {
+        if (!selectedValue || selectedValue == 0) {
             // On peut remplacer par une popup
-            alert("Veuillez sélectionner un technicien.");
+            CreateSimplePopup("Veuillez sélectionner un technicien.");
             console.log("Veuillez sélectionner un technicien.");
             return;
         }
@@ -206,7 +218,7 @@ if (ajouterPrintList) {
         let presentTechs = getPresentTechnicians();
         if (presentTechs.some((t) => t.id === selectedValue)) {
             // On peut remplacer par une popup
-            alert("Ce technicien est déjà dans la liste.");
+            CreateSimplePopup("Ce technicien est déjà dans la liste.");
             console.log("Ce technicien est déjà dans la liste.");
             return;
         }
@@ -218,7 +230,7 @@ if (ajouterPrintList) {
 
         setPresentTechnicians(presentTechs);
         // On peut remplacer par une popup
-        alert("Technicien ajouté à la liste des présents.");
+        CreateSimplePopup("Technicien ajouté à la liste des présents.");
         console.log("Technicien ajouté à la liste des présents.");
     });
 }
@@ -273,11 +285,7 @@ function parseDate(dateStr) {
     return new Date(`${year}-${month}-${day}`);
 }
 
-function shouldConsiderTaskOrder(taskStatut) {
-    return (taskStatut != INVALID_STATUT && taskStatut < FINISHED_STATUT);
-}
-
-function EnregistrerOrdre(displayAlert = true) {
+function EnregistrerOrdre(displayPopup = true) {
     if (idToOrderModified.size === 0) {
         console.log("Aucune modification à sauvegarder.");
         return;
@@ -289,6 +297,7 @@ function EnregistrerOrdre(displayAlert = true) {
         if (initialTaskMap.get(id) == order) {
             console.log(
                 "On skip l'element " + id + " avec le numero d'ordre " + order
+                + " car aucun changement n'est détécté."
             );
             continue;
         }
@@ -317,12 +326,16 @@ function EnregistrerOrdre(displayAlert = true) {
                 return;
             }
 
-            const selectedTech = itemStorage.getItem(TECHNICIEN_KEY);
+            const selectedTech = localStorage.getItem(TECHNICIEN_KEY);
             loadTachesForTechnicien(selectedTech);
 
-            // Remplacer par une popup
-            alert(JsonReponse.message);
             console.log(JsonReponse.message);
+
+            // Remplacer par une popup
+            if (displayPopup)
+            {
+                CreateSimplePopup(JsonReponse.message)
+            }
         }
     };
 
@@ -372,17 +385,35 @@ function closeMediaPopup() {
     document.getElementById('mediaPopup').style.display = 'none';
 }
 
+// Fonction pour créer et afficher le popup
+function CreateSimplePopup(message) {
+    document.getElementById("popup-message").innerText = message;
+    document.getElementById("popup").style.display = "block";
+}
+
+// Fonction pour fermer le popup
+function closeSimplePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+
+var xhrLoadTasks = null;
+
 // Fonction pour charger les tâches pour un technicien donné
 function loadTachesForTechnicien(Technicien) {
     const start = (currentPage - 1) * tasksPerPage;
     const url = BASE_URL + `/tasks?technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}`;
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
+    // On cancel la requete en cours pour laisser place à la nouvelle requete, pour éviter les desync au niveaux de taches <-> numero de pages
+    if (xhrLoadTasks && xhrLoadTasks.readyState > 0 && xhrLoadTasks.readyState < 4) {
+        xhrLoadTasks.abort();
+    }
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const response = safeJsonParse(xhr.responseText);
+    xhrLoadTasks = new XMLHttpRequest();
+    xhrLoadTasks.open("GET", url, true);
+
+    xhrLoadTasks.onreadystatechange = function () {
+        if (xhrLoadTasks.readyState === 4 && xhrLoadTasks.status === 200) {
+            const response = safeJsonParse(xhrLoadTasks.responseText);
             if (!response) {
                 console.error("Les taches reçues du serveur sont invalides.");
                 return;
@@ -403,7 +434,7 @@ function loadTachesForTechnicien(Technicien) {
         }
     };
 
-    xhr.send(null);
+    xhrLoadTasks.send(null);
 }
 
 // Fonction pour mettre à jour les contrôles de pagination
@@ -422,8 +453,14 @@ function changePage(direction) {
     } else {
         currentPage += direction;
     }
+
+    // Update de la current page
     currentPage = Math.max(1, Math.min(currentPage, totalPages));
+    
+    // Update de la pagination
     updatePaginationControls();
+
+    // On load les nouvelles taches
     loadTachesForTechnicien(localStorage.getItem(TECHNICIEN_KEY));  // Recharger les tâches pour le technicien
 }
 
@@ -473,7 +510,7 @@ function RefreshTableAndApplyFilters() {
         if (mediaFilterValue === "1" && hasMedias) return false;
 
         // Filtrage par statut
-        const idStatut = String(tache.statut.id_statut ?? 0);
+        const idStatut = String(tache.statut.id_statut ?? INVALID_STATUT);
 
         // Si "0" est dans les options sélectionnées, on ignore le filtre
         if (!selectedStatusValues.includes("0")) {
@@ -552,16 +589,11 @@ function initTableauTechnicien(taches) {
             const idStatut = tache.statut ? tache.statut.id_statut : INVALID_STATUT;
             const nomStatut = tache.statut ? tache.statut.nom_statut : "Non défini";
 
-            // On détécte une anomalie dans l'ordre des taches, on ajoute donc la tache en question dans
-            // celles qui doivent être modifiées. Si c'est une tache finie, alors on set sa valeur
-            if (idStatut >= 5 && tache.ordre_tache != ORDRE_TACHE_FINIE) {
-                idToOrderModified.set(tache.Id_tache, ORDRE_TACHE_FINIE);
-                console.log("Anomalie détéctée dans la DB, l'ordre de la tache finie [" + tache.Id_tache + "] va avoir le numéro d'ordre suivant : " + ORDRE_TACHE_FINIE);
-            }
-            else if (idStatut < 5 && index != tache.ordre_tache) {
+            if (index != tache.ordre_tache)
+            {
                 idToOrderModified.set(tache.Id_tache, index);
-                console.log("Anomalie détéctée dans la DB, l'ordre de la tache ["
-                    + tache.Id_tache + "] est à " + tache.ordre_tache + " à la place de " + index);
+                console.log("Desync de l'ordre de la tache ["
+                    + tache.Id_tache + "] qui est à " + tache.ordre_tache + " à la place de " + index);
             }
 
             const row = `
@@ -607,11 +639,11 @@ function modifierOrdreTaches(ordreTacheSource, ordreTacheTarget) {
     let start = rows[ordreTacheSource];
     let end = rows[ordreTacheTarget];
     if (!start) {
-        alert("Veuillez séléctionner un ordre de tache pour le début valide.");
+        CreateSimplePopup("Veuillez séléctionner un ordre de tache pour le début valide.");
         return;
     }
     if (!end) {
-        alert("Veuillez séléctionner un ordre de tache pour la fin valide.");
+        CreateSimplePopup("Veuillez séléctionner un ordre de tache pour la fin valide.");
         return;
     }
 
@@ -645,13 +677,9 @@ function setupDragAndDrop() {
     // Écouter les événements de drag & drop
     tableBody.addEventListener("dragstart", function (e) {
         if (e.target && e.target.nodeName === "TR") {
-            if (shouldConsiderTaskOrder(e.target.dataset.taskStatut)) {
                 draggedRow = e.target;
                 draggedRow.style.opacity = "0.5";
-
                 console.log(`Drag Start: Tâche ID ${draggedRow.dataset.taskId}`);
-            }
-
         }
     });
 
@@ -681,10 +709,6 @@ function setupDragAndDrop() {
         const target = e.target.closest("tr");
 
         if (draggedRow && target && draggedRow !== target) {
-            if (!shouldConsiderTaskOrder(target.dataset.taskStatut)) {
-                return;
-            }
-
             const rows = Array.from(document.querySelectorAll('#tasksTable tbody tr'));
             let start = rows.indexOf(draggedRow);
             let end = rows.indexOf(target);

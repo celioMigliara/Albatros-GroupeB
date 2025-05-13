@@ -66,12 +66,12 @@
                 </div>
 
                 <div>
-                    <label for="statusFilter">Filtrer par statut <br>(Ctrl + clic pour sélectionner plusieurs statuts) :</label>
+                    <label for="statusFilter">Filtrer les taches en cours<br>(Ctrl + clic pour sélectionner plusieurs statuts) :</label>
                     <br>
                     <select name="statusFilter" id="statusFilter" multiple size="1">
                         <option value="0">Tous statuts</option>
-                        <?php foreach ($statuts as $statut): ?>
-                            <option value="<?= htmlspecialchars($statut['Id_statut']) ?>">
+                        <?php foreach ($statutsEnCours as $statut): ?>
+                            <option value="<?= htmlspecialchars($statut['id_statut']) ?>">
                                 <?= htmlspecialchars($statut['nom_statut']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -176,6 +176,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="popup">
+        <p id="popup-message"></p>
+        <button onclick="closeSimplePopup()">Fermer</button>
     </div>
 
     <script>

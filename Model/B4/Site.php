@@ -79,7 +79,7 @@ class Site
         $stmt->execute([$id]);
     }
 
-    public static function reacticateSite($id)
+    public static function reactivateSite($id)
     {
         self::initDb();
         $stmt = self::$db->prepare("UPDATE site SET actif_site = true WHERE id_site = ?");

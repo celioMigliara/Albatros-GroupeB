@@ -98,14 +98,7 @@
 
 
         <div class="buttons">
-        
-            <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
-            <input id="sourceTacheOrdre" type="number" placeholder="1">
-            <label for="targetTacheOrdre">Quel ordre voulez-vous lui assigner ?</label>
-            <input id="targetTacheOrdre" type="number" placeholder="2">
-
-            <button id="modifOrdreTache">Modifier l'ordre d'une tache</button>
-
+            <button id="openModifOrdrePopup" class="action-btn">Changer l'ordre manuellement</button>
             <button id="saveOrder">Enregistrer l'ordre des taches</button>
             <button id="listeImpression">Gérer la liste d'impression</button>
 
@@ -153,6 +146,36 @@
         <h3>Médias de la tâche</h3>
         <ul id="mediaList" style="max-height:300px; overflow:auto;"></ul>
         <button onclick="closeMediaPopup()">Fermer</button>
+    </div>
+
+    <div id="popup">
+        <p id="popup-message"></p>
+        <button onclick="closeSimplePopup()">Fermer</button>
+    </div>
+
+    <!-- Popup pour la modification manuelle de l'ordre -->
+    <div id="modifOrdrePopup" class="popup">
+        <div class="popup-content">
+            <button class="fermer-popup">&times;</button>
+            <h3>Modifier l'ordre des tâches</h3>
+            
+            <div class="popup-form">
+                <div class="input-group-custom">
+                    <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
+                    <input id="sourceTacheOrdre" type="number" class="input-custom" placeholder="1">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="targetTacheOrdre">Quel ordre voulez-vous lui assigner ?</label>
+                    <input id="targetTacheOrdre" type="number" class="input-custom" placeholder="2">
+                </div>
+
+                <div class="popup-buttons">
+                    <button id="modifOrdreTache" class="btn">Modifier l'ordre d'une tache</button>
+                    <button id="confirmerModifOrdre" class="btn">Confirmer</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>

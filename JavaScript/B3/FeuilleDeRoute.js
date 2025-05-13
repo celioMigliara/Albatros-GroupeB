@@ -94,7 +94,6 @@ document.getElementById("modifOrdreTache").addEventListener("click", function ()
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-
             const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
             loadTachesForTechnicien(savedTechnicien);
         }
@@ -134,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     else {
-        // Sélectionne par défaut l'option "0" s’il n’y a rien en localStorage
+        // Sélectionne par défaut l'option "0" s'il n'y a rien en localStorage
         Array.from(statusSelect.options).forEach(opt => {
             opt.selected = opt.value === "0";
         });
@@ -715,4 +714,59 @@ function initDragAndDrop() {
         tr.setAttribute("draggable", "true");
     });
 }
+
+// Gestion de la popup de modification d'ordre
+document.addEventListener("DOMContentLoaded", function() {
+    const openPopupBtn = document.getElementById("openModifOrdrePopup");
+    const closePopupBtn = document.querySelector("#modifOrdrePopup .fermer-popup");
+    const modifOrdreBtn = document.getElementById("modifOrdreTache");
+    const confirmerBtn = document.getElementById("confirmerModifOrdre");
+    const popup = document.getElementById("modifOrdrePopup");
+
+    if (openPopupBtn) {
+        openPopupBtn.addEventListener("click", function() {
+            popup.style.display = "flex";
+        });
+    }
+
+    if (closePopupBtn) {
+        closePopupBtn.addEventListener("click", function() {
+            popup.style.display = "none";
+        });
+    }
+
+    if (confirmerBtn) {
+        confirmerBtn.addEventListener("click", function() {
+            popup.style.display = "none";
+        });
+    }
+
+    // Le bouton modifOrdreTache ne ferme plus la popup
+    if (modifOrdreBtn) {
+        modifOrdreBtn.addEventListener("click", function() {
+            // Le code existant de modification d'ordre reste inchangé
+            const start = document.getElementById("sourceTacheOrdre").value;
+            const end = document.getElementById("targetTacheOrdre").value;
+            if (!start || !end) {
+                return;
+            }
+
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            const params = `start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update/lineaire", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
+                    loadTachesForTechnicien(savedTechnicien);
+                }
+            };
+
+            xhr.send(params);
+        });
+    }
+});
 

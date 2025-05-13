@@ -3,6 +3,7 @@
 require_once 'Model/B3/FeuilleDeRoute.php';
 require_once 'Model/B3/Technicien.php';
 require_once 'Model/UserConnectionUtils.php';
+require_once 'Model/B3/MessageErreur.php';
 
 class PrintController
 {

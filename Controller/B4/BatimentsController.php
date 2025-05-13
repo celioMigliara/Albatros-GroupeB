@@ -7,7 +7,7 @@ class BatimentsController
     public function index()
     {
         $id_site = $_GET['id'] ?? null;
-        $filter = $_GET['filter'] ?? 'all';
+        $filter = $_GET['filter'] ?? 'active';
 
         $batiments = [];
         if ($id_site) {
@@ -34,7 +34,7 @@ class BatimentsController
                 }
 
                 if (isset($_POST['activate_site'])) {
-                    Site::reacticateSite($id_site);
+                    Site::reactivateSite($id_site);
                     header("Location: batiments?id=$id_site");
                     exit;
                 }

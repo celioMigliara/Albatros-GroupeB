@@ -3,22 +3,23 @@ document.addEventListener("DOMContentLoaded", function () {
     displayPrintList();
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('input[type="checkbox"][id^="checkbox-taches-"]').forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-            const techId = this.id.replace('checkbox-taches-', '');
-            const advancedSettingsDiv = document.getElementById(`advanced-settings-${techId}`);
-            if (this.checked) {
-                advancedSettingsDiv.style.display = 'block';
-            } else {
-                advancedSettingsDiv.style.display = 'none';
-            }
-        });
-    });
-});
-
 const PRESENT_KEY = "techniciens_presents";
 const TECHNICIEN_KEY = "technicien_courant";
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Listener délégué sur le tbody pour gérer les checkbox avancées
+    const tbody = document.querySelector("#printTable tbody");
+    tbody.addEventListener("change", function (event) {
+        const checkbox = event.target;
+        if (checkbox.matches('input[type="checkbox"][id^="checkbox-taches-"]')) {
+            const techId = checkbox.id.replace('checkbox-taches-', '');
+            const advancedSettingsDiv = document.getElementById(`advanced-settings-${techId}`);
+            if (advancedSettingsDiv) {
+                advancedSettingsDiv.style.display = checkbox.checked ? 'block' : 'none';
+            }
+        }
+    });
+});
 
 function getPresentTechnicians() {
     let techs = localStorage.getItem(PRESENT_KEY);

@@ -5,6 +5,7 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
 <html lang="fr">
 
 <head>
+    <script src="<?= BASE_URL ?>/Javascript/B2/formulaireb2.js" async></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demande d'intervention</title>
@@ -137,12 +138,10 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
     </div>
   </div>
 
-  <script>
-    const BASE_URL = "<?= BASE_URL ?>";
-  </script>
+  
   <!-- Description
   <script src="../script/script.js"></script>-->
-  <script src="<?= BASE_URL ?>/Javascript/B2/FormulaireJsB2.js"></script>
+
 
 </body>
 

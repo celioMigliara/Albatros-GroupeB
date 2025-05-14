@@ -33,7 +33,19 @@ class TaskController
     }
 
     // Affiche la liste des tâches pour un technicien donné
-    public function getTasksForTechnician()
+    public function getOngoingTasksForTechnician()
+    {
+        return $this->getTasks(true);
+    }
+
+    // Affiche toute les tâches pour un technicien donné
+    public function getAllTasksForTechnician()
+    {
+        return $this->getTasks(false);
+    }
+
+    // Méthode qui gère l'accès aux taches d'un technicien
+    private function getTasks($onlyEnCours)
     {
         // Définir un code HTTP 400 (Bad Request) par défaut
         http_response_code(400);
@@ -80,8 +92,8 @@ class TaskController
 
             // On récupère les taches avec un certain offset et une limite. 
             // On récupère aussi le nombre total de tâches. Utile pour la pagination
-            $tasks = $technicien->getTachesEnCours(intval($start), intval($limit));
-            $totalTasks = $technicien->getTotalTachesEnCours();
+            $tasks = $technicien->getTaches($onlyEnCours, intval($start), intval($limit));
+            $totalTasks = $technicien->getTotalTaches($onlyEnCours);
 
             // Vérifier si des tâches ont été trouvées
             foreach ($tasks as &$task) {

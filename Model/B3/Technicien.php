@@ -106,35 +106,36 @@ class Technicien
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function getTotalTachesEnCours(): int 
+    public function getTotalTaches($onlyEnCours): int 
     {
-        // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
 
-        // Requête de base pour compter les tâches en cours de l'utilisateur
         $sql = "SELECT COUNT(*) as total_count
                 FROM tache t
-                WHERE t.id_utilisateur = :userId
-                AND (
-                    SELECT h.Id_statut
-                    FROM historique h
-                    WHERE h.id_tache = t.id_tache
-                    ORDER BY h.date_modif DESC
-                    LIMIT 1
-                ) < 5";
+                WHERE t.id_utilisateur = :userId ";
 
-        // Préparation et exécution de la requête
+        // Si on ne veut que les tâches en cours (statut < 5)
+        if ($onlyEnCours) {
+            $sql .= " AND (
+                        SELECT h.Id_statut
+                        FROM historique h
+                        WHERE h.id_tache = t.id_tache
+                        ORDER BY h.date_modif DESC
+                        LIMIT 1
+                    ) < 5";
+        }
+
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':userId', $this->techId, PDO::PARAM_INT);
 
         $stmt->execute();
 
-        // Récupération du résultat
         return (int)$stmt->fetchColumn();
     }
 
+
     // fonction pour recuperer les taches en cours du technicien
-    public function getTachesEnCours($tasksOffset = 0, $tasksPerPage = 0)
+    public function getTaches($onlyEnCours, $tasksOffset = 0, $tasksPerPage = 0)
     {
         // Connexion à la base de données
         $pdo = Database::getInstance()->getConnection();
@@ -154,21 +155,26 @@ class Technicien
                         t.ordre_tache, 
                         t.Id_demande
                 FROM tache t
-                WHERE t.Id_utilisateur = :userId
-                AND 
-                (
-                    SELECT h.Id_statut
-                    FROM historique h
-                    WHERE h.Id_tache = t.Id_tache
-                    ORDER BY h.date_modif DESC
-                    LIMIT 1
-                ) < 5
-                ORDER BY t.ordre_tache ASC ";
+                WHERE t.Id_utilisateur = :userId ";
+
+        if ($onlyEnCours)
+        {
+            $sql .= " AND 
+                    (
+                        SELECT h.Id_statut
+                        FROM historique h
+                        WHERE h.Id_tache = t.Id_tache
+                        ORDER BY h.date_modif DESC
+                        LIMIT 1
+                    ) < 5 ";
+        }
+
+        $sql .= " ORDER BY t.ordre_tache ASC ";
         
         // Ajouter les filtres de pagination, si on en a plus de 0, cela veut dire qu'on veut un nombre précis
         if ($tasksPerPage > 0)
         {
-            $sql .= "LIMIT :tasks_per_page OFFSET :tasks_offset";
+            $sql .= " LIMIT :tasks_per_page OFFSET :tasks_offset ";
         }
 
         // Préparation de la requête

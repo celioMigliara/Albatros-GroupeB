@@ -321,7 +321,26 @@ switch ($segments[0])
     // Dans le projet B3, c'était le endpoint 'taches'
     // mais il est déjà utilisé au dessus
     case 'tasks':
-        (new TaskController())->getTasksForTechnician();
+        if (!isset($segments[1]))
+        {
+            $pageNotFound = true;
+        }
+        else
+        {
+            switch ($segments[1])
+            {
+                case 'all':
+                    (new TaskController())->getAllTasksForTechnician();
+                    break;
+                case 'ongoing':
+                    (new TaskController())->getOngoingTasksForTechnician();
+                    break;
+                default:
+                    $pageNotFound = true;
+                    break;
+            }
+        }
+        
         break;
 
     // Feuille de route

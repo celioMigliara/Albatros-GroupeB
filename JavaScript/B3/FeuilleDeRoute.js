@@ -5,8 +5,7 @@ const END_DATE_KEY = "endDate";
 const STATUS_FILTER_KEY = "statusFilter";
 const MEDIA_FILTER_KEY = "mediaFilter";
 const INVALID_STATUT = 0;
-const DEFAULT_TACHES_PAR_PAGE = 8;
-const TACHES_PAR_PAGE_KEY = "tachesParPage";
+const DEFAULT_TACHES_PAR_PAGE = 10;
 
 // Mettre ce flag à true si on veut changer le comportement des médias
 // Par défaut (à false), l'url du média est affichée et l'admin clique dessus pour accéder à la
@@ -365,7 +364,7 @@ var xhrLoadTasks = null;
 // Fonction pour charger les tâches pour un technicien donné
 function loadTachesForTechnicien(Technicien) {
     const start = (currentPage - 1) * tasksPerPage;
-    const url = BASE_URL + `/tasks?technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}`;
+    const url = BASE_URL + `/tasks/ongoing?technicien_id=${encodeURIComponent(Technicien)}&start=${start}&limit=${tasksPerPage}`;
 
     // On cancel la requete en cours pour laisser place à la nouvelle requete, pour éviter les desync au niveaux de taches <-> numero de pages
     if (xhrLoadTasks && xhrLoadTasks.readyState > 0 && xhrLoadTasks.readyState < 4) {

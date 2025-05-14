@@ -64,7 +64,7 @@ class PrintController
         }
         
         // Vérifie si le technicien est valide
-        $tasks = $technicien->getTachesEnCours();
+        $tasks = $technicien->getTaches(true);
         if (empty($tasks))
         {
             header("Content-Type: application/json");

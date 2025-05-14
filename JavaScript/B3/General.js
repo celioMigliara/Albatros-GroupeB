@@ -273,7 +273,7 @@ function HandleReadyStateChange() {
       console.log(xhr.responseText);
 
       // Si on a un message du serveur, le mettre dans une popup en attente
-      if (Json.message)
+      if (Json.crossmessage && Json.message)
       {
         storePopupData(Json.message, Json.status);
       }

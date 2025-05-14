@@ -32,21 +32,23 @@ class BaseTestClass extends TestCase
         $db = Database::getInstance()->getConnection();
         // Désactiver temporairement les contraintes de clé étrangère
         $db->exec("SET FOREIGN_KEY_CHECKS = 0");
-        // Vider les tables enfants puis parents, et réinitialiser les auto-incréments
-        $tables = [
-            'travaille',
-            'tache',
-            'demande',
-            'lieu',
-            'batiment',
-            'site',
-            'utilisateur',
-            'role'
-        ];
-        foreach ($tables as $table) {
-            $db->exec("TRUNCATE TABLE `$table`");
-            $db->exec("ALTER TABLE `$table` AUTO_INCREMENT = 1");
-        }
+        
+        // Vider explicitement chaque table une par une
+        $db->exec("TRUNCATE TABLE `batiment`;");
+        $db->exec("TRUNCATE TABLE `demande`;");
+        $db->exec("TRUNCATE TABLE `est`;");
+        $db->exec("TRUNCATE TABLE `historique`;");
+        $db->exec("TRUNCATE TABLE `lieu`;");
+        $db->exec("TRUNCATE TABLE `media`;");
+        $db->exec("TRUNCATE TABLE `recurrence`;");
+        $db->exec("TRUNCATE TABLE `role`;");
+        $db->exec("TRUNCATE TABLE `site`;");
+        $db->exec("TRUNCATE TABLE `statut`;");
+        $db->exec("TRUNCATE TABLE `tache`;");
+        $db->exec("TRUNCATE TABLE `travaille`;");
+        $db->exec("TRUNCATE TABLE `unite`;");
+        $db->exec("TRUNCATE TABLE `utilisateur`;");
+
         // Réactiver les contraintes de clé étrangère
         $db->exec("SET FOREIGN_KEY_CHECKS = 1");
     }

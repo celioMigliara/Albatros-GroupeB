@@ -280,7 +280,7 @@ class UserCredentials extends UserB3
     {
         // Le nom peut contenir seulement des caractères alphabétiques (y compris accentués) et des tirets
         // Le nom doit avoir au moins 2 caractères
-        return !empty($name) && strlen($name) > 1 && preg_match('/^[a-zA-ZÀ-ÿ\-]+$/u', $name);
+        return !empty($name) && strlen($name) > 1 && preg_match('/^(?!\s+$)[a-zA-ZÀ-ÿ\s-]+$/', $name);
     }
 
     // Méthode statique pour vérifier le format de l'email

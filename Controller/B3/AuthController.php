@@ -52,12 +52,6 @@ class AuthController
                 return false;
             }
 
-            // Validation des autres champs requis
-            if (empty($nom) && empty($prenom)) {
-                    echo json_encode(['status' => 'error', 'message' => 'Le nom et le prénom sont requis.']);
-                    return false;
-            }
-
             // Vérification du nom
             if (empty($nom)) {
                 echo json_encode(['status' => 'error', 'message' => 'Le nom est requis.']);
@@ -69,7 +63,6 @@ class AuthController
                 echo json_encode(['status' => 'error', 'message' => 'Le prénom est requis.']);
                 return false;
             }
-
 
             // Validation des bâtiments selon le rôle
             if ($role == Role::TECHNICIEN && !empty($batiments)) {
@@ -94,49 +87,24 @@ class AuthController
             // Validation des emails
             if (empty($confirmEmail)) {
                 echo json_encode(['status' => 'error', 'message' => "Veuillez confirmer l'email"]);
-            return false;
+                return false;
             }
             
-
+            // Vérifier que la confirmation de l'email est valide
             if ($email !== $confirmEmail) {
                 echo json_encode(['status' => 'error', 'message' => 'Les emails ne correspondent pas.']);
                 return false;
             }
 
-            // Validation du format de l'email
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                echo json_encode(['status' => 'error', 'message' => "L'adresse e-mail n'est pas valide."]);
-                return false;
-            }
-
-            // Vérification si l'email est déjà utilisé
-            if (UserCredentials::isEmailAlreadyTaken($email)) {
-                echo json_encode(['status' => 'error', 'message' => "L'adresse email est déjà utilisée. Veuillez changer d'adresse email pour votre inscription"]);
-                return false;
-            }
-
-
+            // Le mdp est un champ requis
             if (empty($confirmPassword)) {
                 echo json_encode(['status' => 'error', 'message' => "Veuillez confirmer le mots de passe"]);
                 return false;
             }
 
+            // Vérifier que la confirmation du mdp est la meme
             if ($pass !== $confirmPassword) {
                 echo json_encode(['status' => 'error', 'message' => 'Les mots de passe ne correspondent pas.']);
-                return false;
-            }
-
-            // Validation du format du mot de passe
-            if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $pass)) {
-                echo json_encode(['status' => 'error', 'message' => "Le mot de passe n'est pas valide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre."]);
-                return false;
-            }
-
-
-
-            // Validation du format du nom et prénom
-            if (!preg_match('/^[a-zA-ZÀ-ÿ\s-]+$/', $nom) || !preg_match('/^[a-zA-ZÀ-ÿ\s-]+$/', $prenom)) {
-                echo json_encode(['status' => 'error', 'message' => 'Le nom et le prénom ne peuvent contenir que des lettres, des espaces et des tirets']);
                 return false;
             }
 
@@ -201,7 +169,8 @@ class AuthController
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Votre demande d\'inscription a bien été envoyée. Elle sera examinée par un administrateur.',
-                'redirect' => BASE_URL . '/connexion'
+                'redirect' => BASE_URL . '/connexion',
+                'crossmessage' => "yes"
             ]);
             return true;
         } else {

@@ -39,12 +39,37 @@ class AuthController
             $batiments = $_POST['batiments_utilisateur'] ?? [];
             $confirmEmail = $_POST['confirmer_mail'] ?? null;
             $confirmPassword = $_POST['confirmer_mots_de_passe'] ?? null;
-
+            
             // Validation du rôle en premier
             if (!in_array($role, [Role::TECHNICIEN, Role::UTILISATEUR])) {
                 echo json_encode(['status' => 'error', 'message' => "Rôle invalide"]);
                 return false;
             }
+
+            if (empty($nom) && empty($prenom) && empty($email) && empty($pass) && empty($confirmEmail) && empty($confirmPassword))
+            {
+                echo json_encode([ 'status' => 'error', 'message' => "Veuillez remplir tous les champs." ]); 
+                return false;
+            }
+
+            // Validation des autres champs requis
+            if (empty($nom) && empty($prenom)) {
+                    echo json_encode(['status' => 'error', 'message' => 'Le nom et le prénom sont requis.']);
+                    return false;
+            }
+
+            // Vérification du nom
+            if (empty($nom)) {
+                echo json_encode(['status' => 'error', 'message' => 'Le nom est requis.']);
+                return false;
+            }
+
+            // Vérification du prénom
+            if (empty($prenom)) {
+                echo json_encode(['status' => 'error', 'message' => 'Le prénom est requis.']);
+                return false;
+            }
+
 
             // Validation des bâtiments selon le rôle
             if ($role == Role::TECHNICIEN && !empty($batiments)) {
@@ -61,10 +86,17 @@ class AuthController
             }
 
             // Validation des emails
-            if (empty($email) || empty($confirmEmail)) {
+            if (empty($email)) {
                 echo json_encode(['status' => 'error', 'message' => "L'adresse e-mail est requise."]);
                 return false;
             }
+
+            // Validation des emails
+            if (empty($confirmEmail)) {
+                echo json_encode(['status' => 'error', 'message' => "Veuillez confirmer l'email"]);
+            return false;
+            }
+            
 
             if ($email !== $confirmEmail) {
                 echo json_encode(['status' => 'error', 'message' => 'Les emails ne correspondent pas.']);
@@ -83,9 +115,9 @@ class AuthController
                 return false;
             }
 
-            // Validation des mots de passe
-            if (empty($pass) || empty($confirmPassword)) {
-                echo json_encode(['status' => 'error', 'message' => "Le mot de passe est requis."]);
+
+            if (empty($confirmPassword)) {
+                echo json_encode(['status' => 'error', 'message' => "Veuillez confirmer le mots de passe"]);
                 return false;
             }
 
@@ -100,11 +132,7 @@ class AuthController
                 return false;
             }
 
-            // Validation des autres champs requis
-            if (empty($nom) || empty($prenom)) {
-                echo json_encode(['status' => 'error', 'message' => 'Le nom et le prénom sont requis.']);
-                return false;
-            }
+
 
             // Validation du format du nom et prénom
             if (!preg_match('/^[a-zA-ZÀ-ÿ\s-]+$/', $nom) || !preg_match('/^[a-zA-ZÀ-ÿ\s-]+$/', $prenom)) {

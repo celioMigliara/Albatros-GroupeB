@@ -411,12 +411,12 @@ class AuthControllerTest extends BaseTestClass
             $_POST = [
                 'csrf_token' => $csrfToken,
                 'nom_utilisateur' => 'Dupont',
-                'prenom_utilisateur' => '',  // Champ requis manquant
+                'prenom_utilisateur' => 'test',  // Champ requis manquant
                 'mail_utilisateur' => 'jean@example.com',
                 'confirmer_mail' => 'jean@example.com',
                 'mdp_utilisateur' => 'Pass1234',
                 'confirmer_mots_de_passe' => 'Pass1234',
-                'role_utilisateur' => Role::ADMINISTRATEUR,
+                'role_utilisateur' => 55,
             ];
 
             // Activer la temporisation de sortie pour éviter les erreurs headers
@@ -432,8 +432,50 @@ class AuthControllerTest extends BaseTestClass
             $this->assertFalse($result); // La méthode doit retourner false
             $this->assertEquals('error', $responseData['status']);
             $this->assertStringContainsString('Rôle invalide', $responseData['message']);
+
+    
         }
-    public function testInscriptionEmailDejaUtilise()
+    
+            /* ================================================ */
+        /* ========== TESTS FORMULAIRE INCOMPLET ========== */
+        /* ================================================ */
+        public function testFormulairePrenomManquant()
+        {
+            $authController = new AuthController();
+
+            // Simuler une soumission POST
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+
+            $csrfToken = bin2hex(random_bytes(32));
+            $_SESSION['csrf_token'] = $csrfToken;
+
+            // Formulaire incomplet (prénom manquant)
+            $_POST = [
+                'csrf_token' => $csrfToken,
+                'nom_utilisateur' => 'Dupont',
+                'prenom_utilisateur' => '',  // Champ requis manquant
+                'mail_utilisateur' => 'jean@example.com',
+                'confirmer_mail' => 'jean@example.com',
+                'mdp_utilisateur' => 'Pass1234',
+                'confirmer_mots_de_passe' => 'Pass1234',
+                'role_utilisateur' => Role::TECHNICIEN,
+            ];
+
+            // Activer la temporisation de sortie pour éviter les erreurs headers
+            ob_start();
+            $result = $authController->register();
+            $jsonOutput = ob_get_clean();
+
+            // Décoder le JSON
+            $responseData = json_decode($jsonOutput, true);
+
+            // Vérifier que la méthode retourne false pour un formulaire incomplet
+            // Vérifications
+            $this->assertFalse($result); // La méthode doit retourner false
+            $this->assertEquals('error', $responseData['status']);
+            $this->assertStringContainsString('Le prénom est requis.', $responseData['message']);
+        }
+        public function testInscriptionEmailDejaUtilise()
     {
         $this->viderToutesLesTables();
         $this->insererRoles(); 
@@ -504,8 +546,8 @@ class AuthControllerTest extends BaseTestClass
 
         $_POST = [
             'csrf_token' => $csrfToken,
-            'nom' => 'Martin',
-            'prenom' => 'Pierre',
+            'nom' => 'Martine',
+            'prenom' => 'Pierreee',
             'mail_utilisateur' => 'pierre@example.com',
             'confirmer_mail' => 'pierre@example.com',
             'mdp_utilisateur' => 'Pass1234',

@@ -69,11 +69,24 @@ class UtilisateursController
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
         if ($id) {
+            // Récupère la cible
+            $target = User::getById($id);
+
+            // Si c'est un admin unique, on bloque
+            if ($target['role'] === 1 && User::countActiveAdmins() <= 1) {
+                header('Location: ' . BASE_URL . '/utilisateurs?error=last_admin');
+                exit;
+            }
+
+            // Sinon désactivation normale
             User::desactiverUtilisateur($id);
         }
+
         header('Location: ' . BASE_URL . '/utilisateurs');
         exit;
     }
+
+
 
     public function activer()
     {

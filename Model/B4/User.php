@@ -310,4 +310,20 @@ public static function getAllUtilisateursParBatiment(int $limit, int $offset): a
         $stmt->execute();
         return (bool) $stmt->fetchColumn();
     }
+
+    /**
+ * Compte le nombre d'administrateurs actifs
+ */
+public static function countActiveAdmins(): int
+{
+    $pdo  = (new self)->getConnection();
+    $stmt = $pdo->query("
+        SELECT COUNT(*) 
+        FROM utilisateur 
+        WHERE id_role = 1 
+          AND actif_utilisateur = 1
+    ");
+    return (int) $stmt->fetchColumn();
+}
+
 }

@@ -56,7 +56,7 @@ $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
         <div class="form-row">
             <div class="form-group">
                 <label for="technicien" class="label">Technicien :</label>
-                <select id="technicien" name="technicien" class="input">
+                <select id="technicien" name="technicien" class="input" required>
                     <option value="">Sélectionnez un technicien</option>
                     <?php foreach ($techniciens as $technicien): ?>
                         <option value="<?= $technicien['id_utilisateur'] ?>">

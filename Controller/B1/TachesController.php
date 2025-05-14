@@ -69,6 +69,10 @@ class TachesController {
             if (empty($data['nom_tache']) || empty($data['date']) || empty($data['id_demande'])) {
                 die("Les champs obligatoires ne sont pas remplis.");
             }
+            if(empty($data['technicien'])) {
+            die("Un technicien doit être sélectionné.");
+                
+            }
 
             // Gérer l'upload du média
             $mediaPath = null;

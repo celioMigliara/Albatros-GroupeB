@@ -46,6 +46,13 @@ require_once 'Model/UserConnectionUtils.php';
 // Mise à true quand la page demandée n'est pas trouvée
 $pageNotFound = false;
 
+$publicRoutes = ['connexion', 'inscription',]; //Acces sans etre connecté
+if(empty($_SESSION['user']) && !in_array($segments[0], $publicRoutes)) {
+    header('Location: ' . BASE_URL . '/connexion');
+    exit;
+}
+
+
 // Gestion de routage manuel
 switch ($segments[0]) 
 {

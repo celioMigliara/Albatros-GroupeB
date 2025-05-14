@@ -347,7 +347,7 @@ switch ($segments[0])
     case 'feuillederoute':
         if (!isset($segments[1])) {
             // Si aucun segment secondaire, afficher l'accueil de la feuille de route
-            (new PrintController())->index();
+            (new TaskController())->index();
         } else {
             switch ($segments[1]) {
                 case 'imprimer':

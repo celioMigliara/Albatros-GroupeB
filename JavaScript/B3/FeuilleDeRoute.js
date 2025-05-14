@@ -247,7 +247,9 @@ function parseDate(dateStr) {
 
 function EnregistrerOrdre(displayPopup = true) {
     if (idToOrderModified.size === 0) {
-        console.log("Aucune modification à sauvegarder.");
+        if (displayPopup) {
+            CreateSimplePopup("Aucune modification à sauvegarder.")
+        }
         return;
     }
 
@@ -388,7 +390,7 @@ function loadTachesForTechnicien(Technicien) {
             listeTaches = tasks;
 
             // On calcule le nombre de pages totales qu'on peut avoir (sans en avoir request les données)
-            totalPages = Math.ceil(response.totalTasks / tasksPerPage);
+            totalPages = Math.max(1, Math.ceil(response.totalTasks / tasksPerPage));
 
             // On refresh la table (qu'on reconstruit de 0) et on applique les filtres éxistants
             RefreshTableAndApplyFilters();
@@ -727,7 +729,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Le bouton modifOrdreTache ne ferme plus la popup
     if (modifOrdreBtn) {
         modifOrdreBtn.addEventListener("click", function () {
             const start = document.getElementById("sourceTacheOrdre").value;
@@ -756,7 +757,7 @@ document.addEventListener("DOMContentLoaded", function () {
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.readyState === 4) {
                     xhrChangeOrderCallback(xhr, true);
                 }
             };

@@ -192,11 +192,11 @@ class TaskController
 
                 return true;
             } else {
-                http_response_code(500);
+                http_response_code(400);
 
                 echo json_encode([
                     'status' => 'error',
-                    'message' => "Erreur : la modification de l'ordre des tâches n'a pas pu être effectuée. Un problème est survenu lors de la mise à jour des données."
+                    'message' => "Erreur : Vous devez spécifier un ordre valide pour les tâches."
                 ]);
 
                 return false;
@@ -216,6 +216,13 @@ class TaskController
 
         // On renvoie du JSON par défaut (AJAX)
         header("Content-Type: application/json");
+
+        if ($_SERVER['REQUEST_METHOD'] != 'POST')
+        {
+            http_response_code(405);
+            echo json_encode(['status' => 'error', 'message' => "Méthode non autorisée"]);
+            return false;
+        }
 
         // Vérification du token CSRF
         if (!$securityObj->checkCSRFToken($_POST['csrf_token'] ?? '')) {

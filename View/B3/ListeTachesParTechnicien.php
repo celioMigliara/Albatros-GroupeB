@@ -169,7 +169,7 @@
                 </div>
 
                 <div class="popup-buttons">
-                    <button id="modifOrdreTache" class="btn">Modifier l'ordre d'une tache</button>
+                    <button id="modifOrdreTache" class="btn">Modifier l'ordre</button>
                     <button id="confirmerModifOrdre" class="btn">OK</button>
                 </div>
             </div>

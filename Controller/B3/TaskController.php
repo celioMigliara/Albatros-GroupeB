@@ -98,18 +98,21 @@ class TaskController
             // Vérifier si des tâches ont été trouvées
             foreach ($tasks as &$task) {
                 // on recupère l'id de la tâche et de la demande
-                $taskId = $task['Id_tache'];
+                $taskId = $task['Id_tache'] ?? null;
                 $demandeId = $task['Id_demande'] ?? null;
+
+                // Skip la tache si pas d'id. C'est pas censé arriver
+                if (is_null($taskId)) {
+                    continue;
+                }
 
                 // On va créer une instance de la classe Tache pour chaque tâche
                 $tache = new Tache($taskId);
 
                 // On va récupérer les médias et le statut de la tâche
-                if (!empty($taskId)) {
-                    $task['medias'] = $tache->getMediasByTacheId();
-                    $task['statut'] = $tache->getTaskStatutByTacheId();
-                }
-
+                $task['medias'] = $tache->getMediasByTacheId();
+                $task['statut'] = $tache->getTaskStatutByTacheId();
+                
                 // On va récupérer les médias et le statut de la tâche
                 if (!empty($demandeId)) {
                     // on va set l'id de la demande

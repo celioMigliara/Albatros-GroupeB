@@ -172,17 +172,15 @@ if (ajouterPrintList) {
         const selectedText = select.options[select.selectedIndex].text;
 
         if (!selectedValue || selectedValue == 0) {
-            // On peut remplacer par une popup
+
             CreateSimplePopup("Veuillez sélectionner un technicien.");
-            console.log("Veuillez sélectionner un technicien.");
             return;
         }
 
         let presentTechs = getPresentTechnicians();
         if (presentTechs.some((t) => t.id === selectedValue)) {
-            // On peut remplacer par une popup
+
             CreateSimplePopup("Ce technicien est déjà dans la liste.");
-            console.log("Ce technicien est déjà dans la liste.");
             return;
         }
 
@@ -192,9 +190,8 @@ if (ajouterPrintList) {
         });
 
         setPresentTechnicians(presentTechs);
-        // On peut remplacer par une popup
+
         CreateSimplePopup("Technicien ajouté à la liste des présents.");
-        console.log("Technicien ajouté à la liste des présents.");
     });
 }
 
@@ -272,7 +269,9 @@ function EnregistrerOrdre(displayPopup = true) {
     }
 
     if (index == 0) {
-        console.log("Aucune modification à sauvegarder.");
+        if (displayPopup) {
+            CreateSimplePopup("Aucune modification à sauvegarder.")
+        }
         return;
     }
 
@@ -281,24 +280,8 @@ function EnregistrerOrdre(displayPopup = true) {
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            idToOrderModified.clear();
-            let JsonReponse = safeJsonParse(xhr.responseText);
-            if (!JsonReponse) {
-                console.log(xhr.responseText);
-                return;
-            }
-
-            const selectedTech = localStorage.getItem(TECHNICIEN_KEY);
-            loadTachesForTechnicien(selectedTech);
-
-            console.log(JsonReponse.message);
-
-            // Remplacer par une popup
-            if (displayPopup)
-            {
-                CreateSimplePopup(JsonReponse.message)
-            }
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            xhrChangeOrderCallback(xhr, displayPopup);
         }
     };
 
@@ -311,6 +294,24 @@ function EnregistrerOrdre(displayPopup = true) {
     }
 
     xhr.send(queryString);
+}
+
+function xhrChangeOrderCallback(xhr, displayPopup) {
+    let JsonReponse = safeJsonParse(xhr.responseText);
+    if (!JsonReponse) {
+        console.log(xhr.responseText);
+        return;
+    }
+    else {
+        if (displayPopup) {
+            CreateSimplePopup(JsonReponse.message)
+        }
+
+        console.log(JsonReponse.message);
+    }
+
+    const selectedTech = localStorage.getItem(TECHNICIEN_KEY);
+    loadTachesForTechnicien(selectedTech);
 }
 
 // Fonction pour supprimer les styles de survol
@@ -419,7 +420,7 @@ function changePage(direction) {
 
     // Update de la current page
     currentPage = Math.max(1, Math.min(currentPage, totalPages));
-    
+
     // Update de la pagination
     updatePaginationControls();
 
@@ -552,8 +553,7 @@ function initTableauTechnicien(taches) {
             const idStatut = tache.statut ? tache.statut.id_statut : INVALID_STATUT;
             const nomStatut = tache.statut ? tache.statut.nom_statut : "Non défini";
 
-            if (index != tache.ordre_tache)
-            {
+            if (index != tache.ordre_tache) {
                 idToOrderModified.set(tache.Id_tache, index);
                 console.log("Desync de l'ordre de la tache ["
                     + tache.Id_tache + "] qui est à " + tache.ordre_tache + " à la place de " + index);
@@ -640,9 +640,8 @@ function setupDragAndDrop() {
     // Écouter les événements de drag & drop
     tableBody.addEventListener("dragstart", function (e) {
         if (e.target && e.target.nodeName === "TR") {
-                draggedRow = e.target;
-                draggedRow.style.opacity = "0.5";
-                console.log(`Drag Start: Tâche ID ${draggedRow.dataset.taskId}`);
+            draggedRow = e.target;
+            draggedRow.style.opacity = "0.5";
         }
     });
 
@@ -703,7 +702,7 @@ function initDragAndDrop() {
 }
 
 // Gestion de la popup de modification d'ordre
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const openPopupBtn = document.getElementById("openModifOrdrePopup");
     const closePopupBtn = document.querySelector("#modifOrdrePopup .fermer-popup");
     const modifOrdreBtn = document.getElementById("modifOrdreTache");
@@ -711,27 +710,26 @@ document.addEventListener("DOMContentLoaded", function() {
     const popup = document.getElementById("modifOrdrePopup");
 
     if (openPopupBtn) {
-        openPopupBtn.addEventListener("click", function() {
+        openPopupBtn.addEventListener("click", function () {
             popup.style.display = "flex";
         });
     }
 
     if (closePopupBtn) {
-        closePopupBtn.addEventListener("click", function() {
+        closePopupBtn.addEventListener("click", function () {
             popup.style.display = "none";
         });
     }
 
     if (confirmerBtn) {
-        confirmerBtn.addEventListener("click", function() {
+        confirmerBtn.addEventListener("click", function () {
             popup.style.display = "none";
         });
     }
 
     // Le bouton modifOrdreTache ne ferme plus la popup
     if (modifOrdreBtn) {
-        modifOrdreBtn.addEventListener("click", function() 
-        {
+        modifOrdreBtn.addEventListener("click", function () {
             const start = document.getElementById("sourceTacheOrdre").value;
             const end = document.getElementById("targetTacheOrdre").value;
             if (!start || !end) {
@@ -739,14 +737,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-            if (start <= 0)
-            {
+            if (start <= 0) {
                 CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache source (ex: 1)");
                 return
             }
 
-            if (end <= 0)
-            {
+            if (end <= 0) {
                 CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache destination (ex: 1)");
                 return;
             }
@@ -761,8 +757,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
-                    loadTachesForTechnicien(savedTechnicien);
+                    xhrChangeOrderCallback(xhr, true);
                 }
             };
 

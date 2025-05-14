@@ -216,3 +216,12 @@ select {
     margin-left: 1px;
 }
 
+.btnExcelB2.disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btnExcelB2.disabled:hover {
+    background-color: #cccccc;
+}

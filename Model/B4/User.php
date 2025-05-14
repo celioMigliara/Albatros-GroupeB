@@ -124,11 +124,11 @@ public static function getAllUtilisateursParBatiment(int $limit, int $offset): a
         $pdo  = (new self)->getConnection();
         $stmt = $pdo->prepare("
             SELECT
-                id_utilisateur      AS user_id,
+               id_utilisateur       AS user_id,
                 nom_utilisateur     AS nom,
                 prenom_utilisateur  AS prenom,
                 mail_utilisateur    AS email,
-                id_role             AS role,
+             id_role             AS role,
                 valide_utilisateur  AS valide,
                 actif_utilisateur   AS actif
             FROM utilisateur

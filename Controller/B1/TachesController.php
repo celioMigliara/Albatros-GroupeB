@@ -173,6 +173,8 @@ class TachesController {
     
             $success = Taches::updateTask($data);
             if ($success) {
+
+                 DemandeB1::recalcDemandStatus($data['id_demande']);
                 if ($_SESSION['user']['role_id'] == 2) { // Technicien
                     header('Location: ' . BASE_URL . '/tasksForTechnicien'); 
                 } else { // Admin

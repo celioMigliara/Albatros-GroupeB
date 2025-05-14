@@ -91,12 +91,15 @@ if (!UserConnectionUtils::isAdminConnected()) {
     <h1 class="title">Liste des utilisateurs</h1>
 
     <div class="container-B4">
-        <!-- Message d'erreur éventuel -->
-        <?php if (isset($_GET['error']) && $_GET['error'] === 'email_exists'): ?>
-            <div class="alert alert-danger">
-                Cet email est déjà utilisé par un autre utilisateur.
-            </div>
-        <?php endif; ?>
+      
+    <!-- Message d'erreur éventuel -->
+    <?php if (isset($_GET['error']) && $_GET['error'] === 'email_exists'): ?>
+        <div class="alert alert-danger">
+            Cet email est déjà utilisé par un autre utilisateur.
+        </div>
+    <?php endif; ?>
+
+ 
 
         <!-- Formulaire de tri -->
         <br>
@@ -203,7 +206,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
 
 
     </div>
-    <script src="<?= BASE_URL ?>/Js/scriptB4.js"></script>
+  
     <script>
 document.addEventListener('DOMContentLoaded', () => {
   const modal      = document.getElementById('confirmModal');

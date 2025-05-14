@@ -26,7 +26,7 @@ class UtilisateursController
     } else {
         $utilisateurs = User::getAllUtilisateurs($limit, $offset);
     }
-
+ 
     require __DIR__ . '/../../View/B4/utilisateurs/index.php';
     }
 
@@ -67,13 +67,15 @@ class UtilisateursController
 
     public function desactiver()
     {
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+
+       $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
         if ($id) {
             // Récupère la cible
             $target = User::getById($id);
-
+            $target['role'] = (int)$target['role']; //force "1" a passer a (1)
             // Si c'est un admin unique, on bloque
             if ($target['role'] === 1 && User::countActiveAdmins() <= 1) {
+                
                 header('Location: ' . BASE_URL . '/utilisateurs?error=last_admin');
                 exit;
             }

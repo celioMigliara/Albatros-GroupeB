@@ -37,7 +37,7 @@ class TaskControllerTest extends BaseTestClass
             $_GET['technicien_id'] = 1; // ID du technicien (peu importe ici)
 
             ob_start();
-            $result = $taskController->getTasksForTechnician();
+            $result = $taskController->getAllTasksForTechnician();
             $jsonOutput = ob_get_clean();
             $responseData = json_decode($jsonOutput, true);
 
@@ -70,7 +70,7 @@ class TaskControllerTest extends BaseTestClass
             $_GET = []; // Aucun technicien_id dans la requête
 
             ob_start();
-            $result = $taskController->getTasksForTechnician();
+            $result = $taskController->getAllTasksForTechnician();
             $jsonOutput = ob_get_clean();
             $responseData = json_decode($jsonOutput, true);
 
@@ -109,7 +109,7 @@ class TaskControllerTest extends BaseTestClass
             $_GET['technicien_id'] = 999; // ID inexistant
 
             ob_start();
-            $result = $taskController->getTasksForTechnician();
+            $result = $taskController->getAllTasksForTechnician();
             $jsonOutput = ob_get_clean();
             $responseData = json_decode($jsonOutput, true);
 
@@ -200,7 +200,7 @@ class TaskControllerTest extends BaseTestClass
 
             // Essayer de récupérer les tâches du technicien
             ob_start();
-            $result = $taskController->getTasksForTechnician();
+            $result = $taskController->getAllTasksForTechnician();
             $jsonOutput = ob_get_clean();
             $responseData = json_decode($jsonOutput, true);
 
@@ -239,7 +239,7 @@ class TaskControllerTest extends BaseTestClass
 
             // Essayer d'appeler la méthode avec une mauvaise méthode HTTP
             ob_start();
-            $result = $taskController->getTasksForTechnician();
+            $result = $taskController->getAllTasksForTechnician();
             $jsonOutput = ob_get_clean();
             $responseData = json_decode($jsonOutput, true);
 

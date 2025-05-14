@@ -89,12 +89,12 @@ function displayPrintList() {
             <input id="checkbox-taches-${tech.id}" type="checkbox">
 
             <div class="advanced-settings" id="advanced-settings-${tech.id}" style="display: none;">
-                <label for="nombre-taches-${tech.id}" style="font-size: 0.95em; color: #bfae7c; margin-right: 2px;">
-                Saisissez le nombre de tâches à imprimer :
+                <label for="nombre-taches-${tech.id}" style="font-size: 0.95em; color:rgb(33, 31, 27); margin-right: 2px;">
+                Saisissez le nombre de tâches à imprimer (Entrez 0 pour imprimer toutes les tâches) :
                 </label>
-                <input type="number" min="1" value="1" id="nombre-taches-${tech.id}" class="nombre-taches" data-tech-id="${tech.id}" style="width: 70px;" placeholder="1">
-                
-                <label for="debut-taches-${tech.id}" style="font-size: 0.95em; color: #bfae7c; margin-right: 2px;">
+                <input type="number" min="0" value="1" id="nombre-taches-${tech.id}" class="nombre-taches" data-tech-id="${tech.id}" style="width: 70px;" placeholder="1">
+                <div style="height: 15px;"></div>
+                <label for="debut-taches-${tech.id}" style="font-size: 0.95em; color:rgb(33, 31, 27); margin-right: 2px;">
                 Indiquez à partir de quelle tâche commencer l'impression :
                 </label>
                 <input type="number" min="1" value="1" id="debut-taches-${tech.id}" class="nombre-taches" data-tech-id="${tech.id}" style="width: 70px;" placeholder="1">

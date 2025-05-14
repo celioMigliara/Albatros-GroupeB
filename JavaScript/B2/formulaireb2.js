@@ -183,16 +183,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Quand un site est choisi → charge les bâtiments associés
     site.addEventListener("change", () => {
         //parser l id pour passer de "1" a 1 
-        const idSite = parseInt(site.value); //Récupère l'id du site sélectionné
-        const batimentsFiltres = locationData.batiments.filter(b => b.id_site === idSite); //Filtrage des bat dans le controller qui appartient au site selectionné 
-        remplirSelect(batiment, batimentsFiltres, "BATIMENT"); //Remplissage du select batiment avec les batiments filtrés
+        const idSite = parseInt(site.value);
+const batimentsFiltres = locationData.batiments.filter(b => parseInt(b.id_site) === idSite);//Filtrage des bat dans le controller qui appartient au site selectionné 
+remplirSelect(batiment, batimentsFiltres, "BATIMENT"); //Remplissage du select batiment avec les batiments filtrés
         lieu.innerHTML = `<option value="">LIEU</option>`; //Renitialise le select lieu a lieu
     });
 
 
     batiment.addEventListener("change", () => {
         const idBat = parseInt(batiment.value);
-        const lieuxFiltres = locationData.lieux.filter(l => l.id_batiment === idBat); //Filtre les lieux qui sont rataché au bat selectionné
+        const lieuxFiltres = locationData.lieux.filter(l => parseInt(l.id_batiment) === idBat); //Filtre les lieux qui sont rataché au bat selectionné
         remplirSelect(lieu, lieuxFiltres, "LIEU"); //et remplit le select lieu avec les lieux filtrés
     });
 

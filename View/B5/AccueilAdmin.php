@@ -54,7 +54,7 @@ $nbComptesEnAttente = User::countUtilisateursEnAttente();
         <main class="dashboard">
             <!-- NOTIFICATIONS -->
             <section class="notifications-section">
-                <h2><i class="fas fa-bell"></i> Notifications récentes</h2>
+                <h2><i class="fas fa-bell"></i> Notification(s) récente(s)</h2>
 
                 <div class="notification-card alert">
                     <div class="notification-header">

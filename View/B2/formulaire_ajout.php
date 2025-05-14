@@ -104,7 +104,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         const BASE_URL = "<?= BASE_URL ?>";
     </script>
 
-    <script src="<?= BASE_URL ?>/Javascript/B2/script.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/B2/script.js"></script>
 
 </body>
 

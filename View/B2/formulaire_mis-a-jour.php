@@ -111,7 +111,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
                 <select id="choixLieu" name="lieu" class="demo-form-field" required data-selected="<?= $maintenance['id_lieu'] ?>">
                 <option value="">Sélectionnez un lieu</option>
                     <?php
-                        $lieux = $pdo->query("SELECT id_lieu, nom_lieu FROM lieu WHERE id_batiment = '$maintenance[id_batiment]'")->fetchAll(PDO::FETCH_ASSOC);
+                        $lieux = $pdo->query("SELECT id_lieu, nom_lieu FROM lieu WHERE id_batiment = '$maintenance[id_batiment]' ")->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($lieux as $lieu) {
                             $selected = ($lieu['id_lieu'] == $maintenance['id_lieu']) ? 'selected' : '';
                             echo "<option value='{$lieu['id_lieu']}' $selected>{$lieu['nom_lieu']}</option>";
@@ -155,7 +155,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
     const BASE_URL = "<?= BASE_URL ?>";
     </script>
 
-    <script src="<?= BASE_URL ?>/Javascript/B2/script.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/B2/script.js"></script>
 
 </body>
 </html>

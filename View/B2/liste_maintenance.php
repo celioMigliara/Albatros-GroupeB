@@ -40,7 +40,7 @@ if (isset($_SESSION['popup_message'])) {
 <script>
     const BASE_URL = "<?= BASE_URL ?>";
 </script>
-<script src="<?= BASE_URL ?>/Javascript/B2/script.js" defer></script>
+<script src="<?= BASE_URL ?>/JavaScript/B2/script.js" defer></script>
 
 <body>
     <div id="popup" class="popup" style="display: none;">

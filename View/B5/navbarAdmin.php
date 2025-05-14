@@ -61,7 +61,7 @@ if (!isset($nbComptesEnAttente)) {
                         <a href="#" class="dropdown-toggle">Demandes</a>
                         <div class="dropdown-menu demandes-menu">
                             <a href="<?= BASE_URL ?>/ListeDemandes"">Gérer les demandes</a>
-                   <a href=" <?= BASE_URL ?>/demande">Nouvelle Demande</a>
+                   <a href=" <?= BASE_URL ?>/demande">Nouvelle(s) Demande(s)</a>
                             <a href="<?= BASE_URL ?>/recurrence">Gérer récurrence</a>
                             <a href="<?= BASE_URL ?>/LisetDemandeExporter">Liste demandes</a>
                         </div>

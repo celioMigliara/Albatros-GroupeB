@@ -27,7 +27,7 @@ class UtilisateursController
         $utilisateurs = User::getAllUtilisateurs($limit, $offset);
     }
 
-    require __DIR__ . '/../../View/B4/Utilisateurs/index.php';
+    require __DIR__ . '/../../View/B4/utilisateurs/index.php';
     }
 
     public function modifier()
@@ -62,7 +62,7 @@ class UtilisateursController
         // <<< Appel en global namespace >>>
         $allBatiments      = \Batiment::getAllBatiments();
 
-        require __DIR__ . '/../../View/B4/Utilisateurs/modifier.php';
+        require __DIR__ . '/../../View/B4/utilisateurs/modifier.php';
     }
 
     public function desactiver()

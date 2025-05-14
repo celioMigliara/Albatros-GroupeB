@@ -1,6 +1,6 @@
 <?php
 
-    require_once(__DIR__ . '/../../model/B2/demande.php');
+    require_once(__DIR__ . '/../../Model/B2/demande.php');
     require_once(__DIR__ .'/../../Secure/B2/session.php');
     
 function accueil()
@@ -26,7 +26,7 @@ function accueil()
 
        // Récupérer tous les résultats
        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-       require __DIR__ . '/../../View/B2/Liste_maintenance.php';
+       require __DIR__ . '/../../View/B2/liste_maintenance.php';
         } catch (PDOException $e) {
         $msgError = 'Echec de la connexion : ' .  $e->getMessage();
     }

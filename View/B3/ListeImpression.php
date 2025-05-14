@@ -15,11 +15,11 @@
 <body data-page="ListeImpression">
   <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
+
   <h1>Liste d'impression</h1>
-  <div class="separateur-double-ligne-B2"></div>
-
-
+ <div class="separateur-double-ligne-B2"></div>
   <div class="block_taches">
+    
     <div class="overlay"></div>
 
     <div>

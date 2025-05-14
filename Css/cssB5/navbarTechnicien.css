@@ -96,17 +96,20 @@
 
 /* Navbar styles */
 nav {
-    display: flex;
+   display: flex;
     background-color: #f9bb30;
-    padding: 8px 15px;
+    padding: 10px 20px;
     align-items: center;
     border-radius: 0 0 50px 50px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    width: 85%; 
-    max-width: 800px;
-    margin: 0 auto;
+    width: 65%; /* Réduire la largeur */
+    max-width: 1000px;
+    margin: auto; /* Supprimer le centrage automatique */
+     margin-left: 32%; /* Pousser vers la droite */
+    /* margin-right: 20px; Petit espace avec le bord droit */ 
     justify-content: center;
 }
+
 
 nav img.logo {
     height: 40px;

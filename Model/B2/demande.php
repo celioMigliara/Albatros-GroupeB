@@ -220,20 +220,62 @@ class RecurrenceModel {
         }
     }
 
-    public function delete($idRecurrence) {
-        
-        if(!$idRecurrence)
-        {
-            return ['success' => false, 'message' => "ID de la récurrence est vide."];
+  public function delete($idRecurrence) {
+
+    if (!$idRecurrence) {
+        return ['success' => false, 'message' => "ID de la récurrence est vide."];
+    }
+
+    try {
+        $this->db->beginTransaction();
+
+        //  Récupérer toutes les demandes liées à la récurrence
+        $stmt = $this->db->prepare("SELECT id_demande FROM demande WHERE id_recurrence = ?");
+        $stmt->execute([$idRecurrence]);
+        $demandes = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        if (!empty($demandes)) {
+            // Préparer la clause IN pour les demandes
+            $placeholdersDemandes = implode(',', array_fill(0, count($demandes), '?'));
+
+            // Récupérer les taches liées à ces demandes
+            $stmtTache = $this->db->prepare("SELECT id_tache FROM tache WHERE id_demande IN ($placeholdersDemandes)");
+            $stmtTache->execute($demandes);
+            $taches = $stmtTache->fetchAll(PDO::FETCH_COLUMN);
+
+            if (!empty($taches)) {
+                // Supprimer les historiques liés aux taches
+                $placeholdersTaches = implode(',', array_fill(0, count($taches), '?'));
+                $stmtHisto = $this->db->prepare("DELETE FROM historique WHERE id_tache IN ($placeholdersTaches)");
+                $stmtHisto->execute($taches);
+            }
+
+            // Supprimer les taches
+            $stmtDelTache = $this->db->prepare("DELETE FROM tache WHERE id_demande IN ($placeholdersDemandes)");
+            $stmtDelTache->execute($demandes);
+
+            // Supprimer les lignes dans est
+            $stmtEst = $this->db->prepare("DELETE FROM est WHERE id_demande IN ($placeholdersDemandes)");
+            $stmtEst->execute($demandes);
+
+            // Supprimer les demandes elles-mêmes
+            $stmtDemande = $this->db->prepare("DELETE FROM demande WHERE id_recurrence = ?");
+            $stmtDemande->execute([$idRecurrence]);
         }
 
-        try{
-            $stmt = $this->db->prepare("DELETE FROM recurrence WHERE id_recurrence = ?");
-            $stmt->execute([$idRecurrence]);
-            return ['success' => true, 'message' => "Récurrence supprimée avec succès "];
-        }catch(Exception $e){
-            return ['success' => false, 'message' => "Erreur BDD : " . $e->getMessage()];
-        }
+        // Supprimer la récurrence
+        $stmtRecurrence = $this->db->prepare("DELETE FROM recurrence WHERE id_recurrence = ?");
+        $stmtRecurrence->execute([$idRecurrence]);
+
+        $this->db->commit();
+
+        return ['success' => true, 'message' => "Récurrence (et toutes ses dépendances) supprimée avec succès."];
+
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        return ['success' => false, 'message' => "Erreur lors de la suppression : " . $e->getMessage()];
     }
+}
+
 }
 ?>

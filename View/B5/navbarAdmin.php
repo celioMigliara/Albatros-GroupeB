@@ -79,7 +79,7 @@ if (!isset($nbComptesEnAttente)) {
                     </li>
                     <li>
                         <a href="<?= BASE_URL ?>/inscriptions" class="with-badge">
-                            Valider les accès
+                            Valider l(es) accè(s)
                             <span class="badge"><?= $nbComptesEnAttente ?></span>
                         </a>
                     </li>

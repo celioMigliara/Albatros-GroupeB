@@ -11,8 +11,8 @@ body{
     font-family: 'Caveat Brush', cursive;
     text-align: center;
     color: #F9BB30;
-    font-size: 3em;
-    margin-top: 80px;
+    font-size: 2.6em;
+    margin-top: 110px;
     margin-bottom: 0.2rem;
     font-weight: normal;
 }
@@ -345,7 +345,7 @@ border-color: red;
 
 @media screen and (min-width: 2000px){
     .titre {
-        font-size: 5.5em;
+        font-size: 4em;
     }
     label {
         font-size: 40px;

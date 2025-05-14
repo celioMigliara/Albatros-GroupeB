@@ -557,7 +557,9 @@ nav ul li a:hover {
     body {
         padding-top: 50px; /* Pour la navbar fixe */
     }
-    
+    .logo-wrapper {
+        display: none;
+    }
     /* Header fixe avec logo */
     .logo-container {
         position: fixed;

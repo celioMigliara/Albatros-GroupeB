@@ -331,7 +331,7 @@ nav ul li a:hover {
         padding-right: 15px;
     }
 }
-
+  
 @media (max-width: 900px) {
     .navbar-wrapper {
         padding-left: 150px;
@@ -351,7 +351,9 @@ nav ul li a:hover {
     body {
         padding-top: 60px; /* Pour la navbar fixe */
     }
-    
+    .logo-wrapper {
+        display: none;
+    }
     /* Conteneur de logo */
     .logo-container {
         width: 100%; /* Prend toute la largeur */

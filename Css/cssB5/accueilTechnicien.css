@@ -26,7 +26,7 @@ body {
 }
 
 .container {
-    max-width: 600px;
+    max-width: 650px;
     padding: 0 15px;
 }
 
@@ -57,10 +57,10 @@ margin: auto;
 }
 
 .technicien-text h2 {
-    font-size: 28px;
+    font-size: 27px;
     font-weight: bold;
     color: var(--primary-color);
-    font-family: 'Caveat Brush', cursive; 
+            font-family: "Montserrat Alternates", sans-serif;
 }
 
 .technicien-text p {
@@ -404,6 +404,7 @@ margin: auto;
         font-size: 20px;
         margin-top: 0;
         margin-bottom: 5px;
+            font-family: "Montserrat Alternates", sans-serif;
     }
     
     .technicien-text p {

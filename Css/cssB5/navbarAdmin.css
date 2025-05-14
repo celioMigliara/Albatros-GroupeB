@@ -98,10 +98,10 @@ nav {
     align-items: center;
     border-radius: 0 0 50px 50px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    width: 65%; /* Réduire la largeur */
+    width: 60%; /* Réduire la largeur */
     max-width: 1000px;
     margin: auto; /* Supprimer le centrage automatique */
-     margin-left: 32%; /* Pousser vers la droite */
+     margin-left: 20%; /* Pousser vers la droite */
     /* margin-right: 20px; Petit espace avec le bord droit */ 
     justify-content: center;
 }

@@ -36,8 +36,9 @@
                 </select>
 
                 <div class="buttons">
-                    <button type="button" id="ajouterPrintList">Ajouter ce technicien à la liste d'impression</button>
                     <button type="button" id="imprimerFeuilleRoute" class="action-btn">🖨️ Imprimer la feuille de route</button>
+                    <button type="button" id="ajouterPrintList">Ajouter ce technicien à la liste d'impression</button>
+                    <button type="button" id="listeImpression">Gérer la liste d'impression</button>
                 </div>
 
             </div>
@@ -96,12 +97,9 @@
             </div>
         </div>
 
-
         <div class="buttons">
             <button id="openModifOrdrePopup" class="action-btn">Changer l'ordre manuellement</button>
             <button id="saveOrder">Enregistrer l'ordre des taches</button>
-            <button id="listeImpression">Gérer la liste d'impression</button>
-
         </div>
 
         <!-- Tableau des tâches -->
@@ -158,7 +156,7 @@
         <div class="popup-content">
             <button class="fermer-popup">&times;</button>
             <h3>Modifier l'ordre des tâches</h3>
-            
+
             <div class="popup-form">
                 <div class="input-group-custom">
                     <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
@@ -172,7 +170,7 @@
 
                 <div class="popup-buttons">
                     <button id="modifOrdreTache" class="btn">Modifier l'ordre d'une tache</button>
-                    <button id="confirmerModifOrdre" class="btn">Confirmer</button>
+                    <button id="confirmerModifOrdre" class="btn">OK</button>
                 </div>
             </div>
         </div>

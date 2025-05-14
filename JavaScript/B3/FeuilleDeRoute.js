@@ -5,6 +5,8 @@ const END_DATE_KEY = "endDate";
 const STATUS_FILTER_KEY = "statusFilter";
 const MEDIA_FILTER_KEY = "mediaFilter";
 const INVALID_STATUT = 0;
+const DEFAULT_TACHES_PAR_PAGE = 8;
+const TACHES_PAR_PAGE_KEY = "tachesParPage";
 
 // Mettre ce flag à true si on veut changer le comportement des médias
 // Par défaut (à false), l'url du média est affichée et l'admin clique dessus pour accéder à la
@@ -25,7 +27,7 @@ let listeTaches = null;
 let draggedRow = null;
 let currentPage = 1; // Page initiale
 let totalPages = 1;  // Nombre total de pages
-const tasksPerPage = 1; // Nombre de tâches par page
+const tasksPerPage = DEFAULT_TACHES_PAR_PAGE; // Nombre de tâches par page
 
 document.getElementById("saveOrder").addEventListener("click", EnregistrerOrdre);
 
@@ -74,44 +76,6 @@ document.getElementById("technicienSelect").addEventListener("change", function 
 
 document.getElementById("listeImpression").addEventListener("click", function () {
     window.location.href = BASE_URL + "/feuillederoute/liste/impression";
-});
-
-document.getElementById("modifOrdreTache").addEventListener("click", function () {
-    const start = document.getElementById("sourceTacheOrdre").value;
-    const end = document.getElementById("targetTacheOrdre").value;
-    if (!start || !end) {
-        CreateSimplePopup("Veuillez renseigner les champs de saisie pour l'ordre des taches.");
-        return;
-    }
-
-    if (start <= 0)
-    {
-        CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache source (ex: 1)");
-        return
-    }
-
-    if (end <= 0)
-    {
-        CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache destination (ex: 1)");
-        return;
-    }
-
-    const currentTechId = localStorage.getItem(TECHNICIEN_KEY);
-    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-    const params = `techId=${encodeURIComponent(currentTechId)}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update/lineaire", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
-            loadTachesForTechnicien(savedTechnicien);
-        }
-    };
-
-    xhr.send(params);
 });
 
 // Restauration des filtres
@@ -767,23 +731,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Le bouton modifOrdreTache ne ferme plus la popup
     if (modifOrdreBtn) {
-        modifOrdreBtn.addEventListener("click", function() {
-            // Le code existant de modification d'ordre reste inchangé
+        modifOrdreBtn.addEventListener("click", function() 
+        {
             const start = document.getElementById("sourceTacheOrdre").value;
             const end = document.getElementById("targetTacheOrdre").value;
             if (!start || !end) {
+                CreateSimplePopup("Veuillez renseigner les champs de saisie pour l'ordre des taches.");
                 return;
             }
 
+            if (start <= 0)
+            {
+                CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache source (ex: 1)");
+                return
+            }
+
+            if (end <= 0)
+            {
+                CreateSimplePopup("Veuillez renseigner un nombre supérieur à 0 pour l'ordre de la tache destination (ex: 1)");
+                return;
+            }
+
+            const currentTechId = localStorage.getItem(TECHNICIEN_KEY);
             const csrfToken = document.querySelector('input[name="csrf_token"]').value;
-            const params = `start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
+            const params = `techId=${encodeURIComponent(currentTechId)}&start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&csrf_token=${encodeURIComponent(csrfToken)}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", BASE_URL + "/feuillederoute/ordre/update/lineaire", true);
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
+                if (xhr.readyState === 4 && xhr.status === 200) {
                     const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
                     loadTachesForTechnicien(savedTechnicien);
                 }

@@ -88,6 +88,10 @@ class FeuilleDeRoute
         </style></head><body>";
 
         $numeroOrdre = 1;
+        if (empty($groupes))
+        {
+            return false;
+        }
 
         foreach ($groupes as $index => $pageTasks) {
             $html .= "<div class='page'>";
@@ -148,5 +152,6 @@ class FeuilleDeRoute
         $NomFichier = "fdr_{$prenom}_{$nom}_$dateNom.pdf";
     
         $dompdf->stream($NomFichier, ["Attachment" => false]);
+        return true;
     }    
 }

@@ -16,63 +16,209 @@ body {
   align-items: center;
   flex-direction: column;
   font-family: "Caveat Brush", cursive;
-      background-color: #f5f3f3;
-
+  background-color: #f5f3f3;
 }
 
 /* Overlay semi-transparent avec effet de flou */
 .overlay {
   position: fixed;
-  top: 10%;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-    background-color: #f5f3f3;
+  background-color: #f5f3f3;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   pointer-events: none;
   z-index: -999;
-  margin-bottom: 15%;
 }
+
+/* ===================================CSS PARTIE POPUP=================================== */
+/* ======================= CSS PARTIE POPUP  ================== */
+/* Style de la modale(popup generale du site) */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  margin-top: 240px;
+}
+
+.popup-form {
+  background-color: #f5f3f3;
+  padding: 20px;
+  border-radius: 10px;
+  width: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  position: relative;
+  align-content: flex-start;
+}
+
+/* CSS pour le bouton de fermeture du popup */
+.fermer-popup {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  background-color: #fff;
+  color: black;
+  border: 2px solid #f9bb30;
+  font-size: 50px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: 0.5s ease;
+}
+
+.fermer-popup:hover {
+  background-color: #f9bb30;
+  border: 2px solid white;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* CSS pour le titre de la popup */
+.popup-content h3 {
+  font-size: x-large;
+  font-family: "Montserrat", sans-serif;
+}
+
+/*CSS pour gerer le contenu de la popup */
+.popup-content {
+  background-color: rgb(255, 255, 255);
+  padding: 40px;
+  border-radius: 10px;
+  width: 30%;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: "Montserrat", sans-serif;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap : 10px;
+  }
 
 /* Conteneur principal pour le bloc entier */
 .block_taches {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  height: auto; /* Permet de s'ajuster dynamiquement */
-  overflow-y: auto; /* Permet de défiler dans le bloc si nécessaire */
-
-  max-width: 90%;
-  max-height: 90%;
+  width: 90%;
+  height: 100%;
+  margin: 0px;
   border: 1px solid #d1d1d1;
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.85);
-  overflow: hidden;
-  align-items: flex-start;
-  overflow: hidden; /* Empêche le débordement du contenu */
-
   padding: 20px;
-  font-family: "Caveat Brush", cursive;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* En-tête fixe */
+.block_taches>div:first-child {
+  flex-shrink: 0;
+  padding: 0 20px;
+  margin-bottom: 20px;
 }
 
 h1 {
-  font-family: "ceavat brush", cursive;
+  font-family: "Caveat Brush", cursive;
   font-size: 2.5em;
   color: #f9bb30;
   text-align: center;
-  margin-block: 0px;
-  margin-inline: 0px;
-  margin-bottom: 5px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-form {
+/* Zone de contenu scrollable */
+.block_taches>form,
+.block_taches>.filters,
+.block_taches>.buttons,
+.block_taches>#dropPrevPage,
+.block_taches>#tasksTable,
+.block_taches>#dropNextPage {
+  flex-shrink: 0;
+}
+
+/* Zone du tableau scrollable */
+.table-container {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0px 0;
+  padding-right: 10px;
+}
+
+/* Ajustement des filtres */
+.filters {
+  margin: 0;
+  padding: 15px 0;
+  flex-shrink: 0;
+}
+
+/* Ajustement des boutons */
+.buttons {
+  margin: 15px 0;
+  flex-shrink: 0;
+}
+
+/* Ajustement de la pagination */
+.pagination_container {
+  margin-top: 15px;
+  flex-shrink: 0;
+}
+
+/* Ajustement des zones de drop */
+.drop-zone {
+  margin: 10px 0;
+  flex-shrink: 0;
+}
+
+/* Ajustement du tableau */
+#tasksTable {
+  margin: 0;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+}
+
+#tasksTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, #f9bb30, #f8a51c);
+}
+
+/* Ajustement pour le responsive */
+@media screen and (max-height: 800px) {
+  .block_taches {
+    height: 95vh;
+    margin: 2.5vh auto;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .block_taches {
+    width: 95%;
+  }
 }
 
 /* ========================== Pagination Container ========================= */
@@ -81,12 +227,14 @@ form {
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin-top: 30px;
+  margin-top: 10px;
+  padding-bottom: 20px;
 }
 
 /* ========================== Pagination Buttons ========================== */
 #pagination button {
-  background-color: #f9bb30;  /* Orange primary */
+  background-color: #f9bb30;
+  /* Orange primary */
   color: white;
   padding: 12px 20px;
   border: none;
@@ -115,7 +263,8 @@ form {
 
 /* Active page button */
 #pagination button.active {
-  background: linear-gradient(135deg, #f9bb30, #fcd281); /* Gradient effect for active page */
+  background: linear-gradient(135deg, #f9bb30, #fcd281);
+  /* Gradient effect for active page */
   box-shadow: 0 5px 15px rgba(249, 187, 48, 0.3);
 }
 
@@ -172,7 +321,8 @@ form {
 }
 
 button {
-  background-color: #f9bb30; /* Orange principal */
+  background-color: #f9bb30;
+  /* Orange principal */
   color: white;
   padding: 12px 25px;
   border-radius: 15px;
@@ -188,7 +338,8 @@ button {
 
 /* Style pour les boutons survolés */
 button:hover {
-  background: linear-gradient(135deg, #f9bb30, #fcd281); /* Dégradé orange */
+  background: linear-gradient(135deg, #f9bb30, #fcd281);
+  /* Dégradé orange */
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(249, 187, 48, 0.3);
 }
@@ -240,10 +391,50 @@ button:active {
 /* Pour les champs de date avec placeholder */
 #startDate::placeholder,
 #endDate::placeholder {
-  color: #aaa; /* Gris pour un placeholder plus discret */
+  color: #aaa;
+  /* Gris pour un placeholder plus discret */
   font-style: italic;
 }
 
+/* Style pour le select multiple des statuts */
+#statusFilter[multiple] {
+  height: auto;
+  min-height: 120px;
+  padding: 8px;
+}
+
+#statusFilter[multiple] option {
+  padding: 8px;
+  margin: 2px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#statusFilter[multiple] option:hover {
+  background-color: #f9bb30;
+  color: white;
+}
+
+#statusFilter[multiple] option:checked {
+  background-color: #f9bb30;
+  color: white;
+  font-weight: bold;
+}
+
+/* Style pour le conteneur du select multiple */
+#statusFilter[multiple] {
+  border: 2px solid #f9bb30;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#statusFilter[multiple]:focus {
+  outline: none;
+  border-color: #f9bb30;
+  box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+}
 
 /* ================================ TABLEAU ================================= */
 #tasksTable {
@@ -272,19 +463,15 @@ button:active {
 }
 
 #tasksTable tr:nth-child(even) {
-  background: linear-gradient(
-    to right,
-    rgba(249, 187, 48, 0.2) 0%,
-    rgba(249, 187, 48, 0.05) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(249, 187, 48, 0.2) 0%,
+      rgba(249, 187, 48, 0.05) 100%);
 }
 
 #tasksTable tr:nth-child(even):hover {
-  background: linear-gradient(
-    to right,
-    rgba(249, 187, 48, 0.3) 0%,
-    rgba(249, 187, 48, 0.15) 100%
-  );
+  background: linear-gradient(to right,
+      rgba(249, 187, 48, 0.3) 0%,
+      rgba(249, 187, 48, 0.15) 100%);
 }
 
 /* Animation hover plus cohérente */
@@ -298,99 +485,25 @@ button:active {
 }
 
 #tasksTable tr:hover td {
-  color: #2c3e50; /* Garde la couleur du texte lisible */
+  color: #2c3e50;
+  /* Garde la couleur du texte lisible */
   background: rgba(249, 187, 48, 0.1);
 }
+
 #tasksTable td {
   transition: color 0.3s ease;
 }
 
 /* ========================== STRUCTURE GLOBALE ========================== */
 .block_taches {
-
   flex-direction: column;
-  margin-top: 8%;
+  margin-top: 85px;
 }
 
 .filters {
   width: 100%;
   margin: 0;
   padding: 15px 0;
-}
-
-/* ========================================================================== */
-/* ======================= LISTE IMPRESSION SPECIFIQUE ====================== */
-/* ========================================================================== */
-
-[data-page="ListeImpression"] .block_taches {
-  align-items: center;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
-
- 
-}
-
-/* Boutons de navigation */
-.back-btn {
-  background: linear-gradient(135deg, #9bac7e, #9faf7f);
-  color: white !important;
-  text-decoration: none;
-  padding: 12px 25px;
-  margin: 10px;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.back-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(155, 172, 126, 0.3);
-}
-
-/* Tableau principal */
-#printTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 25px 0;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 1px 15px rgba(0, 0, 0, 0.05);
-}
-
-#printTable th {
-  background: linear-gradient(to bottom, #f9bb30, #f8a51c);
-  color: white;
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #f3f3f3;
-}
-
-#printTable td {
-  padding: 15px;
-  border-bottom: 1px solid #f3f3f3;
-  background: rgba(249, 187, 48, 0.05);
-}
-/* Dans la section Liste Impression Spécifique */
-#printTable td:nth-child(2) {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* Si vous avez des boutons dans la colonne Actions */
-#printTable td:nth-child(2) button {
-  white-space: nowrap;
-  margin: 2px;
-  padding: 8px 15px;
-  font-size: 0.9em;
 }
 
 
@@ -451,6 +564,7 @@ button:active {
   border: 2px dashed #f9bb30;
   cursor: pointer;
 }
+
 .drop-zone.active {
   display: block;
 }
@@ -497,22 +611,25 @@ button:active {
   transition: stroke-dashoffset 0.6s ease-in;
 }
 
-.checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-box,
-  .checkbox-wrapper input[type="checkbox"]:checked + .terms-label .checkbox-tick {
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-box,
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-tick {
   stroke-dashoffset: 0;
 }
 
 .pagination_container {
   width: 100%;
-  transform: scale(0.95); /* Réduit légèrement la taille */
+  transform: scale(0.95);
+  /* Réduit légèrement la taille */
 }
 
 .pagination_container {
-  transform: scale(1); /* Rétablit la taille normale pour le contenu interne */
+  transform: scale(1);
+  /* Rétablit la taille normale pour le contenu interne */
 }
 
 .block_taches {
-  transform: scale(1); /* Rétablit la taille normale pour le contenu interne */
+  transform: scale(1);
+  /* Rétablit la taille normale pour le contenu interne */
 }
 
 tr.drop-target {
@@ -529,14 +646,274 @@ tr.drop-after {
 
 /*PAS DE RESPONSIVE CAR LA PAGE CONTIENT UN TABLEAU*/
 .separateur-double-ligne-B2 {
-    width: 95%;
-    margin: 0 auto;
-    display: block;
-    background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
-    background-size: 15px 15px;
-    background-repeat: repeat;
-    height: 25px;
-    opacity: 1;
-    
-  
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+  background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+  background-size: 15px 15px;
+  background-repeat: repeat;
+  height: 25px;
+  opacity: 1;
+
+
+}
+
+/* Style pour le filtre média */
+#mediaFilter {
+  width: 200px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  /* Contour jaune */
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 250px;
+  border-color: #f9bb30;
+}
+
+#mediaFilter:hover {
+  border-color: #FFA500;
+  /* Orange plus foncé au survol */
+  box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+  /* Ombre jaune */
+}
+
+#mediaFilter:focus {
+  outline: none;
+  border-color: #FFA500;
+  /* Orange plus foncé au focus */
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  /* Ombre jaune plus prononcée */
+}
+
+#mediaFilter option {
+  padding: 8px;
+}
+
+#mediaFilter option:hover {
+  background-color: #f8f9fa;
+}
+
+/* Style pour l'input de nombre de tâches */
+.input[type="number"] {
+  width: 200px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #f9bb30;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+/* Pour masquer les flèches de l'input number dans Chrome, Safari, Edge, Opera */
+.input[type="number"]::-webkit-inner-spin-button,
+.input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input[type="number"]:focus {
+  outline: none;
+  border-color: #f8a51c;
+  box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+}
+
+.input[type="number"]:hover {
+  border-color: #f8a51c;
+  box-shadow: 0 0 5px rgba(249, 187, 48, 0.3);
+}
+
+/* Style pour le label associé */
+.form-row label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 16px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+/* Style pour les checkboxes de statut */
+.status-checkboxes {
+  background: white;
+  border: 2px solid #f9bb30;
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 5px;
+}
+
+.checkbox-wrapper {
+  margin: 8px 0;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-wrapper .terms-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-wrapper .terms-label:hover {
+  background-color: rgba(249, 187, 48, 0.1);
+}
+
+.checkbox-wrapper .label-text {
+  margin-left: 10px;
+  font-family: "Montserrat Alternates", sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.checkbox-wrapper .checkbox-svg {
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.checkbox-wrapper .checkbox-box {
+  fill: white;
+  stroke: #f9bb30;
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper .checkbox-tick {
+  stroke: #f9bb30;
+  stroke-width: 2;
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  transition: stroke-dashoffset 0.2s ease;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-box {
+  fill: rgba(249, 187, 48, 0.1);
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label .checkbox-tick {
+  stroke-dashoffset: 0;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked+.terms-label {
+  background-color: rgba(249, 187, 48, 0.1);
+}
+
+/* Style pour la scrollbar des checkboxes */
+.status-checkboxes::-webkit-scrollbar {
+  width: 8px;
+}
+
+.status-checkboxes::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.status-checkboxes::-webkit-scrollbar-thumb {
+  background: #f9bb30;
+  border-radius: 4px;
+}
+
+.status-checkboxes::-webkit-scrollbar-thumb:hover {
+  background: #f8a51c;
+}
+
+#printTable input.nombre-taches {
+  width: 70px;
+  padding: 6px 10px;
+  border: 1.5px solid #f9bb30;
+  border-radius: 8px;
+  background: #fffbe6;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  color: #333;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+#printTable input.nombre-taches:focus {
+  border: 2px solid #f9bb30;
+  background: #fff7cc;
+  box-shadow: 0 0 4px #f9bb30;
+}
+
+#printTable input.nombre-taches::placeholder {
+  color: #bfae7c;
+  font-style: italic;
+  opacity: 1;
+}
+
+/* Styles pour le popup */
+#popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 9999;
+}
+
+/* Styles pour le bouton */
+#popup button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
+}
+
+
+
+#sourceTacheOrdre {
+  width: 70px;
+  padding: 6px 10px;
+  border: 1.5px solid #f9bb30;
+  border-radius: 8px;
+  background: #fffbe6;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  color: #333;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+#targetTacheOrdre {
+  width: 70px;
+  padding: 6px 10px;
+  border: 1.5px solid #f9bb30;
+  border-radius: 8px;
+  background: #fffbe6;
+  font-size: 1rem;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  color: #333;
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+
+#modifOrdreTache {
+  background-color: #d69813;
 }

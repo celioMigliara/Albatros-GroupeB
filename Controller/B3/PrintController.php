@@ -3,6 +3,7 @@
 require_once 'Model/B3/FeuilleDeRoute.php';
 require_once 'Model/B3/Technicien.php';
 require_once 'Model/UserConnectionUtils.php';
+require_once 'Model/B3/MessageErreur.php';
 
 class PrintController
 {
@@ -54,13 +55,20 @@ class PrintController
 
         // Vérifie si le technicien existe et a des tâches assignées
         $technicien = new Technicien(intval($techId));
+
+        // Vérifie d'abord si le technicien existe
+        if (!$technicien->exists()) {
+            header("Content-Type: application/json");
+            echo json_encode(["status" => "warning", "message" => "Le technicien n'existe pas."]);
+            return false;
+        }
         
         // Vérifie si le technicien est valide
-        $tasks = $technicien->getTachesEnCours();
+        $tasks = $technicien->getTaches(true);
         if (empty($tasks))
         {
             header("Content-Type: application/json");
-            echo json_encode(["status" => "warning", "message" => "Le technicien est invalide ou n'a aucune tâche assignée."]);
+            echo json_encode(["status" => "warning", "message" => "Le technicien n'a aucune tâche assignée."]);
             return false;
         }
 
@@ -105,7 +113,15 @@ class PrintController
         $prenom = $techNomEtPrenom['prenom_utilisateur'] ?? "prenom absent";
         
         // Vérifie si le technicien a des tâches assignées
-        FeuilleDeRoute::generatePDF($tasks, $nom, $prenom, $debutTask, $nombreDeTask);
+        $result = FeuilleDeRoute::generatePDF($tasks, $nom, $prenom, $debutTask, $nombreDeTask);
+        if (!$result)
+        {
+            // On setup le message d'erreur pour la vue
+            $errorMsg = new MessageErreur("Aucune tâche n'a été trouvée pour l'impression", "Veuillez ajuster les paramètres de la séléction des taches.");
+            require './View/B3/PageErreur.php';
+            return false;
+        }
+
         return true;
     }
 }

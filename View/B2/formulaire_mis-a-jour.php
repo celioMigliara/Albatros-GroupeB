@@ -143,7 +143,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
 
         <!-- Pop-up de confirmation de suppression -->
         <div id="popupDel" class="popupDel">
-                <span id="popup-close-sup" class="popup-close">&times;</span>
+                <span hidden id="popup-close-sup" class="popup-close">&times;</span>
                 <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2"data-effect="mfp-move-horizontal">
                 <p id="popup-message-sup"></p>
                 <button class="popup-ok-btn-sup" id="popup-ok-btn-sup">Supprimer la maintenance</button>

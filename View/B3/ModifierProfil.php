@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/StylesB3.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/ModifierProfil.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB2/style_maintenance.css">
     <?php if (($_SESSION['user']['role_id'] ?? null) == 1): ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
     <?php else: ?>
@@ -25,6 +26,9 @@
         <?php endif; ?>
     </header>
 
+    <h1 class="title">Modifier Profil</h1>
+    <div class="separateur-double-ligne-B2"></div>
+
     <div class="block" style="max-height: 65%; max-width: 65%;">
 
         <div class="left">
@@ -38,8 +42,7 @@
         </div>
 
         <div class="right-panel">
-            <!-- Titre de la </div>section de modification du profil -->
-            <h2 class="title">Modifier son profil</h2>
+            
 
             <!-- Formulaire de modification -->
             <form class="formulaire" id="formulaire-modification-profil" novalidate style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">

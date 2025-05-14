@@ -20,7 +20,7 @@ body {
   align-items: center;
   flex-direction: column;
   font-family: "Caveat Brush", cursive;
-      background-color: #f5f3f3;
+  background-color: #f5f3f3;
 
 }
 
@@ -40,7 +40,7 @@ body {
   /* Permet de ne pas interférer avec les interactions utilisateur */
   z-index: -999;
   /* Assure que l'overlay est derrière le contenu */
-      background-color: #f5f3f3;
+  background-color: #f5f3f3;
 
 }
 
@@ -56,13 +56,13 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
- height: 100%;
+  height: 100%;
   /* Largeur maximale du bloc */
   /* Hauteur maximale du bloc */
   /* Bordure noire */
   border-radius: 10px;
   /* Coins arrondis */
-    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
   /* Ombre légère */
   background-color: rgba(255, 255, 255, 0.8);
   /* Fond semi-transparent */
@@ -266,14 +266,8 @@ h2 {
   transition: stroke-dashoffset 0.6s ease-in;
 }
 
-.checkbox-wrapper-radio
-  input[type="radio"]:checked
-  + .terms-label
-  .checkbox-box,
-.checkbox-wrapper-radio
-  input[type="radio"]:checked
-  + .terms-label
-  .checkbox-tick {
+.checkbox-wrapper-radio input[type="radio"]:checked+.terms-label .checkbox-box,
+.checkbox-wrapper-radio input[type="radio"]:checked+.terms-label .checkbox-tick {
   stroke-dashoffset: 0;
 }
 
@@ -368,6 +362,40 @@ h2 {
 }
 
 /* ================= CSS PARTIE BATIMENT ET CHECKBOX ================= */
+
+/* Style pour la barre de recherche des bâtiments */
+#searchInputBatiments {
+  width: calc(100% - 20px);
+  padding: 12px;
+  border: 2px solid #f9bb30;
+  border-radius: 8px;
+  background-color: rgba(249, 187, 48, 0.1);
+  color: #2c3e50;
+  font-size: 16px;
+  appearance: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(249, 187, 48, 0.1);
+  margin-bottom: 15px;
+  margin-right: 20px;
+}
+
+#searchInputBatiments:hover {
+  background-color: rgba(249, 187, 48, 0.15);
+  box-shadow: 0 2px 8px rgba(249, 187, 48, 0.2);
+}
+
+#searchInputBatiments:focus {
+  outline: none;
+  border-color: #f9bb30;
+  box-shadow: 0 0 0 3px rgba(249, 187, 48, 0.2);
+}
+
+#searchInputBatiments::placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+
 /* CSS pour le label de chaque batiment */
 .terms-label-batiment-choix {
   display: flex;
@@ -444,14 +472,8 @@ h2 {
   transition: stroke-dashoffset 0.6s ease-in;
 }
 
-.checkbox-wrapper-checkbox
-  input[type="checkbox"]:checked
-  + .terms-label-batiment-choix
-  .checkbox-box,
-.checkbox-wrapper-checkbox
-  input[type="checkbox"]:checked
-  + .terms-label-batiment-choix
-  .checkbox-tick {
+.checkbox-wrapper-checkbox input[type="checkbox"]:checked+.terms-label-batiment-choix .checkbox-box,
+.checkbox-wrapper-checkbox input[type="checkbox"]:checked+.terms-label-batiment-choix .checkbox-tick {
   stroke-dashoffset: 0;
 }
 
@@ -540,16 +562,16 @@ h2 {
   border: 1.5px solid #f9bb30;
 }
 
-.input-custom:focus ~ .user-label-custom,
-.input-custom:valid ~ .user-label-custom {
+.input-custom:focus~.user-label-custom,
+.input-custom:valid~.user-label-custom {
   transform: translateY(-50%) scale(0.8);
   background-color: white;
   padding: 0 0.2em;
   color: #f9bb30;
 }
 
-.input-custom:focus ~ .user-label-custom,
-.input-custom:not(:placeholder-shown) ~ .user-label-custom {
+.input-custom:focus~.user-label-custom,
+.input-custom:not(:placeholder-shown)~.user-label-custom {
   transform: translateY(-50%) scale(0.8);
   background-color: white;
   padding: 0 0.2em;
@@ -561,7 +583,7 @@ h2 {
   border-color: #ff4444;
 }
 
-.input-custom:not(:placeholder-shown):invalid ~ .user-label-custom {
+.input-custom:not(:placeholder-shown):invalid~.user-label-custom {
   color: #ff4444;
 }
 
@@ -570,7 +592,7 @@ h2 {
   border-color: #ff4444;
 }
 
-.input-custom:not(:placeholder-shown):invalid:focus ~ .user-label-custom {
+.input-custom:not(:placeholder-shown):invalid:focus~.user-label-custom {
   color: #ff4444;
 }
 
@@ -579,7 +601,7 @@ h2 {
   border-color: #ff4444;
 }
 
-.input-custom:invalid:focus ~ .user-label-custom {
+.input-custom:invalid:focus~.user-label-custom {
   color: #ff4444;
 }
 
@@ -605,10 +627,10 @@ input[type="password"]:valid {
   border: 1.5px solid #f9bb30;
 }
 
-.input-custom:focus ~ label,
-input[type="text"]:valid ~ label,
-input[type="email"]:valid ~ label,
-input[type="password"]:valid ~ label {
+.input-custom:focus~label,
+input[type="text"]:valid~label,
+input[type="email"]:valid~label,
+input[type="password"]:valid~label {
   transform: translateY(-50%) scale(0.8);
   background-color: white;
   padding: 0 0.2em;
@@ -654,7 +676,7 @@ input[type="password"]:valid ~ label {
   border-color: #ff4444;
 }
 
-.input-custom:user-invalid ~ .user-label-custom {
+.input-custom:user-invalid~.user-label-custom {
   color: #ff4444;
 }
 
@@ -691,7 +713,7 @@ input[type="password"]:valid ~ label {
   align-items: center;
   gap: 10px;
   width: 100%;
- margin-bottom: 2%;
+  margin-bottom: 2%;
 }
 
 .cssbuttons-io-button {
@@ -836,33 +858,35 @@ input[type="password"]:valid ~ label {
   margin: 0;
   padding: 0;
 }
- .back-button-item > svg {
+
+.back-button-item>svg {
   margin-right: 5px;
   margin-left: 5px;
   font-size: 20px;
   transition: all 0.4s ease-in;
- }
- 
- .back-button-item:hover > svg {
+}
+
+.back-button-item:hover>svg {
   font-size: 1.2em;
   transform: translateX(-5px);
- }
- 
- .back-button-item:hover {
+}
+
+.back-button-item:hover {
   box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
   transform: translateY(-2px);
- }
+}
 
- .paragraphe {
+.paragraphe {
   font-size: 20px;
   color: black;
   text-align: center;
   margin-top: 10px;
- }
+}
 
-/*=======================================================================================================*/
-/*====================================== RESPONSIVE DESIGN POUR TABLETTE ET PLUS ==================================*/
-/*=======================================================================================================*/
+
+/*=========================================================================================================*/
+/*================================ RESPONSIVE DESIGN POUR TABLETTE ET PLUS ================================*/
+/*=========================================================================================================*/
 
 /* Largeur minimale de 768px et hauteur minimale de 1024px (tablettes en mode portrait) */
 @media (min-width: 768px) and (min-height: 1024px) {
@@ -871,16 +895,16 @@ input[type="password"]:valid ~ label {
     max-height: 95%;
   }
 
-  .formulaire 
-  {
+  .formulaire {
     width: 95%;
-}
+  }
 
-.btnConnexion, .btnInscription {
+  .btnConnexion,
+  .btnInscription {
 
-  width: 100%;
+    width: 100%;
 
-}
+  }
 
 }
 
@@ -890,6 +914,7 @@ input[type="password"]:valid ~ label {
 
 /* Largeur inférieure à 576px (téléphones) */
 @media (max-width: 576px) {
+
   /* Correction de l'espace blanc en mobile */
   html {
     height: -webkit-fill-available;
@@ -971,7 +996,7 @@ input[type="password"]:valid ~ label {
     gap: 5px;
     padding-top: 10px;
 
-}
+  }
 
   .input-group-custom {
     max-width: 100%;
@@ -1075,13 +1100,12 @@ input[type="password"]:valid ~ label {
 
 /* Largeur inférieure à 576px (téléphones) plus petit de hauteur  */
 @media (max-width: 576px) and (max-height: 670px) {
- 
+
   .label-batiments {
     display: none;
   }
 
-  .formulaire-champs-batiment
-    {
+  .formulaire-champs-batiment {
     margin: 0px;
   }
 
@@ -1090,7 +1114,7 @@ input[type="password"]:valid ~ label {
     gap: 5px;
     padding-top: 0px;
     padding-bottom: 0px;
-}
+  }
 
 }
 
@@ -1100,8 +1124,7 @@ input[type="password"]:valid ~ label {
     display: none;
   }
 
-  .formulaire-champs-batiment
-    {
+  .formulaire-champs-batiment {
     margin: 0px;
   }
 
@@ -1110,7 +1133,7 @@ input[type="password"]:valid ~ label {
     gap: 5px;
     padding-top: 0px;
     padding-bottom: 0px;
-}
+  }
 
 }
 

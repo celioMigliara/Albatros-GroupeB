@@ -3,6 +3,7 @@
 require_once 'Model/B3/UserCredentials.php';
 require_once 'Model/B3/UserProfile.php';
 require_once 'Model/B3/Security.php';
+require_once 'Model/B3/MessageErreur.php';
 require_once 'Model/UserConnectionUtils.php';
 
 class ProfileController

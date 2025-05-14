@@ -25,7 +25,7 @@ class Batiment
     public static function getActiveBatiments()
     {
         self::initDb();
-        $query = self::$db->query("SELECT * FROM batiment WHERE actif_batiment = true");
+        $query = self::$db->query("SELECT b.* FROM batiment AS b INNER JOIN site AS s  ON s.id_site = b.id_site WHERE b.actif_batiment = true AND s.actif_site     = true");
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -33,7 +33,11 @@ class Batiment
     public static function getbatimentById($id)
     {
         self::initDb();
-        $stmt = self::$db->prepare("SELECT * FROM batiment WHERE id_batiment = ?");
+        $stmt = self::$db->prepare("
+        SELECT b.*, s.actif_site 
+        FROM batiment AS b
+        JOIN site AS s ON s.id_site = b.id_site
+        WHERE b.id_batiment = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -91,7 +95,17 @@ class Batiment
     public static function getAllBatimentBySite($id_site)
     {
         self::initDb();
-        $stmt = self::$db->prepare("SELECT * FROM batiment WHERE id_site = ?");
+        $stmt = self::$db->prepare("        SELECT  b.*,
+                CASE
+                    WHEN b.actif_batiment = 0          -- ou = FALSE
+                    OR s.actif_site     = 0          -- ou = FALSE
+                    THEN 0                             -- renvoyé comme FALSE
+                    ELSE s.actif_site                  -- valeur réelle sinon
+                END AS actif_batiment
+
+        FROM   batiment  AS b
+        JOIN    site      AS s ON s.id_site     = b.id_site
+		WHERE b.id_site = ?;");
         $stmt->execute([$id_site]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -122,7 +136,17 @@ class Batiment
     public static function getAllBatimentsWithSite()
     {
         self::initDb();
-        $stmt = self::$db->query("SELECT b.*, s.nom_site FROM batiment b JOIN site s ON b.id_site = s.id_site");
+        $stmt = self::$db->query("        SELECT  b.*,
+                s.nom_site                                                         AS nom_site,
+                CASE
+                    WHEN b.actif_batiment = 0          -- ou = FALSE
+                    OR s.actif_site     = 0          -- ou = FALSE
+                    THEN 0                             -- renvoyé comme FALSE
+                    ELSE s.actif_site                  -- valeur réelle sinon
+                END AS actif_batiment
+
+        FROM   batiment  AS b
+        JOIN    site      AS s ON s.id_site     = b.id_site;");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

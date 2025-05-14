@@ -33,7 +33,6 @@ if (!empty($segments[0]) && $segments[0] === basename($_SERVER['SCRIPT_NAME'])) 
 }
 
 // Les require pour les B3
-require_once 'Controller/B3/UserControlleur.php';
 require_once 'Controller/B3/AuthController.php';
 require_once 'Controller/B3/PasswordController.php';
 require_once 'Controller/B3/PrintController.php';
@@ -322,7 +321,26 @@ switch ($segments[0])
     // Dans le projet B3, c'était le endpoint 'taches'
     // mais il est déjà utilisé au dessus
     case 'tasks':
-        (new TaskController())->getTasksForTechnician();
+        if (!isset($segments[1]))
+        {
+            $pageNotFound = true;
+        }
+        else
+        {
+            switch ($segments[1])
+            {
+                case 'all':
+                    (new TaskController())->getAllTasksForTechnician();
+                    break;
+                case 'ongoing':
+                    (new TaskController())->getOngoingTasksForTechnician();
+                    break;
+                default:
+                    $pageNotFound = true;
+                    break;
+            }
+        }
+        
         break;
 
     // Feuille de route
@@ -340,7 +358,14 @@ switch ($segments[0])
                     break;
                 case 'ordre':
                     if (isset($segments[2]) && $segments[2] === 'update') {
-                        (new TaskController())->updateTasksOrder();
+                        if (isset($segments[3]) && $segments[3] === 'lineaire')
+                        {
+                            (new TaskController())->updateLinearTaskOrder();
+                        }
+                        else
+                        {
+                            (new TaskController())->updateTasksOrder();
+                        }
                     } else {
                         $pageNotFound = true;
                     }

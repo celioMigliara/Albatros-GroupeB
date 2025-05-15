@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const select = document.getElementById("technicienSelect");
             const techId = select.value;
 
-            if (!techId) {
+            if (!techId || techId == 0) {
                 CreateSimplePopup(
                     "Veuillez sélectionner un technicien avant d'imprimer sa feuille de route."
                 );

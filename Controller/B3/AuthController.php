@@ -96,7 +96,7 @@ class AuthController
             }
 
             // Le mdp est un champ requis
-            if (empty($confirmPassword)) {
+            if (empty($pass)) {
                 echo json_encode(['status' => 'error', 'message' => "Le mots de passe est requis"]);
                 return false;
             }

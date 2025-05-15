@@ -12,14 +12,11 @@
 <body data-page="ListeTaches">
     <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
-    <div class="overlay"></div>
-    <div style="width: 100%;">
-        <h1>Feuille de route du technicien</h1>
-        <div class="separateur-double-ligne-B2"></div>
-    </div>
-
     <div class="block_taches">
-
+        <div style="width: 100%;">
+            <h1>Feuille de route du technicien</h1>
+            <div class="separateur-double-ligne-B2"></div>
+        </div>
         <form>
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token ?? '', ENT_QUOTES); ?>">
 
@@ -70,7 +67,7 @@
                 <div>
                     <label for="statusFilter">Filtrer les taches en cours<br>(Ctrl + clic pour sélectionner plusieurs statuts) :</label>
                     <br>
-                    <select name="statusFilter" id="statusFilter" multiple size="1">
+                    <select name="statusFilter" id="statusFilter" multiple size="2">
                         <option value="0">Tous statuts</option>
                         <?php foreach ($statutsEnCours as $statut): ?>
                             <option value="<?= htmlspecialchars($statut['id_statut']) ?>">
@@ -95,12 +92,12 @@
                         🔄 Réinitialiser les filtres
                     </button>
                 </div>
-            </div>
-        </div>
 
-        <div class="buttons">
-            <button id="openModifOrdrePopup" class="action-btn">Changer l'ordre manuellement</button>
-            <button id="saveOrder">Enregistrer l'ordre des taches</button>
+                <div class="buttons">
+                    <button id="openModifOrdrePopup" class="action-btn">Changer l'ordre manuellement</button>
+                    <button id="saveOrder">Enregistrer l'ordre des taches</button>
+                </div>
+            </div>
         </div>
 
         <!-- Tableau des tâches -->

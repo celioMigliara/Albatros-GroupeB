@@ -89,12 +89,18 @@ class AuthController
                 echo json_encode(['status' => 'error', 'message' => "Veuillez confirmer l'email"]);
                 return false;
             }
-            
             // Vérifier que la confirmation de l'email est valide
             if ($email !== $confirmEmail) {
                 echo json_encode(['status' => 'error', 'message' => 'Les emails ne correspondent pas.']);
                 return false;
             }
+
+            // Le mdp est un champ requis
+            if (empty($confirmPassword)) {
+                echo json_encode(['status' => 'error', 'message' => "Le mots de passe est requis"]);
+                return false;
+            }
+
 
             // Le mdp est un champ requis
             if (empty($confirmPassword)) {

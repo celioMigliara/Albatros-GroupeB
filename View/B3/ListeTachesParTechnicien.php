@@ -13,11 +13,12 @@
     <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
     <div class="overlay"></div>
-   <div style="width: 100%;">
-            <h1>Feuille de route du technicien</h1>
-        </div>
+    <div style="width: 100%;">
+        <h1>Feuille de route du technicien</h1>
+        <div class="separateur-double-ligne-B2"></div>
+    </div>
+
     <div class="block_taches">
-     
 
         <form>
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token ?? '', ENT_QUOTES); ?>">

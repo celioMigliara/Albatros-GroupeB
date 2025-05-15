@@ -109,15 +109,15 @@ body {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-  gap : 10px;
-  }
+  gap: 10px;
+}
 
 /* Conteneur principal pour le bloc entier */
+
 .block_taches {
   display: flex;
   flex-direction: column;
   width: 90%;
-
   margin: 0px;
   border: 1px solid #d1d1d1;
   border-radius: 12px;
@@ -125,8 +125,10 @@ body {
   background-color: rgba(255, 255, 255, 0.85);
   padding: 20px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: auto;
+  transform: scale(1);
 }
+
 
 /* En-tête fixe */
 .block_taches>div:first-child {
@@ -139,11 +141,12 @@ h1 {
   font-family: "Caveat Brush", cursive;
   font-size: 2.8em;
   color: #f9bb30;
-  font-weight: normal;  
+  font-weight: normal;
   text-align: center;
   padding: 0;
-    margin-top: 6%;
-  overflow: hidden;}
+  margin-top: 6%;
+  overflow: hidden;
+}
 
 /* Zone de contenu scrollable */
 .block_taches>form,
@@ -158,7 +161,7 @@ h1 {
 /* Zone du tableau scrollable */
 .table-container {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
   margin: 0px 0;
   padding-right: 10px;
 }
@@ -493,10 +496,6 @@ button:active {
 }
 
 /* ========================== STRUCTURE GLOBALE ========================== */
-.block_taches {
-  flex-direction: column;
-  margin-top: 54px;
-}
 
 .filters {
   width: 100%;
@@ -616,18 +615,8 @@ button:active {
 
 .pagination_container {
   width: 100%;
-  transform: scale(0.95);
+  transform: scale(1);
   /* Réduit légèrement la taille */
-}
-
-.pagination_container {
-  transform: scale(1);
-  /* Rétablit la taille normale pour le contenu interne */
-}
-
-.block_taches {
-  transform: scale(1);
-  /* Rétablit la taille normale pour le contenu interne */
 }
 
 tr.drop-target {
@@ -644,14 +633,14 @@ tr.drop-after {
 
 /*PAS DE RESPONSIVE CAR LA PAGE CONTIENT UN TABLEAU*/
 .separateur-double-ligne-B2 {
-    width: 95%;
-    margin: 0 auto;
-    display: block;
-    background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
-    background-size: 15px 15px;
-    background-repeat: repeat;
-    height: 25px;
-    opacity: 1;
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+  background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+  background-size: 15px 15px;
+  background-repeat: repeat;
+  height: 25px;
+  opacity: 1;
 }
 
 
@@ -857,28 +846,28 @@ tr.drop-after {
 
 /* Styles pour le popup */
 #popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    z-index: 9999;
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 9999;
 }
 
 /* Styles pour le bouton */
 #popup button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    cursor: pointer;
-    border: none;
-    background-color: #007BFF;
-    color: white;
-    font-size: 16px;
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  font-size: 16px;
 }
 
 

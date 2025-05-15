@@ -160,12 +160,12 @@
             <div class="popup-form">
                 <div class="input-group-custom">
                     <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
-                    <input id="sourceTacheOrdre" type="number" class="input-custom" placeholder="1">
+                    <input id="sourceTacheOrdre" type="number" class="input-custom" min="1" placeholder="1">
                 </div>
 
                 <div class="input-group-custom">
                     <label for="targetTacheOrdre">Quel ordre voulez-vous lui assigner ?</label>
-                    <input id="targetTacheOrdre" type="number" class="input-custom" placeholder="2">
+                    <input id="targetTacheOrdre" type="number" class="input-custom" min="1" placeholder="2">
                 </div>
 
                 <div class="popup-buttons">

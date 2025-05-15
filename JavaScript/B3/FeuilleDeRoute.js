@@ -152,14 +152,33 @@ document.addEventListener("DOMContentLoaded", function () {
 // Fonction pour restaurer le technicien courant
 document.addEventListener("DOMContentLoaded", function () {
     setupDragAndDrop();
+    // Récupère l'ID du technicien sauvegardé dans le localStorage
     const savedTechnicien = localStorage.getItem(TECHNICIEN_KEY);
-    if (savedTechnicien) {
-        let TechnicienSelect = document.getElementById("technicienSelect");
-        if (TechnicienSelect) {
-            TechnicienSelect.value = savedTechnicien;
+
+    // Vérifie que la valeur existe et n'est pas "0" (valeur par défaut du select)
+    if (savedTechnicien && savedTechnicien != "0") {
+        const technicienSelect = document.getElementById("technicienSelect");
+        const options = technicienSelect.options;
+        let found = false;
+
+        // Parcourt toutes les options du select pour vérifier si la valeur sauvegardée existe toujours
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].value === savedTechnicien) {
+                found = true;
+                break;
+            }
         }
 
-        loadTachesForTechnicien(savedTechnicien);
+        if (found) {
+            // Si la valeur est valide, on définit le select sur cette valeur
+            technicienSelect.value = savedTechnicien;
+
+            // Et on charge les tâches associées à ce technicien
+            loadTachesForTechnicien(savedTechnicien);
+        } else {
+            // Si la valeur n'existe plus (ex : technicien supprimé), on la supprime du localStorage
+            localStorage.removeItem(TECHNICIEN_KEY);
+        }
     }
 });
 

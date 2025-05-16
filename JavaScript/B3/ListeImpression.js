@@ -1,12 +1,25 @@
-
 // On setup la print list
-document.addEventListener("DOMContentLoaded", function () 
-{
+document.addEventListener("DOMContentLoaded", function () {
     displayPrintList();
 });
 
 const PRESENT_KEY = "techniciens_presents";
 const TECHNICIEN_KEY = "technicien_courant";
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Listener délégué sur le tbody pour gérer les checkbox avancées
+    const tbody = document.querySelector("#printTable tbody");
+    tbody.addEventListener("change", function (event) {
+        const checkbox = event.target;
+        if (checkbox.matches('input[type="checkbox"][id^="checkbox-taches-"]')) {
+            const techId = checkbox.id.replace('checkbox-taches-', '');
+            const advancedSettingsDiv = document.getElementById(`advanced-settings-${techId}`);
+            if (advancedSettingsDiv) {
+                advancedSettingsDiv.style.display = checkbox.checked ? 'block' : 'none';
+            }
+        }
+    });
+});
 
 function getPresentTechnicians() {
     let techs = localStorage.getItem(PRESENT_KEY);
@@ -55,25 +68,58 @@ function displayPrintList() {
     const techs = getPresentTechnicians();
     const tbody = document.querySelector("#printTable tbody");
     tbody.innerHTML = "";
-    
+
     if (techs.length === 0) {
         tbody.innerHTML =
-        '<tr><td colspan="2">Aucun technicien présent pour l\'impression.</td></tr>';
+            '<tr><td colspan="3">Aucun technicien présent pour l\'impression.</td></tr>';
         return;
     }
-    
+
     // Affiche le tableau
     techs.forEach((tech) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
         <td>${tech.name}</td>
-        <td>
-        <button class="action-btn" onclick="window.open('${BASE_URL}/feuillederoute/imprimer?tech_id=${tech.id}', '_blank')">Voir la feuille de route</button>
-        <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
-        <button class="action-btn" onclick="removeTechnician('${tech.id}')">Supprimer</button>
+        <td style="display: flex; align-items: center; gap: 10px;">
+            <button class="action-btn imprimer-btn" data-tech-id="${tech.id}">Imprimer la feuille de route</button>
+            <button class="action-btn" onclick="voirTaches('${tech.id}')">Voir les taches</button>
+            <button class="action-btn" onclick="removeTechnician('${tech.id}')">Retirer de la liste d'impression</button>
+            
+            <label for="checkbox-taches-${tech.id}">Paramètres avancés</label>
+            <input id="checkbox-taches-${tech.id}" type="checkbox">
+
+            <div class="advanced-settings" id="advanced-settings-${tech.id}" style="display: none;">
+                <label for="nombre-taches-${tech.id}" style="font-size: 0.95em; color:rgb(33, 31, 27); margin-right: 2px;">
+                Saisissez le nombre de tâches à imprimer (Entrez 0 pour imprimer toutes les tâches) :
+                </label>
+                <input type="number" min="0" value="1" id="nombre-taches-${tech.id}" class="nombre-taches" data-tech-id="${tech.id}" style="width: 70px;" placeholder="1">
+                <div style="height: 15px;"></div>
+                <label for="debut-taches-${tech.id}" style="font-size: 0.95em; color:rgb(33, 31, 27); margin-right: 2px;">
+                Indiquez à partir de quelle tâche commencer l'impression :
+                </label>
+                <input type="number" min="1" value="1" id="debut-taches-${tech.id}" class="nombre-taches" data-tech-id="${tech.id}" style="width: 70px;" placeholder="1">
+            </div>
         </td>
+
         `;
         tbody.appendChild(tr);
+
+        // Ajouter l'événement click pour le bouton d'impression
+        tr.querySelector('.imprimer-btn').addEventListener('click', function () {
+            const techId = this.dataset.techId;
+            const checkbox = tr.querySelector(`#checkbox-taches-${techId}`);
+            let url = `${BASE_URL}/feuillederoute/imprimer?tech_id=${techId}`;
+
+            if (checkbox && checkbox.checked) {
+                const nombreTaches = tr.querySelector(`#nombre-taches-${techId}`)?.value || 1;
+                const debutTaches = tr.querySelector(`#debut-taches-${techId}`)?.value || 1;
+
+                url += `&nombreTask=${encodeURIComponent(nombreTaches)}&debutTask=${encodeURIComponent(debutTaches)}`;
+            }
+
+            window.open(url, '_blank');
+        });
+
     });
 }
 

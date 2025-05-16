@@ -24,7 +24,12 @@ class BatimentB3
         $db = Database::getInstance();
         $connexion = $db->getConnection();
 
-        $query = "SELECT Id_batiment, nom_batiment FROM batiment WHERE actif_batiment = 1";
+        // Ajout de la clause ORDER BY pour trier par nom_batiment par ordre alphabétique croissant (A-Z)
+        $query = "SELECT Id_batiment, nom_batiment 
+                FROM batiment 
+                WHERE actif_batiment = 1 
+                ORDER BY nom_batiment ASC";
+        
         $stmt = $connexion->prepare($query);
         $stmt->execute();
 

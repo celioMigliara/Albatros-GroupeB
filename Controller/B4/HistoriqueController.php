@@ -8,6 +8,6 @@ class HistoriqueController
     {
         $model      = new Historique();
         $historique = $model->getAll();
-        require __DIR__ . '/../../View/B4/Historique/index.php';
+        require __DIR__ . '/../../View/B4/historique/index.php';
     }
 }

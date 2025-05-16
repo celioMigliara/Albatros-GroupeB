@@ -1591,3 +1591,59 @@ a.btn-primary {
     color: white;
     /* Facultatif si tu veux qu’il soit bien blanc comme ton bouton */
 }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px 35px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+.close-btn:hover {
+    color: #333;
+}
+
+.modal button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #f4a81b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.popup-logo-B2 {
+    width: 55%;
+    height: 60px;
+    object-fit: contain;
+    margin: auto;
+}
+

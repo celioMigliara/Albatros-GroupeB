@@ -103,7 +103,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
                 </div>
             <?php endif; ?>
 
-            <?php if ($_SESSION['user']['role_id'] == 3 || ($_SESSION['user']['role_id'] == 2 && $isDemandeModifiable)): ?>
+            <?php if ($isDemandeModifiable && $_SESSION['user']['role_id'] == 3 || ($_SESSION['user']['role_id'] == 2 && $isDemandeModifiable )): ?>
                 <div class="form-row">
                     <button type="submit" class="btn btn-primary btn-modif">Modifier</button>
                 </div>
@@ -112,9 +112,9 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
 
 
         <!-- Bouton d'annulation pour les utilisateurs -->
-        <?php if ($_SESSION['user']['role_id']  == 3 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
+        <?php if ($isDemandeModifiable &&  $_SESSION['user']['role_id']  == 3 || $_SESSION['user']['role_id']  == 2 && strtolower($demande['nom_statut']) === 'nouvelle'): ?>
             <div class="user-actions">
-                <form method="POST" action="index.php?action=annulerDemande&id=<?= htmlspecialchars($demande['id_demande']) ?>" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette demande ?');">
+            <form method="POST" action="<?= BASE_URL ?>/annulerDemande/<?= htmlspecialchars($demande['id_demande']) ?>">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
                     <button type="submit" class="btn-danger">Annuler ma demande</button>
                 </form>
@@ -151,7 +151,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
                 <form method="POST" action="<?= BASE_URL ?>/updateCommentaire">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($demande['id_demande']) ?>">
                     <label for="commentaire_admin">Commentaire Admin :</label>
-                    <textarea id="commentaire_admin" name="commentaire_admin" rows="4" cols="50"><?= htmlspecialchars($demande['commentaire_admin_dmd']) ?></textarea>
+                    <textarea id="commentaire_admin" name="commentaire_admin" rows="4" cols="50"><?= htmlspecialchars($demande['commentaire_admin_dmd'] ?? '') ?></textarea>
                     <button type="submit" class="btn btn-success">Enregistrer</button>
                 </form>
             </div>
@@ -223,7 +223,7 @@ $isDemandeModifiable = !in_array(strtolower($demande['nom_statut']), ['annulée'
                         </div>
                         <div class="tache-body">
                             <p><strong>Date planifiée :</strong> <?= htmlspecialchars($tache['date_planif_tache']) ?></p>
-                            <p><strong>Date de fin :</strong> <?= htmlspecialchars($tache['date_fin_tache']) ?></p>
+                            <p><strong>Date de fin :</strong> <?= htmlspecialchars($tache['date_fin_tache']?? '') ?></p>
                             <p><strong>Statut :</strong> <span class="statut-label <?= $statutClass ?>"><?= htmlspecialchars($tache['nom_statut']) ?></span></p>
                         </div>
                         <div class="tache-actions">

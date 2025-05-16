@@ -1,13 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
 
+body{
+        background-color: #f5f3f3;
+
+}
+
 /* TITRE PRINCIPAL */
 
 .titre {
     font-family: 'Caveat Brush', cursive;
     text-align: center;
     color: #F9BB30;
-    font-size: 3em;
-    margin-top: 110px;
+    font-size: 2.6em;
+    margin-top: 80px;
     margin-bottom: 0.2rem;
     font-weight: normal;
 }
@@ -17,7 +22,7 @@ label{
 }
 
 .separateur-double-ligne-B2 {
-    width: 78%;
+    width: 67%;
     margin: 0 auto;
     display: block;
     background: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%), radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
@@ -258,26 +263,42 @@ label{
 }
 .popup {
     display: none;
-    font-family: 'Inter', sans-serif;
-    position: absolute;
-    background :#DFD9D9;
-    color: #000000;
-    font-size: 1.5em;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 2px solid #ccc;
-    padding: 20px;
-    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 25px 35px;
+    border-radius: 10px;
+    margin-left: 33%;
     text-align: center;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    margin-top: 17%;
+    font-size: 18px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+}
+
+.popup-logo-B2 {
+    width: 55%;
+    height: 60px;
+    object-fit: contain;
+    margin: auto;
 }
 
 .popupDel {
     display: none;
     font-family: 'Inter', sans-serif;
     position: absolute;
-    background :#DFD9D9;
+    background :white;
+    border-radius: 10px;
     color: #000000;
     font-size: 1.5em;
     top: 30%;
@@ -291,7 +312,7 @@ label{
 }
 
 .popup.error {
-    border-color: red;
+border-color: red;
 }
 .popup-ok-btn{
     font-size: 1.0em;
@@ -324,7 +345,7 @@ label{
 
 @media screen and (min-width: 2000px){
     .titre {
-        font-size: 5.5em;
+        font-size: 4em;
     }
     label {
         font-size: 40px;
@@ -508,13 +529,29 @@ label{
         border-radius: 15px; /* bordure du bouton (arrondie)*/
     }
     .popup {
-        font-size: 2em;
-        top: 30%;
-        left: 50%;
-        border: 2px solid #ccc;
-        padding: 20px;
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
     }
-
+    .modal-content {
+        background-color: #fff;
+        padding: 25px 35px;
+        border-radius: 10px;
+        margin-left: 35%;
+        text-align: center;
+        margin-top: 17%;
+        font-size: 35px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 90%;
+    }
     .popupDel {
 
         font-size: 2em;
@@ -874,6 +911,30 @@ label{
         width: 95%;
         padding: 30px;
     }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        padding: 25px 35px;
+        border-radius: 10px;
+        margin-left: 17%;
+        text-align: center;
+        margin-top: 17%;
+        font-size: 25px;
+        max-width: 450px;
+        width: 90%;
+    }
     
     .demo-form-row-titre{
         margin: auto;
@@ -1141,30 +1202,34 @@ label{
         padding: 10px 25px; /* Ajoute de l'espace à l'intérieur du bouton */
         border-radius: 15px; /* bordure du bouton (arrondie)*/
     }
-
-    .popup {
-        display: none;
-        font-family: 'Inter', sans-serif;
-        position: absolute;
-        background :#DFD9D9;
-        color: #000000;
-        font-size: 0.5em;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border: 2px solid #ccc;
-        padding: 20px;
-        z-index: 1000;
-        text-align: center;
-        box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    
+    .popup{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
     }
 
+    .modal-content {
+    padding: 25px 35px;
+    border-radius: 10px;
+    margin-left: 17%;
+    text-align: center;
+    margin-top: 17%;
+    font-size: 20px;
+    max-width: 50%;
+    width: 90%;
+    }
+    
+
     .popupDel {
-        display: none;
-        font-family: 'Inter', sans-serif;
-        position: absolute;
-        background :#DFD9D9;
-        color: #000000;
+        position: fixed;
         font-size: 0.8em;
         top: 30%;
         left: 50%;
@@ -1211,4 +1276,15 @@ label{
         font-size: 0.3em;
 
     }
+}
+
+.popup button {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #f4a81b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }

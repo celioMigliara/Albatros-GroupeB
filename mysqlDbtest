@@ -199,7 +199,7 @@ INSERT INTO `statut` (`id_statut`, `nom_statut`) VALUES
 (4, 'Planifiée'),
 (5, 'Terminée'),
 (6, 'Annulée'),
-(16, 'Nouvelle');
+(1, 'Nouvelle');
 
 -- --------------------------------------------------------
 

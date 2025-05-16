@@ -7,6 +7,19 @@ require_once __DIR__ . '/../../Model/UserConnectionUtils.php';
 if (!UserConnectionUtils::isAdminConnected()) {
     header('Location: ' . BASE_URL . "/connexion");
     exit;
+    
+    if (isset($_SESSION['popup_message'])) { 
+    $message = $_SESSION['popup_message'];
+    $success = $_SESSION['popup_success'];
+
+    echo "<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showPopup(" . json_encode($message) . ", " . ($success ? 'false' : 'true') . ");
+    });
+    </script>";
+
+    unset($_SESSION['popup_message'], $_SESSION['popup_success']);
+}
 }
 ?>
 <!DOCTYPE html>
@@ -98,7 +111,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
                 <select id="choixLieu" name="lieu" class="demo-form-field" required data-selected="<?= $maintenance['id_lieu'] ?>">
                 <option value="">Sélectionnez un lieu</option>
                     <?php
-                        $lieux = $pdo->query("SELECT id_lieu, nom_lieu FROM lieu WHERE id_batiment = '$maintenance[id_batiment]'")->fetchAll(PDO::FETCH_ASSOC);
+                        $lieux = $pdo->query("SELECT id_lieu, nom_lieu FROM lieu WHERE id_batiment = '$maintenance[id_batiment]' ")->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($lieux as $lieu) {
                             $selected = ($lieu['id_lieu'] == $maintenance['id_lieu']) ? 'selected' : '';
                             echo "<option value='{$lieu['id_lieu']}' $selected>{$lieu['nom_lieu']}</option>";
@@ -128,23 +141,10 @@ if (!UserConnectionUtils::isAdminConnected()) {
           
         </form>
 
-        <!-- Pop-up de succès -->
-        <div id="popup" class="popup">
-            <span id="popup-close" class="popup-close">&times;</span>
-            <p id="popup-message"></p>
-            <button class="popup-ok-btn" id="popup-ok-btn">OK</button>
-        </div>
-
-        <!-- Pop-up d’erreur -->
-        <div id="error-popup" class="popup error">
-            <span id="error-popup-close" class="popup-close">&times;</span>
-            <p id="error-message"></p>
-            <button class="popup-ok-btn" id="error-ok-btn">OK</button>
-        </div>
-
         <!-- Pop-up de confirmation de suppression -->
         <div id="popupDel" class="popupDel">
-                <span id="popup-close-sup" class="popup-close">&times;</span>
+                <span hidden id="popup-close-sup" class="popup-close">&times;</span>
+                <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2"data-effect="mfp-move-horizontal">
                 <p id="popup-message-sup"></p>
                 <button class="popup-ok-btn-sup" id="popup-ok-btn-sup">Supprimer la maintenance</button>
                 <button class="popup-no-btn-sup" id="popup-no-btn-sup">Revenir en arrière</button>
@@ -155,7 +155,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
     const BASE_URL = "<?= BASE_URL ?>";
     </script>
 
-    <script src="<?= BASE_URL ?>/Javascript/B2/script.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/B2/script.js"></script>
 
 </body>
 </html>

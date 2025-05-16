@@ -69,6 +69,10 @@ class TachesController {
             if (empty($data['nom_tache']) || empty($data['date']) || empty($data['id_demande'])) {
                 die("Les champs obligatoires ne sont pas remplis.");
             }
+            if(empty($data['technicien'])) {
+            die("Un technicien doit être sélectionné.");
+                
+            }
 
             // Gérer l'upload du média
             $mediaPath = null;
@@ -173,6 +177,8 @@ class TachesController {
     
             $success = Taches::updateTask($data);
             if ($success) {
+
+                 DemandeB1::recalcDemandStatus($data['id_demande']);
                 if ($_SESSION['user']['role_id'] == 2) { // Technicien
                     header('Location: ' . BASE_URL . '/tasksForTechnicien'); 
                 } else { // Admin

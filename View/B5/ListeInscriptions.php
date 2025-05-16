@@ -83,44 +83,40 @@ $totalPages = ceil($totalUtilisateurs / $utilisateursParPage);
         </div>
     </div>
 </div>
+<!-- Overlay de fond -->
+<div id="popup-overlay-B5" class="popup-overlay-B5"></div>
 
-<!-- Script pour ajuster la position de la liste -->
+<!-- Fenêtre popup -->
+<div id="popup-B5" class="popup-B5">
+    <div class="popup-content-B5">
+              <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2" data-effect="mfp-move-horizontal">
+        <p id="popup-message-B5"></p>
+        <button onclick="fermerPopupB5()">FERMER</button>
+    </div>
+</div>
 <script>
-window.onload = function() {
-    // Ajuste l'espacement selon la taille de l'écran
-    const spacingElement = document.getElementById('spacing-element');
-    if (spacingElement) {
-        if (window.innerWidth <= 480) {
-            spacingElement.style.height = '140px';
-        } else if (window.innerWidth <= 768) {
-            spacingElement.style.height = '120px';
-        } else {
-            spacingElement.style.height = '120px';
-        }
-    }
-};
-</script>
-<script>
-window.onload = function() {
-    const spacingElement = document.getElementById('spacing-element');
-    if (spacingElement) {
-        if (window.innerWidth <= 480) {
-            spacingElement.style.height = '140px';
-        } else if (window.innerWidth <= 768) {
-            spacingElement.style.height = '120px';
-        } else {
-            spacingElement.style.height = '120px';
-        }
-    }
+function afficherPopupB5(message) {
+    document.getElementById("popup-message-B5").textContent = message;
+    document.getElementById("popup-B5").style.display = "block";
+    document.getElementById("popup-overlay-B5").style.display = "block";
+    document.body.classList.add("no-scroll");
+}
 
+function fermerPopupB5() {
+    document.getElementById("popup-B5").style.display = "none";
+    document.getElementById("popup-overlay-B5").style.display = "none";
+    document.body.classList.remove("no-scroll");
+}
+
+// Affiche le popup si un paramètre GET est présent
+window.onload = function () {
     <?php if (isset($_GET['status']) && $_GET['status'] === 'validation') : ?>
-        alert("✅ L'inscription a bien été validée !");
+        afficherPopupB5("L'inscription a bien été validée !");
     <?php elseif (isset($_GET['status']) && $_GET['status'] === 'refus') : ?>
-        alert("❌ L'inscription a été refusée avec succès.");
+        afficherPopupB5("L'inscription a été refusée avec succès.");
     <?php endif; ?>
 };
 </script>
-
 
 </body>
 </html>

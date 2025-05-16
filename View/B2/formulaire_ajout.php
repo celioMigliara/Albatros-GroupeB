@@ -100,27 +100,11 @@ if (!UserConnectionUtils::isAdminConnected()) {
 
         </form>
 
-        <!-- Pop-up de succès -->
-        <div id="popup" class="popup">
-            <span id="popup-close" class="popup-close">&times;</span>
-            <p id="popup-message"></p>
-            <button class="popup-ok-btn" id="popup-ok-btn">OK</button>
-        </div>
-
-        <!-- Pop-up d’erreur -->
-        <div id="error-popup" class="popup error">
-            <span id="error-popup-close" class="popup-close">&times;</span>
-            <p id="error-message"></p>
-            <button class="popup-ok-btn" id="error-ok-btn">OK</button>
-
-        </div>
-    </div>
-
     <script>
         const BASE_URL = "<?= BASE_URL ?>";
     </script>
 
-    <script src="<?= BASE_URL ?>/Javascript/B2/script.js"></script>
+    <script src="<?= BASE_URL ?>/JavaScript/B2/script.js"></script>
 
 </body>
 

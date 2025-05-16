@@ -1,26 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400;500;600;700&display=swap');
-/* Logo dans le coin supérieur gauche */
+
+
+
 .logo-container {
-    position: fixed;
+    position: absolute ;
     top: 0;
     left: 0;
     z-index: 300;
-    margin: 0;
-    padding: 0;
-    border-radius: 0 0 50% 0;
-    background-color: #94A77E;
 }
 
-.logo-container img {
-    height: auto;
+.logo-wrapper {
+    position: absolute ;
     width: 150px;
-    padding: 0;
-    position: relative;
-    z-index: 2001;
+    height: 150px;
+}
+
+.logo {
+    width: 98%;
+      margin-left: 18%; 
+    cursor: pointer;
+}
+
+.cercle-vert,
+.cercle-blanc {
+   
+    z-index: 1;
+}
+
+.cercle-vert {
+      position: absolute ;
+    top: -100%;
+     right: 15%;
+    width: 260px;
+    height: auto;
+    transform: rotate(75deg);
+    z-index: -1;
+}
+
+.cercle-blanc {
+    position: absolute ;
+    top: -88%; 
+    right: -43%;
+    width: 220px;   
+    height: auto;
+    transform: rotate(145deg);
+    z-index: -1;
 }
 
 .site-logo {
+     
     width: 150px;
     height: auto;
     display: block;
@@ -69,15 +98,18 @@
 nav {
     display: flex;
     background-color: #f9bb30;
-    padding: 8px 15px;
+    padding: 10px 20px;
     align-items: center;
     border-radius: 0 0 50px 50px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    width: 85%; 
-    max-width: 800px;
-    margin: 0;
+    width: 60%; /* Réduire la largeur */
+    max-width: 1000px;
+    margin: auto; /* Supprimer le centrage automatique */
+     margin-left: 20%; /* Pousser vers la droite */
+    /* margin-right: 20px; Petit espace avec le bord droit */ 
     justify-content: center;
 }
+
 
 nav img.logo {
     height: 40px;
@@ -103,7 +135,7 @@ nav ul li {
 
 nav ul li a {
     font-family: 'Caveat Brush', cursive; 
-    font-weight: bold;
+    font-weight: normal;
     font-size: 23px;
     color: white;
     text-decoration: none;
@@ -299,7 +331,7 @@ nav ul li a:hover {
         padding-right: 15px;
     }
 }
-
+  
 @media (max-width: 900px) {
     .navbar-wrapper {
         padding-left: 150px;
@@ -319,7 +351,9 @@ nav ul li a:hover {
     body {
         padding-top: 60px; /* Pour la navbar fixe */
     }
-    
+    .logo-wrapper {
+        display: none;
+    }
     /* Conteneur de logo */
     .logo-container {
         width: 100%; /* Prend toute la largeur */

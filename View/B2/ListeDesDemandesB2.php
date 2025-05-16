@@ -141,7 +141,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <script>
     const BASE_URL = "<?= BASE_URL ?>";
   </script>
-        <script src="<?= BASE_URL ?>/Javascript/B2/exportCsv.js"></script>
+        <script src="<?= BASE_URL ?>/JavaScript/B2/exportCsv.js"></script>
     </div>
 </body>
 </html>

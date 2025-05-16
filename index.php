@@ -33,7 +33,6 @@ if (!empty($segments[0]) && $segments[0] === basename($_SERVER['SCRIPT_NAME'])) 
 }
 
 // Les require pour les B3
-require_once 'Controller/B3/UserControlleur.php';
 require_once 'Controller/B3/AuthController.php';
 require_once 'Controller/B3/PasswordController.php';
 require_once 'Controller/B3/PrintController.php';
@@ -46,6 +45,13 @@ require_once 'Model/UserConnectionUtils.php';
 
 // Mise à true quand la page demandée n'est pas trouvée
 $pageNotFound = false;
+
+$publicRoutes = ['connexion', 'inscription',]; //Acces sans etre connecté
+if(empty($_SESSION['user']) && !in_array($segments[0], $publicRoutes)) {
+    header('Location: ' . BASE_URL . '/connexion');
+    exit;
+}
+
 
 // Gestion de routage manuel
 switch ($segments[0]) 
@@ -75,6 +81,8 @@ switch ($segments[0])
 
             break;
         
+    
+
             case 'AccueilAdmin':
                 if (!empty($_SESSION['user']['role_id']) && $_SESSION['user']['role_id'] == 1) {
                     require 'View/B5/AccueilAdmin.php';
@@ -160,7 +168,17 @@ switch ($segments[0])
         }
         break;
 
-   
+            case 'annulerDemande':
+    require_once __DIR__ . '/Controller/B1/DemandesController.php';
+    $DemandesController = new DemandesController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($segments[1]) && is_numeric($segments[1])) {
+        $_GET['id'] = (int)$segments[1]; // injection de l'ID dans $_GET
+        $DemandesController->annulerDemande();
+    } else {
+        error('Méthode non autorisée ou ID manquant ou invalide pour annulerDemande.');
+    }
+    break;
 
     case 'listedemande':
     if (isset($segments[1])) {
@@ -298,10 +316,10 @@ switch ($segments[0])
     // Profil
     case 'profil':
         if (!isset($segments[1])) {
-            // Appel à updateProfile en GET pour afficher ModifierProfil.php
-            (new ProfileController())->updateProfile(); 
+            // Si aucun segment secondaire, afficher l'accueil de la feuille de route
+            (new ProfileController())->index(); 
         } elseif ($segments[1] === 'modifier') {
-            (new ProfileController())->updateProfile(); // Même méthode gère POST
+            (new ProfileController())->updateProfile();
         } else {
             $pageNotFound = true;
         }
@@ -310,14 +328,33 @@ switch ($segments[0])
     // Dans le projet B3, c'était le endpoint 'taches'
     // mais il est déjà utilisé au dessus
     case 'tasks':
-        (new TaskController())->getTasksForTechnician();
+        if (!isset($segments[1]))
+        {
+            $pageNotFound = true;
+        }
+        else
+        {
+            switch ($segments[1])
+            {
+                case 'all':
+                    (new TaskController())->getAllTasksForTechnician();
+                    break;
+                case 'ongoing':
+                    (new TaskController())->getOngoingTasksForTechnician();
+                    break;
+                default:
+                    $pageNotFound = true;
+                    break;
+            }
+        }
+        
         break;
 
     // Feuille de route
     case 'feuillederoute':
         if (!isset($segments[1])) {
             // Si aucun segment secondaire, afficher l'accueil de la feuille de route
-            (new PrintController())->index();
+            (new TaskController())->index();
         } else {
             switch ($segments[1]) {
                 case 'imprimer':
@@ -328,7 +365,14 @@ switch ($segments[0])
                     break;
                 case 'ordre':
                     if (isset($segments[2]) && $segments[2] === 'update') {
-                        (new TaskController())->updateTasksOrder();
+                        if (isset($segments[3]) && $segments[3] === 'lineaire')
+                        {
+                            (new TaskController())->updateLinearTaskOrder();
+                        }
+                        else
+                        {
+                            (new TaskController())->updateTasksOrder();
+                        }
                     } else {
                         $pageNotFound = true;
                     }
@@ -438,8 +482,10 @@ switch ($segments[0])
             default:
             $pageNotFound = true;
             break;
-    
+  
+
     }
+    
 
 if ($pageNotFound)
 {

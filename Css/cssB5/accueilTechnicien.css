@@ -19,14 +19,14 @@
 
 /* Base */
 body {
-    background-color: white;
+    background-color: #f5f3f3;
     color: var(--dark-color);
     margin: 0;
     padding: 0;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 650px;
     padding: 0 15px;
 }
 
@@ -44,7 +44,7 @@ margin: auto;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 85%;
+    width: 65%;
     margin: auto;
     padding: 20px;
     background-color: var(--kaki-color);
@@ -57,10 +57,10 @@ margin: auto;
 }
 
 .technicien-text h2 {
-    font-size: 28px;
+    font-size: 27px;
     font-weight: bold;
     color: var(--primary-color);
-    font-family: 'Caveat Brush', cursive; 
+            font-family: "Montserrat Alternates", sans-serif;
 }
 
 .technicien-text p {
@@ -264,7 +264,7 @@ margin: auto;
     .technicien-welcome {
         padding: 20px 15px;
         margin: 10px auto;
-        width: 65%;
+        width: 75%;
         display: flex;
         align-items: center;
     }
@@ -404,6 +404,7 @@ margin: auto;
         font-size: 20px;
         margin-top: 0;
         margin-bottom: 5px;
+            font-family: "Montserrat Alternates", sans-serif;
     }
     
     .technicien-text p {

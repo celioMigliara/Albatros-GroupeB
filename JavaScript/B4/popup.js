@@ -1,5 +1,11 @@
-function openPopup() {
-    document.getElementById("popup").style.display = "block";
+function openAddPopup() {
+    document.getElementById("addPopup").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+}
+
+function openDeletePopup(message){
+    document.getElementById("deletePopupMessage").innerText = message;
+    document.getElementById("deletePopup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 }
 
@@ -7,12 +13,26 @@ function openImportPopup() {
     document.getElementById("importPopup").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 }
-
-function closePopup() {
-    document.getElementById("importPopup").style.display = "none";
-    document.getElementById("popup").style.display = "none";
+function closeLieuPopup() {
+    document.getElementById("addPopup").style.display = "none";
+    document.getElementById("deletePopup").style.display = "none";
     document.getElementById("overlay").style.display = "none";
 }
+function closeSitePopup() {
+    document.getElementById("importPopup").style.display = "none";
+    document.getElementById("addPopup").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+function closeBatimentPopup() {
+    document.getElementById("addPopup").style.display = "none";
+    document.getElementById("deletePopup").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+function closeLieuDetailPopup() {
+    document.getElementById("deletePopup").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
+
 
 function validateUpload() {
     const fileInput = document.getElementById('excel_file');

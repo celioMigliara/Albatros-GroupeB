@@ -7,26 +7,23 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB3/FeuilleRoute.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-
 </head>
 
 <body data-page="ListeTaches">
-<?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
-
-    <div class="overlay"></div>
+    <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
 
     <div class="block_taches">
         <div style="width: 100%;">
             <h1>Feuille de route du technicien</h1>
+            <div class="separateur-double-ligne-B2"></div>
         </div>
-
         <form>
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token ?? '', ENT_QUOTES); ?>">
 
             <!-- Conteneur du choix du technicien -->
             <div class="container_technicien">
                 <select name="technicien_id" id="technicienSelect">
-                    <option value="">Sélectionnez un technicien</option>
+                    <option value="0">Sélectionnez un technicien</option>
                     <?php
                     foreach ($techniciens as $tech): ?>
                         <option value="<?= htmlspecialchars($tech['Id_utilisateur']) ?>">
@@ -37,8 +34,9 @@
                 </select>
 
                 <div class="buttons">
-                    <button type="button" id="ajouterPrintList">Ajouter ce technicien à la liste d'impression</button>
                     <button type="button" id="imprimerFeuilleRoute" class="action-btn">🖨️ Imprimer la feuille de route</button>
+                    <button type="button" id="ajouterPrintList">Ajouter ce technicien à la liste d'impression</button>
+                    <button type="button" id="listeImpression">Gérer la liste d'impression</button>
                 </div>
 
             </div>
@@ -48,63 +46,82 @@
         <!-- Zone des filtres de recherche -->
         <div class="filters">
             <div class="filter-group">
-                <input type="text" id="searchInput" placeholder="Rechercher...">
-
-                <!-- Ajouter les champs pour la recherche par date -->
                 <div>
+                    <label for="searchInput">Recherche par mot-clé :</label>
+                    <br>
+                    <input type="text" id="searchInput" placeholder="Rechercher...">
+                </div>
+
+                <div>
+                    <label for="startDate">Date de début :</label>
+                    <br>
                     <input type="date" id="startDate" placeholder="Date début">
                 </div>
+
                 <div>
+                    <label for="endDate">Date de fin :</label>
+                    <br>
                     <input type="date" id="endDate" placeholder="Date fin">
                 </div>
 
-                <select name="statusFilter" id="statusFilter" multiple size=6>
-                    <option value="0">Tous statuts</option>
-                    <?php
-                    foreach ($statuts as $statut): ?>
-                        <option value="<?= htmlspecialchars($statut['Id_statut']) ?>">
-                            <?= htmlspecialchars($statut['nom_statut']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div>
+                    <label for="statusFilter">Filtrer les taches en cours<br>(Ctrl + clic pour sélectionner plusieurs statuts) :</label>
+                    <br>
+                    <select name="statusFilter" id="statusFilter" multiple size="2">
+                        <option value="0">Tous statuts</option>
+                        <?php foreach ($statutsEnCours as $statut): ?>
+                            <option value="<?= htmlspecialchars($statut['id_statut']) ?>">
+                                <?= htmlspecialchars($statut['nom_statut']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <select id="mediaFilter">
-                    <option value="0">Pas de filtre média</option>
-                    <option value="1">Uniquement sans média</option>
-                    <option value="2">Uniquement avec média</option>
-                </select>
+                <div>
+                    <label for="mediaFilter">Filtrer par média :</label>
+                    <br>
+                    <select id="mediaFilter">
+                        <option value="0">Pas de filtre média</option>
+                        <option value="1">Uniquement sans média</option>
+                        <option value="2">Uniquement avec média</option>
+                    </select>
+                </div>
 
-                <button id="resetFiltersBtn">
-                    🔄 Réinitialiser les filtres
-                </button>
+                <div>
+                    <button id="resetFiltersBtn">
+                        🔄 Réinitialiser les filtres
+                    </button>
+                </div>
+
+                <div class="buttons">
+                    <button id="openModifOrdrePopup" class="action-btn">Changer l'ordre manuellement</button>
+                    <button id="saveOrder">Enregistrer l'ordre des taches</button>
+                </div>
             </div>
         </div>
 
-        <div class="buttons">
-            <button id="saveOrder">Enregistrer l'ordre des taches</button>
-            <button id="listeImpression">Gérer la liste d'impression</button>
-        </div>
-
-        <div id="dropPrevPage" class="drop-zone">← Déposer ici pour page précédente</div>
         <!-- Tableau des tâches -->
-        <table id="tasksTable">
-            <thead>
-                <tr>
-                    <th>N° Tâche</th>
-                    <th>Date</th>
-                    <th>Ticket</th>
-                    <th>Bâtiment</th>
-                    <th>Lieu</th>
-                    <th>Description</th>
-                    <th>Média</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Les lignes de tâches vont ici -->
-            </tbody>
-        </table>
-        <div id="dropNextPage" class="drop-zone">Déposer ici pour page suivante →</div>
+        <div class="table-container">
+            <table id="tasksTable">
+                <thead>
+                    <tr>
+                        <th>N° Tâche</th>
+                        <th>Date</th>
+                        <th>Ticket</th>
+                        <th>Bâtiment</th>
+                        <th>Lieu</th>
+                        <th>Description</th>
+                        <th>Média</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Les lignes de tâches vont ici -->
+
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -125,6 +142,41 @@
         <h3>Médias de la tâche</h3>
         <ul id="mediaList" style="max-height:300px; overflow:auto;"></ul>
         <button onclick="closeMediaPopup()">Fermer</button>
+    </div>
+
+    <div id="popup">
+        <p id="popup-message"></p>
+        <button onclick="closeSimplePopup()">Fermer</button>
+    </div>
+
+    <!-- Popup pour la modification manuelle de l'ordre -->
+    <div id="modifOrdrePopup" class="popup">
+        <div class="popup-content">
+            <button class="fermer-popup">&times;</button>
+            <h3>Modifier l'ordre des tâches</h3>
+
+            <div class="popup-form">
+                <div class="input-group-custom">
+                    <label for="sourceTacheOrdre">Quelle tache dont il faut changer l'ordre ?</label>
+                    <input id="sourceTacheOrdre" type="number" class="input-custom" min="1" placeholder="1">
+                </div>
+
+                <div class="input-group-custom">
+                    <label for="targetTacheOrdre">Quel ordre voulez-vous lui assigner ?</label>
+                    <input id="targetTacheOrdre" type="number" class="input-custom" min="1" placeholder="2">
+                </div>
+
+                <div class="popup-buttons">
+                    <button id="modifOrdreTache" class="btn">Modifier l'ordre</button>
+                    <button id="confirmerModifOrdre" class="btn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup">
+        <p id="popup-message"></p>
+        <button onclick="closeSimplePopup()">Fermer</button>
     </div>
 
     <script>

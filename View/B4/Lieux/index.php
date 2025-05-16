@@ -16,6 +16,7 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/styleB4.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB4/style.css">
         <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+        <script src="<?= BASE_URL ?>/JavaScript/B4/popup.js"></script>
    
 </head>
 
@@ -33,11 +34,16 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <br>
         <div class="header">
             <h2>Modifier le bâtiment</h2>
-
-            <?php if ($batiment['actif_batiment']): ?>
-                <button type="button" class="delete" onclick="openDeletePopup()">Supprimer le bâtiment</button>
-            <?php else: ?>
-                <button type="button" class="add" onclick="openDeletePopup()">Réactiver le bâtiment</button>
+            <?php if ($batimentAndSiteActive): 
+                $message = "Êtes‑vous sûr de vouloir supprimer le bâtiment {$batiment['nom_batiment']} ?";?>
+                <button type="button" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)" class="delete">Supprimer le lieu</button>
+            <?php else: 
+                if ($batiment['actif_site']){
+                    $message = "Êtes-vous sûr de vouloir réactiver le bâtiment {$batiment['nom_batiment']} ?";
+                } else {
+                    $message = "En reactivant ce bâtiment, vous réactiverez également le site associé. Êtes-vous sûr de vouloir continuer ?";
+                }?>
+                <button type="button" onclick="openDeletePopup(<?= htmlspecialchars(json_encode($message), ENT_QUOTES, 'UTF-8') ?>)" class="add">Réactiver le lieu</button>
             <?php endif; ?>
         </div>
 
@@ -55,34 +61,39 @@ if (!UserConnectionUtils::isAdminConnected()) {
     <div class="header">
         <h2 style="margin-top: 30px;">Lieux</h2>
             <!-- Formulaire de filtrage des lieux -->
-            <form method="get" action="" style="margin-top: 10px;">
-                <input type="hidden" name="id" value="<?= $id_batiment ?>">
-                <label for="filter">Afficher:</label>
-                <select name="filter" id="filter" onchange="this.form.submit()">
-                    <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les lieux</option>
-                    <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Lieux actifs</option>
-                </select>
-            </form>
+            <?php if ((isset($batiment['actif_batiment']) && $batiment['actif_batiment']) || !isset($batiment['actif_batiment'])): ?>
+                <form method="get" action="" style="margin-top: 10px;">
+                    <input type="hidden" name="id" value="<?= $id_batiment ?>">
+                    <label for="filter">Afficher:</label>
+                    <select name="filter" id="filter" onchange="this.form.submit()">
+                        <option value="all" <?= ($filter ?? '') === 'all' ? 'selected' : '' ?>>Tous les lieux</option>
+                        <option value="active" <?= ($filter ?? '') === 'active' ? 'selected' : '' ?>>Lieux actifs</option>
+                    </select>
+                </form>
+            <?php endif; ?>
             
         <?php if (isset($id_batiment)): ?>
-            <button class="add" onclick="openPopup()">Ajouter un lieu</button>
+            <button class="add" onclick="openAddPopup()">Ajouter un lieu</button>
         <?php else: ?>
             <br>
         <?php endif; ?>
     </div>
 
-     <table class="table">
-            <thead class="table-header">
-        <tr>
-            <th>Lieu</th>
-            <?php if (!isset($id_batiment)): ?>
-                <th>Bâtiment</th>
-                <th>Site</th>
-            <?php endif; ?>
-        </tr>
-    </thead>
+    <table class="table">
+        <thead class="table-header">
+            <tr>
+                <th>Lieu</th>
+                <?php if (!isset($id_batiment)): ?>
+                    <th>Bâtiment</th>
+                    <th>Site</th>
+                <?php endif; ?>
 
-      <tbody class="tbody">
+                <?php if (($filter ?? '') === 'all'): ?>
+                    <th>Statut</th>
+                <?php endif; ?>
+            </tr>
+        </thead>
+        <tbody class="tbody">
         <?php if (!empty($lieux)): ?>
             <?php foreach ($lieux as $lieu): ?>
                 <tr
@@ -95,17 +106,22 @@ if (!UserConnectionUtils::isAdminConnected()) {
                         <td><?= htmlspecialchars($lieu['nom_batiment']) ?></td>
                         <td><?= htmlspecialchars($lieu['nom_site']) ?></td>
                     <?php endif; ?>
+
+                    <?php if (($filter ?? '') === 'all'): ?>
+                        <td><?= $lieu['actif_lieu'] ? 'Actif' : 'Inactif' ?></td>
+                    <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         <?php else: ?>
+            <?php
+                $colspan = 1 + (!isset($id_batiment) ? 2 : 0) + (($filter ?? '') === 'all' ? 1 : 0);
+            ?>
             <tr>
-                <td colspan="<?= !isset($id_batiment) ? 3 : 1 ?>">
-                    Aucun lieu disponible.
-                </td>
+                <td colspan="<?= $colspan ?>">Aucun lieu disponible.</td>
             </tr>
         <?php endif; ?>
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 
     <?php if (isset($id_batiment)): ?>
@@ -114,61 +130,42 @@ if (!UserConnectionUtils::isAdminConnected()) {
 </div>
 
 <!-- Popup suppression ou réactivation -->
+<div class="overlay" id="overlay" onclick="closeLieuPopup()"></div>
 <?php if (isset($id_batiment)): ?>
-    <div class="overlay" id="overlay-delete" onclick="closeDeletePopup()"></div>
-    <?php if ($batiment['actif_batiment']): ?>
-        <div class="popup-delete" id="popup-delete">
+    <?php if ($batimentAndSiteActive): ?>
+        <div class="popup-delete" id="deletePopup">
             <h3>Confirmer la suppression</h3>
-            <p>Êtes-vous sûr de vouloir supprimer ce bâtiment ?</p>
+            <p id="deletePopupMessage">Êtes-vous sûr de vouloir supprimer ce bâtiment ?</p>
             <form method="post">
                 <div class="button-group">
                     <button type="submit" name="delete_batiment" class="delete">Confirmer</button>
-                    <button type="button" onclick="closeDeletePopup()" class="stop">Annuler</button>
+                    <button type="button" onclick="closeLieuPopup()" class="stop">Annuler</button>
                 </div>
             </form>
         </div>
     <?php else: ?>
-        <div class="popup-delete" id="popup-delete">
+        <div class="popup-delete" id="deletePopup">
             <h3>Confirmer la réactivation</h3>
-            <p>Voulez-vous réactiver ce bâtiment ?</p>
+            <p id="deletePopupMessage">Voulez-vous réactiver ce bâtiment ?</p>
             <form method="post">
                 <div class="button-group">
                     <button type="submit" name="activate_batiment" class="save">Confirmer</button>
-                    <button type="button" onclick="closeDeletePopup()" class="delete">Annuler</button>
+                    <button type="button" onclick="closeLieuPopup()" class="delete">Annuler</button>
                 </div>
             </form>
         </div>
     <?php endif; ?>
 
     <!-- Popup ajout lieu -->
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
-    <div class="popup" id="popup">
+    
+    <div class="popup" id="addPopup">
         <h3>Ajouter un lieu</h3>
         <form method="post">
             <label for="lieuName">Nom du lieu :</label>
             <input type="text" id="lieuName" name="lieu_name" required>
             <br><br>
             <button type="submit" name="add_lieu" class="save">Ajouter</button>
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeLieuPopup()" class="delete">Annuler</button>
         </form>
     </div>
 <?php endif; ?>
-
-<script>
-    function openDeletePopup() {
-        document.getElementById("popup-delete").style.display = "block";
-        document.getElementById("overlay-delete").style.display = "block";
-    }
-    function closeDeletePopup() {
-        document.getElementById("popup-delete").style.display = "none";
-        document.getElementById("overlay-delete").style.display = "none";
-    }
-    function openPopup() {
-        document.getElementById("popup").style.display = "block";
-        document.getElementById("overlay").style.display = "block";
-    }
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-        document.getElementById("overlay").style.display = "none";
-    }
-</script>

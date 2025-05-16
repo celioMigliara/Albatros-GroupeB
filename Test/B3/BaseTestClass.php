@@ -1,5 +1,8 @@
 <?php
 
+require 'vendor/autoload.php';
+
+
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../../Model/B3/db_connect.php';
@@ -24,14 +27,12 @@ class BaseTestClass extends TestCase
             (4, 'Systeme')");
     }
 
-    protected function viderToutesLesTables() 
+    protected function viderToutesLesTables()
     {
-        // Connexion à la base de données
         $db = Database::getInstance()->getConnection();
-    
-        // Désactiver temporairement les vérifications des clés étrangères
-        $db->exec("SET foreign_key_checks = 0;");
-    
+        // Désactiver temporairement les contraintes de clé étrangère
+        $db->exec("SET FOREIGN_KEY_CHECKS = 0");
+        
         // Vider explicitement chaque table une par une
         $db->exec("TRUNCATE TABLE `batiment`;");
         $db->exec("TRUNCATE TABLE `demande`;");
@@ -47,8 +48,8 @@ class BaseTestClass extends TestCase
         $db->exec("TRUNCATE TABLE `travaille`;");
         $db->exec("TRUNCATE TABLE `unite`;");
         $db->exec("TRUNCATE TABLE `utilisateur`;");
-    
-        // Réactiver les vérifications des clés étrangères
-        $db->exec("SET foreign_key_checks = 1;");
+
+        // Réactiver les contraintes de clé étrangère
+        $db->exec("SET FOREIGN_KEY_CHECKS = 1");
     }
 }

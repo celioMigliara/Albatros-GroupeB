@@ -18,7 +18,11 @@ $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styles.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB1/styleB1.css">
     
-    <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+    <?php if ($_SESSION['user']['role_id']  == 1): ?>
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
+    <?php else: ?>
+        <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
+    <?php endif; ?>
 
 
 </head>
@@ -52,7 +56,7 @@ $id_demande = isset($_GET['id_demande']) ? intval($_GET['id_demande']) : 0;
         <div class="form-row">
             <div class="form-group">
                 <label for="technicien" class="label">Technicien :</label>
-                <select id="technicien" name="technicien" class="input">
+                <select id="technicien" name="technicien" class="input" required>
                     <option value="">Sélectionnez un technicien</option>
                     <?php foreach ($techniciens as $technicien): ?>
                         <option value="<?= $technicien['id_utilisateur'] ?>">

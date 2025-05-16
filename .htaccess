@@ -1,3 +1,8 @@
+
+php_flag display_errors On
+php_value error_reporting 32767
+
+
 # # ========== SÉCURITÉ DE BASE ==========
 
 # # Empêche l'affichage de l'arborescence des dossiers s'il n'y a pas de fichier index

@@ -41,24 +41,44 @@ if (!UserConnectionUtils::isAdminConnected()) {
                     <option value="active" <?= $filter === 'active' ? 'selected' : '' ?>>Sites actifs</option>
                 </select>
             </form>
-            <button class="add" onclick="openPopup()">Ajouter</button>
+        <button class="add" onclick="openAddPopup()">Ajouter</button>
         </div>
         <!-- Affichage des sites -->
-       <table class="table">
+        <table class="table">
             <thead class="table-header">
                 <tr>
                     <th>Nom</th>
+
+                    <!-- ► Colonne « Statut » quand on affiche TOUS les sites -->
+                    <?php if (($filter ?? '') === 'all'): ?>
+                        <th>Statut</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
+
             <tbody class="tbody">
+            <?php if (!empty($sites)): ?>
                 <?php foreach ($sites as $site): ?>
-                    <tr onclick="window.location.href='batiments?id=<?= $site['id_site'] ?>'" style="cursor: pointer;">
+                    <tr
+                        onclick="window.location.href='batiments?id=<?= $site['id_site'] ?>'"
+                        style="cursor: pointer;"
+                    >
                         <td><?= htmlspecialchars($site['nom_site']) ?></td>
+
+                        <?php if (($filter ?? '') === 'all'): ?>
+                            <td><?= $site['actif_site'] ? 'Actif' : 'Inactif' ?></td>
+                        <?php endif; ?>
                     </tr>
-                    
                 <?php endforeach; ?>
+            <?php else: ?>
+                <?php $colspan = 1 + (($filter ?? '') === 'all' ? 1 : 0); ?>
+                <tr>
+                    <td colspan="<?= $colspan ?>">Aucun site disponible.</td>
+                </tr>
+            <?php endif; ?>
             </tbody>
         </table>
+
         <div class="center"></div>
             <button id="openImport" class="center" onclick="openImportPopup()">Importer via un fichier Excel</button>
         </div>
@@ -73,20 +93,20 @@ if (!UserConnectionUtils::isAdminConnected()) {
         <form action="sites/import" method="post" enctype="multipart/form-data" onsubmit="return validateUpload()">
             <input type="file" name="excel_file" id="excel_file" accept=".xlsx" required><br><br>
             <input type="submit" value="Importer" class="save">
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeSitePopup()" class="delete">Annuler</button>
         </form>
     </div>
 
-    <div class="overlay" id="overlay" onclick="closePopup()"></div>
+    <div class="overlay" id="overlay" onclick="closeSitePopup()"></div>
     <!-- Popup pour ajouter un site -->
-    <div class="popup" id="popup">
+    <div class="popup" id="addPopup">
         <h3>Ajouter un site</h3>
         <form method="post">
             <label for="site_name">Nom du site :</label>
             <input type="text" id="site_name" name="site_name" required>
             <br><br>
             <button class="save" type="submit" name="add_site">Ajouter</button>
-            <button type="button" onclick="closePopup()" class="delete">Annuler</button>
+            <button type="button" onclick="closeSitePopup()" class="delete">Annuler</button>
         </form>
     </div>
 </body>

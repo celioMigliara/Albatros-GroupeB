@@ -101,9 +101,11 @@ $filters = $filters ?? [];
                             ?>
                             <p><strong>Statut :</strong> <span class="statut-label <?= $statutClass ?>"><?= htmlspecialchars($demande['nom_statut']) ?></span></p>
                         </div>
+<?php if ($_SESSION['user']['id'] == $demande['id_utilisateur'] || $_SESSION['user']['id'] == 1): ?>
                         <div class="demande-actions">
                                 <a href="<?= BASE_URL ?>/listedemande/<?= htmlspecialchars($demande['id_demande']) ?>" class="action-button">Voir</a>
                         </div>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -158,5 +160,28 @@ $filters = $filters ?? [];
             </form>
         <?php endif; ?>
     </div>
+    <?php if (!empty($_SESSION['popup_annulation'])): ?>
+    <div id="popupModal" class="modal">
+        <div class="modal-content">
+                  <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2" data-effect="mfp-move-horizontal">
+            <span class="close-btn" onclick="closePopupModal()">&times;</span>
+            <p>Votre demande a bien été annulée.</p>
+               <button onclick="closePopup()">FERMER</button>
+        </div>
+    </div>
+    <?php unset($_SESSION['popup_annulation']); ?>
+<?php endif; ?>
 </body>
 </html>
+<script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById("popupModal");
+
+    });
+    function closePopup() {
+     const modal = document.getElementById("popupModal");
+        if (modal) modal.style.display = "none";
+   
+}
+</script>

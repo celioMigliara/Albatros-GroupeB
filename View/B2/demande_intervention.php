@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
-
 ?>
 
 <html lang="fr">
@@ -12,28 +11,28 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
   <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB2/StyleB2.css">
   <?php if ($_SESSION['user']['role_id'] == 1): ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarAdmin.css">
-<?php else: ?>
+  <?php else: ?>
     <link rel="stylesheet" href="<?= BASE_URL ?>/Css/cssB5/navbarTechnicien.css">
-<?php endif; ?>
+  <?php endif; ?>
 </head>
 
 <body class="page-demande-B2">
 
-<header>
+  <header>
 
     <?php if ($_SESSION['user']['role_id'] == 1): ?>
-    <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
+      <?php require_once __DIR__ . '/../B5/navbarAdmin.php'; ?>
     <?php else: ?>
-        <?php require_once __DIR__ . '/../B5/navbarTechnicien.php'; ?>
-        <?php endif; ?>
-    </header>  
-    <noscript>
+      <?php require_once __DIR__ . '/../B5/navbarTechnicien.php'; ?>
+    <?php endif; ?>
+  </header>
+  <noscript>
     <div class="noscript-message-B2">
       JavaScript est désactivé, veuillez l'activer pour une meilleure expérience.
     </div>
   </noscript>
 
- 
+
   <div class="container-B2">
     <header>
       <h1 class="title-B2">Demande d'intervention</h1>
@@ -127,9 +126,9 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
       </form>
     </div>
   </div>
- 
 
-  <div id="popup-overlay-B2" class="popup-overlay"></div>
+
+  <div id="popup-overlay-B2" class="popup-overlay-B2"></div>
   <div id="popup" class="popup-B2">
     <div class="popup-content-B2">
       <img src="<?= BASE_URL ?>/Assets/B2/Albatros.jpg" alt="Logo popup" class="popup-logo-B2" data-effect="mfp-move-horizontal">
@@ -141,9 +140,10 @@ require_once(__DIR__ . "/../../Secure/B2/session_secureB2.php");
   <script>
     const BASE_URL = "<?= BASE_URL ?>";
   </script>
+
   <!-- Description
   <script src="../script/script.js"></script>-->
-  <script src="<?= BASE_URL ?>/Javascript/B2/FormulaireJsB2.js"></script>
+  <script src="<?= BASE_URL ?>/JavaScript/B2/formulaireb2.js"></script>
 
 </body>
 

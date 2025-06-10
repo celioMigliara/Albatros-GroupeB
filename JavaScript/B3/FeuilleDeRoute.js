@@ -289,6 +289,8 @@ function EnregistrerOrdre(displayPopup = true) {
         index++;
     }
 
+	idToOrderModified.clear();
+
     if (index == 0) {
         if (displayPopup) {
             CreateSimplePopup("Aucune modification à sauvegarder.")
